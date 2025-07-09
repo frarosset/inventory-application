@@ -1,0 +1,414 @@
+{
+  "categories": [
+    { "name": "Classiche" },
+    { "name": "Bianche" },
+    { "name": "Rosse" },
+    { "name": "Vegetariane" },
+    { "name": "Vegane" },
+    { "name": "Pesce" },
+    { "name": "Carne" },
+    { "name": "Speciali" }
+  ],
+  "ingredients": [
+    {
+      "name": "Pomodoro",
+      "enforcedCategories": ["Rosse"],
+      "incompatibleCategories": ["Bianche"],
+      "price": "0.5",
+      "stock": "200"
+    },
+    {
+      "name": "Mozzarella",
+      "enforcedCategories": ["Bianche", "Vegetariane"],
+      "incompatibleCategories": ["Rosse", "Vegane"],
+      "price": "1.0",
+      "stock": "100"
+    },
+    {
+      "name": "Basilico",
+      "enforcedCategories": ["Vegetariane"],
+      "incompatibleCategories": [],
+      "price": "0.2",
+      "stock": "150"
+    },
+    {
+      "name": "Olio",
+      "enforcedCategories": [],
+      "incompatibleCategories": [],
+      "price": "0.1",
+      "stock": "300"
+    },
+    {
+      "name": "Salame Piccante",
+      "enforcedCategories": ["Carne"],
+      "incompatibleCategories": ["Vegetariane", "Vegane"],
+      "price": "1.2",
+      "stock": "80"
+    },
+    {
+      "name": "Peperoncino",
+      "enforcedCategories": ["Speciali"],
+      "incompatibleCategories": [],
+      "price": "0.3",
+      "stock": "120"
+    },
+    {
+      "name": "Olive Nere",
+      "enforcedCategories": ["Vegetariane"],
+      "incompatibleCategories": [],
+      "price": "0.4",
+      "stock": "90"
+    },
+    {
+      "name": "Funghi",
+      "enforcedCategories": ["Vegetariane"],
+      "incompatibleCategories": ["Vegane"],
+      "price": "0.7",
+      "stock": "110"
+    },
+    {
+      "name": "Carciofi",
+      "enforcedCategories": ["Vegetariane"],
+      "incompatibleCategories": [],
+      "price": "0.6",
+      "stock": "100"
+    },
+    {
+      "name": "Prosciutto Cotto",
+      "enforcedCategories": ["Carne"],
+      "incompatibleCategories": ["Vegetariane", "Vegane"],
+      "price": "1.3",
+      "stock": "70"
+    },
+    {
+      "name": "Gorgonzola",
+      "enforcedCategories": ["Bianche"],
+      "incompatibleCategories": ["Rosse", "Vegane"],
+      "price": "1.1",
+      "stock": "60"
+    },
+    {
+      "name": "Fontina",
+      "enforcedCategories": ["Bianche"],
+      "incompatibleCategories": ["Rosse", "Vegane"],
+      "price": "1.0",
+      "stock": "50"
+    },
+    {
+      "name": "Parmigiano Reggiano",
+      "enforcedCategories": ["Bianche"],
+      "incompatibleCategories": ["Rosse", "Vegane"],
+      "price": "0.9",
+      "stock": "70"
+    },
+    {
+      "name": "Gamberetti",
+      "enforcedCategories": ["Pesce"],
+      "incompatibleCategories": ["Vegetariane", "Vegane"],
+      "price": "1.5",
+      "stock": "60"
+    },
+    {
+      "name": "Cozze",
+      "enforcedCategories": ["Pesce"],
+      "incompatibleCategories": ["Vegetariane", "Vegane"],
+      "price": "1.4",
+      "stock": "50"
+    },
+    {
+      "name": "Calamari",
+      "enforcedCategories": ["Pesce"],
+      "incompatibleCategories": ["Vegetariane", "Vegane"],
+      "price": "1.6",
+      "stock": "40"
+    },
+    {
+      "name": "Aglio",
+      "enforcedCategories": [],
+      "incompatibleCategories": [],
+      "price": "0.2",
+      "stock": "200"
+    },
+    {
+      "name": "Prezzemolo",
+      "enforcedCategories": [],
+      "incompatibleCategories": [],
+      "price": "0.2",
+      "stock": "180"
+    },
+    {
+      "name": "Wurstel",
+      "enforcedCategories": ["Carne"],
+      "incompatibleCategories": ["Vegetariane", "Vegane"],
+      "price": "1.3",
+      "stock": "70"
+    },
+    {
+      "name": "Patatine Fritte",
+      "enforcedCategories": ["Speciali"],
+      "incompatibleCategories": [],
+      "price": "0.8",
+      "stock": "90"
+    },
+    {
+      "name": "Salsiccia",
+      "enforcedCategories": ["Carne"],
+      "incompatibleCategories": ["Vegetariane", "Vegane"],
+      "price": "1.4",
+      "stock": "60"
+    },
+    {
+      "name": "Pomodoro San Marzano",
+      "enforcedCategories": ["Rosse"],
+      "incompatibleCategories": ["Bianche"],
+      "price": "0.6",
+      "stock": "80"
+    },
+    {
+      "name": "Mozzarella di Bufala",
+      "enforcedCategories": ["Bianche", "Vegetariane"],
+      "incompatibleCategories": ["Rosse", "Vegane"],
+      "price": "1.2",
+      "stock": "90"
+    },
+    {
+      "name": "Pomodoro Fresco",
+      "enforcedCategories": ["Rosse"],
+      "incompatibleCategories": ["Bianche"],
+      "price": "0.5",
+      "stock": "100"
+    },
+    {
+      "name": "Pere",
+      "enforcedCategories": ["Speciali"],
+      "incompatibleCategories": [],
+      "price": "0.8",
+      "stock": "70"
+    },
+    {
+      "name": "Pepe Nero",
+      "enforcedCategories": [],
+      "incompatibleCategories": [],
+      "price": "0.2",
+      "stock": "200"
+    },
+    {
+      "name": "Ananas",
+      "enforcedCategories": ["Speciali"],
+      "incompatibleCategories": ["Carne"],
+      "price": "0.9",
+      "stock": "100"
+    },
+    {
+      "name": "Origano",
+      "enforcedCategories": ["Classiche"],
+      "incompatibleCategories": [],
+      "price": "0.1",
+      "stock": "200"
+    },
+    {
+      "name": "Mortadella",
+      "enforcedCategories": ["Carne"],
+      "incompatibleCategories": ["Vegetariane", "Vegane"],
+      "price": "1.3",
+      "stock": "50"
+    },
+    {
+      "name": "Pesto di Pistacchi",
+      "enforcedCategories": ["Speciali"],
+      "incompatibleCategories": [],
+      "price": "1.0",
+      "stock": "60"
+    },
+    {
+      "name": "Acciughe",
+      "enforcedCategories": ["Pesce"],
+      "incompatibleCategories": ["Vegetariane", "Vegane"],
+      "price": "1.1",
+      "stock": "70"
+    },
+    {
+      "name": "Capperi",
+      "enforcedCategories": ["Vegetariane"],
+      "incompatibleCategories": [],
+      "price": "0.4",
+      "stock": "90"
+    },
+    {
+      "name": "Tonno",
+      "enforcedCategories": ["Pesce"],
+      "incompatibleCategories": ["Vegetariane", "Vegane"],
+      "price": "1.2",
+      "stock": "60"
+    },
+    {
+      "name": "Cipolla",
+      "enforcedCategories": ["Vegetariane"],
+      "incompatibleCategories": [],
+      "price": "0.3",
+      "stock": "100"
+    }
+  ],
+  "pizzas": [
+    {
+      "name": "Margherita",
+      "ingredients": ["Pomodoro", "Mozzarella", "Basilico", "Olio"],
+      "customCategories": ["Classiche", "Vegetariane"]
+    },
+    {
+      "name": "Diavola",
+      "ingredients": [
+        "Pomodoro",
+        "Mozzarella",
+        "Salame Piccante",
+        "Peperoncino",
+        "Olive Nere"
+      ],
+      "customCategories": ["Speciali", "Carne"]
+    },
+    {
+      "name": "Capricciosa",
+      "ingredients": [
+        "Pomodoro",
+        "Mozzarella",
+        "Funghi",
+        "Carciofi",
+        "Prosciutto Cotto",
+        "Olive Nere"
+      ],
+      "customCategories": ["Classiche", "Carne"]
+    },
+    {
+      "name": "Quattro Formaggi",
+      "ingredients": [
+        "Mozzarella",
+        "Gorgonzola",
+        "Fontina",
+        "Parmigiano Reggiano",
+        "Basilico"
+      ],
+      "customCategories": ["Classiche", "Bianche", "Vegetariane"]
+    },
+    {
+      "name": "Quattro Stagioni",
+      "ingredients": [
+        "Pomodoro",
+        "Mozzarella",
+        "Funghi",
+        "Carciofi",
+        "Prosciutto Cotto",
+        "Olive Nere"
+      ],
+      "customCategories": ["Classiche", "Carne"]
+    },
+    {
+      "name": "Frutti di Mare",
+      "ingredients": [
+        "Pomodoro",
+        "Mozzarella",
+        "Gamberetti",
+        "Cozze",
+        "Calamari",
+        "Aglio",
+        "Prezzemolo"
+      ],
+      "customCategories": ["Pesce", "Speciali"]
+    },
+    {
+      "name": "Americana",
+      "ingredients": ["Pomodoro", "Mozzarella", "Wurstel", "Patatine Fritte"],
+      "customCategories": ["Classiche", "Carne"]
+    },
+    {
+      "name": "Boscaiola",
+      "ingredients": ["Mozzarella", "Funghi", "Salsiccia"],
+      "customCategories": ["Carne", "Speciali"]
+    },
+    {
+      "name": "Bufala",
+      "ingredients": [
+        "Pomodoro San Marzano",
+        "Mozzarella di Bufala",
+        "Basilico"
+      ],
+      "customCategories": ["Classiche", "Vegetariane"]
+    },
+    {
+      "name": "Caprese",
+      "ingredients": [
+        "Pomodoro Fresco",
+        "Mozzarella di Bufala",
+        "Basilico",
+        "Olio"
+      ],
+      "customCategories": ["Vegetariane", "Classiche"]
+    },
+    {
+      "name": "Funghi",
+      "ingredients": ["Pomodoro", "Mozzarella", "Funghi", "Prezzemolo", "Olio"],
+      "customCategories": ["Classiche", "Vegetariane"]
+    },
+    {
+      "name": "Gorgonzola e Pere",
+      "ingredients": ["Mozzarella", "Gorgonzola", "Pere", "Pepe Nero", "Olio"],
+      "customCategories": ["Speciali", "Vegetariane"]
+    },
+    {
+      "name": "Hawaiana",
+      "ingredients": ["Pomodoro", "Mozzarella", "Ananas", "Prosciutto Cotto"],
+      "customCategories": ["Speciali", "Carne"]
+    },
+    {
+      "name": "Mare e Monti",
+      "ingredients": [
+        "Pomodoro",
+        "Mozzarella",
+        "Funghi",
+        "Gamberetti",
+        "Cozze",
+        "Aglio"
+      ],
+      "customCategories": ["Speciali", "Pesce"]
+    },
+    {
+      "name": "Marinara",
+      "ingredients": ["Pomodoro", "Aglio", "Origano", "Olio"],
+      "customCategories": ["Classiche", "Vegane"]
+    },
+    {
+      "name": "Mortadella e Pesto di Pistacchi",
+      "ingredients": ["Mozzarella", "Mortadella", "Pesto di Pistacchi"],
+      "customCategories": ["Speciali", "Carne"]
+    },
+    {
+      "name": "Napoletana",
+      "ingredients": ["Pomodoro", "Acciughe", "Capperi", "Origano", "Olio"],
+      "customCategories": ["Classiche", "Pesce"]
+    },
+    {
+      "name": "Prosciutto",
+      "ingredients": ["Pomodoro", "Mozzarella", "Prosciutto Cotto"],
+      "customCategories": ["Classiche", "Carne"]
+    },
+    {
+      "name": "Prosciutto e Funghi",
+      "ingredients": ["Pomodoro", "Mozzarella", "Prosciutto Cotto", "Funghi"],
+      "customCategories": ["Carne", "Classiche"]
+    },
+    {
+      "name": "Tonno e Cipolla",
+      "ingredients": ["Pomodoro", "Mozzarella", "Tonno", "Cipolla"],
+      "customCategories": ["Pesce", "Speciali"]
+    },
+    {
+      "name": "Viennese",
+      "ingredients": ["Pomodoro", "Mozzarella", "Wurstel"],
+      "customCategories": ["Classiche", "Carne"]
+    },
+    {
+      "name": "Romana",
+      "ingredients": ["Pomodoro", "Mozzarella", "Acciughe", "Origano"],
+      "customCategories": ["Classiche", "Pesce"]
+    }
+  ]
+}
