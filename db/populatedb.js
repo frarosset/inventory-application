@@ -104,6 +104,14 @@ async function main() {
     });
   }
 
+  // add ingredients to the db
+  for (const ingredient of datadb.ingredients) {
+    await queries.create.ingredient({
+      ...ingredient,
+      is_protected: true,
+    });
+  }
+
   // add pizzas to the db
   for (const pizza of datadb.pizzas) {
     await queries.create.pizza({

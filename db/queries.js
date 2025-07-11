@@ -53,6 +53,35 @@ exports.create.category = async (data) => {
   await makeTransaction(queries);
 };
 
+exports.create.ingredient = async (data) => {
+  // Adding a new ingredient to the database means editing more than one table:
+  // ingredients, pizzas_ingredients, ingredients_incompatible_categories, ingredients_enforced_categories
+  //
+  // Hence a transaction is used, to ensure a consistend update  and allowing a rollback in case of errors.
+  //
+  // Currently, only the ingredients table is updated.
+  //
+  // Sample data:
+  // {
+  //    "name": "Pomodoro",
+  //    "is_protected": false,
+  //    "enforcedCategories": ["Rosse"],
+  //    "incompatibleCategories": ["Bianche"],
+  //    "price": "0.5",
+  //    "stock": "200"
+  //    "pizzas": []
+  // }
+
+  const queries = [
+    {
+      text: "INSERT INTO ingredients (name,is_protected,price,stock) VALUES($1,$2,$3,$4);",
+      data: [data.name, data.is_protected ?? false, data.price, data.stock],
+    },
+  ];
+
+  await makeTransaction(queries);
+};
+
 exports.create.pizza = async (data) => {
   // Adding a new pizza to the database means editing more than one table:
   // pizzas, pizzas_categories, pizzas_ingredients
