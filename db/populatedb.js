@@ -96,6 +96,14 @@ async function main() {
   await client.query(SQL_init);
   await client.end();
 
+  // add categories to the db
+  for (const category of datadb.categories) {
+    await queries.create.category({
+      ...category,
+      is_protected: true,
+    });
+  }
+
   // add pizzas to the db
   for (const pizza of datadb.pizzas) {
     await queries.create.pizza({
