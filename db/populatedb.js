@@ -2,6 +2,8 @@
 
 require("dotenv").config();
 const { Client } = require("pg");
+const datadb = require("./datadb.json");
+const queries = require("./queries.js");
 
 // Initialize core tables for pizza database schema:
 
@@ -26,7 +28,7 @@ const { Client } = require("pg");
 
 const defaultColumns = `
         id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-        name VARCHAR(${Number(process.env.NAME_MAX_LENGTH)}),
+        name VARCHAR(${Number(process.env.NAME_MAX_LENGTH)}) UNIQUE NOT NULL,
         is_protected BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMPTZ DEFAULT NULL`;
@@ -93,6 +95,14 @@ async function main() {
   await client.connect();
   await client.query(SQL_init);
   await client.end();
+
+  // add pizzas to the db
+  for (const pizza of datadb.pizzas) {
+    await queries.create.pizza({
+      ...pizza,
+      is_protected: true,
+    });
+  }
 }
 
 main();

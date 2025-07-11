@@ -1,0 +1,54 @@
+const pool = require("./pool.js");
+
+exports.create = {};
+exports.read = {};
+exports.update = {};
+exports.delete = {};
+
+const makeTransaction = async (queries) => {
+  // This assumes the queries results are not used
+
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    for (const query of queries) {
+      await client.query(query.text, query.data ?? []);
+    }
+
+    await client.query("COMMIT");
+  } catch (e) {
+    await client.query("ROLLBACK");
+    throw e;
+  } finally {
+    client.release();
+  }
+};
+
+exports.create.pizza = async (data) => {
+  // Adding a new pizza to the database means editing more than one table:
+  // pizzas, pizzas_categories, pizzas_ingredients
+  //
+  // Hence a transaction is used, to ensure a consistend update  and allowing a rollback in case of errors.
+  //
+  // Currently, only the pizzas table is updated.
+  //
+  // Sample data:
+  // {
+  //    "name": "Margherita",
+  //    "ingredients": ["Pomodoro", "Mozzarella", "Basilico", "Olio"],
+  //    "customCategories": ["Classiche", "Vegetariane"],
+  //    "is_protected": false,
+  //    "notes": "Some notes"
+  // }
+
+  const queries = [
+    {
+      text: "INSERT INTO pizzas (name,is_protected,notes) VALUES($1,$2,$3);",
+      data: [data.name, data.is_protected ?? false, data.notes ?? ""],
+    },
+  ];
+
+  await makeTransaction(queries);
+};
