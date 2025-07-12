@@ -63,18 +63,21 @@ const SQL_create = `
 
     CREATE TABLE IF NOT EXISTS pizzas_categories (
         ${createForeignKeyColumn("pizza_id", "pizzas")},
-        ${createForeignKeyColumn("category_id", "categories")}
+        ${createForeignKeyColumn("category_id", "categories")},
+        CONSTRAINT U_pizza_category UNIQUE (pizza_id,category_id)
     );
 
     CREATE TABLE IF NOT EXISTS pizzas_ingredients (
         ${createForeignKeyColumn("pizza_id", "pizzas")},
-        ${createForeignKeyColumn("ingredient_id", "ingredients")}
+        ${createForeignKeyColumn("ingredient_id", "ingredients")},
+        CONSTRAINT U_pizza_ingredient UNIQUE (pizza_id, ingredient_id)
     );
 
     CREATE TABLE IF NOT EXISTS ingredients_categories_rules (
         ${createForeignKeyColumn("ingredient_id", "ingredients")},
         ${createForeignKeyColumn("category_id", "categories")},
-        rule_type VARCHAR(30) NOT NULL CHECK (rule_type IN ('enforcing', 'incompatible'))
+        rule_type VARCHAR(30) NOT NULL CHECK (rule_type IN ('enforcing', 'incompatible')),
+        CONSTRAINT U_ingredient_category UNIQUE (ingredient_id,category_id)
     );
 `;
 
