@@ -34,7 +34,7 @@ const queryTextGetIdFromName = (table, idAlias, name, isArray) => `
 
 exports.create.category = async (data) => {
   // Adding a new category to the database means editing more than one table:
-  // categories, pizzas_categories, ingredients_incompatible_categories, ingredients_enforced_categories
+  // categories, pizzas_categories, ingredients_categories_rules
   //
   // Hence a transaction is used, to ensure a consistend update  and allowing a rollback in case of errors.
   //
@@ -61,7 +61,7 @@ exports.create.category = async (data) => {
 
 exports.create.ingredient = async (data) => {
   // Adding a new ingredient to the database means editing more than one table:
-  // ingredients, pizzas_ingredients, ingredients_incompatible_categories, ingredients_enforced_categories
+  // ingredients, pizzas_ingredients, ingredients_categories_rules
   //
   // Hence a transaction is used, to ensure a consistend update  and allowing a rollback in case of errors.
   //

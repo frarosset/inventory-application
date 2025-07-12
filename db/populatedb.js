@@ -13,12 +13,11 @@ const queries = require("./queries.js");
 
 // - ingredients: stores ingredients, with price, stock and their metadata
 
-// - ingredients_enforced_categories: many-to-many relation between
-//   ingredients and the categories they enforce when present (and when
-//   such categories are not incompatible by some other ingredient)
-
-// - ingredients_incompatible_categories:  many-to-many relation between
-//   ingredients and the incompatible categories
+// - ingredients_categories_rules: many-to-many relation between
+//   ingredients and categories. The type of relationship is specified by
+//   rule_type field and and can be: "incompatible" or "enforcing" (ie,
+//   ingredient enforces a category when present, and when such category is
+//   not incompatible by some other ingredient)
 
 // - pizzas_categories: many-to-many relation between pizzas and their
 //   assigned categories
@@ -40,8 +39,7 @@ const createForeignKeyColumn = (id, tab, tabId = "id") => `
 const SQL_drop = `
     DROP TABLE IF EXISTS pizzas_categories;
     DROP TABLE IF EXISTS pizzas_ingredients;
-    DROP TABLE IF EXISTS ingredients_enforced_categories;
-    DROP TABLE IF EXISTS ingredients_incompatible_categories;
+    DROP TABLE IF EXISTS ingredients_categories_rules;
     DROP TABLE IF EXISTS pizzas;
     DROP TABLE IF EXISTS categories;
     DROP TABLE IF EXISTS ingredients;
@@ -73,14 +71,10 @@ const SQL_create = `
         ${createForeignKeyColumn("ingredient_id", "ingredients")}
     );
 
-    CREATE TABLE IF NOT EXISTS ingredients_enforced_categories (
+    CREATE TABLE IF NOT EXISTS ingredients_categories_rules (
         ${createForeignKeyColumn("ingredient_id", "ingredients")},
-        ${createForeignKeyColumn("category_id", "categories")}
-    );
-
-    CREATE TABLE IF NOT EXISTS ingredients_incompatible_categories (
-        ${createForeignKeyColumn("ingredient_id", "ingredients")},
-        ${createForeignKeyColumn("category_id", "categories")}
+        ${createForeignKeyColumn("category_id", "categories")},
+        rule_type VARCHAR(30) NOT NULL CHECK (rule_type IN ('enforcing', 'incompatible'))
     );
 `;
 
