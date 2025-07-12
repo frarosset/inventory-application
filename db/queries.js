@@ -26,6 +26,12 @@ const makeTransaction = async (queries) => {
   }
 };
 
+const queryTextGetIdFromName = (table, idAlias, name, isArray) => `
+  SELECT id AS ${idAlias} 
+  FROM ${table} 
+  WHERE name = ${isArray ? `ANY(${name}::text[])` : name}
+`;
+
 exports.create.category = async (data) => {
   // Adding a new category to the database means editing more than one table:
   // categories, pizzas_categories, ingredients_incompatible_categories, ingredients_enforced_categories
@@ -94,7 +100,7 @@ exports.create.pizza = async (data) => {
   // {
   //    "name": "Margherita",
   //    "ingredients": ["Pomodoro", "Mozzarella", "Basilico", "Olio"],
-  //    "customCategories": ["Classiche", "Vegetariane"],
+  //    "categories": ["Classiche", "Vegetariane"],
   //    "is_protected": false,
   //    "notes": "Some notes"
   // }
@@ -105,6 +111,20 @@ exports.create.pizza = async (data) => {
       data: [data.name, data.is_protected ?? false, data.notes ?? ""],
     },
   ];
+
+  if (data.categories instanceof Array && data.categories.length > 0) {
+    queries.push({
+      text: `
+         INSERT INTO pizzas_categories (pizza_id,category_id)
+         SELECT pizza_id, category_id
+         FROM ((
+            ${queryTextGetIdFromName("pizzas", "pizza_id", "$1")}
+          ) CROSS JOIN (
+            ${queryTextGetIdFromName("categories", "category_id", "$2", true)}
+         ))`,
+      data: [data.name, data.categories],
+    });
+  }
 
   await makeTransaction(queries);
 };

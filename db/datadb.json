@@ -253,7 +253,7 @@
     {
       "name": "Margherita",
       "ingredients": ["Pomodoro", "Mozzarella", "Basilico", "Olio"],
-      "customCategories": ["Classiche", "Vegetariane"]
+      "categories": ["Classiche", "Vegetariane"]
     },
     {
       "name": "Diavola",
@@ -264,7 +264,7 @@
         "Peperoncino",
         "Olive Nere"
       ],
-      "customCategories": ["Speciali", "Carne"]
+      "categories": ["Speciali", "Carne"]
     },
     {
       "name": "Capricciosa",
@@ -276,7 +276,7 @@
         "Prosciutto Cotto",
         "Olive Nere"
       ],
-      "customCategories": ["Classiche", "Carne"]
+      "categories": ["Classiche", "Carne"]
     },
     {
       "name": "Quattro Formaggi",
@@ -287,7 +287,7 @@
         "Parmigiano Reggiano",
         "Basilico"
       ],
-      "customCategories": ["Classiche", "Bianche", "Vegetariane"]
+      "categories": ["Classiche", "Bianche", "Vegetariane"]
     },
     {
       "name": "Quattro Stagioni",
@@ -299,7 +299,7 @@
         "Prosciutto Cotto",
         "Olive Nere"
       ],
-      "customCategories": ["Classiche", "Carne"]
+      "categories": ["Classiche", "Carne"]
     },
     {
       "name": "Frutti di Mare",
@@ -312,17 +312,17 @@
         "Aglio",
         "Prezzemolo"
       ],
-      "customCategories": ["Pesce", "Speciali"]
+      "categories": ["Pesce", "Speciali"]
     },
     {
       "name": "Americana",
       "ingredients": ["Pomodoro", "Mozzarella", "Wurstel", "Patatine Fritte"],
-      "customCategories": ["Classiche", "Carne"]
+      "categories": ["Classiche", "Carne"]
     },
     {
       "name": "Boscaiola",
       "ingredients": ["Mozzarella", "Funghi", "Salsiccia"],
-      "customCategories": ["Carne", "Speciali"]
+      "categories": ["Carne", "Speciali"]
     },
     {
       "name": "Bufala",
@@ -331,7 +331,7 @@
         "Mozzarella di Bufala",
         "Basilico"
       ],
-      "customCategories": ["Classiche", "Vegetariane"]
+      "categories": ["Classiche", "Vegetariane"]
     },
     {
       "name": "Caprese",
@@ -341,22 +341,22 @@
         "Basilico",
         "Olio"
       ],
-      "customCategories": ["Vegetariane", "Classiche"]
+      "categories": ["Vegetariane", "Classiche"]
     },
     {
       "name": "Funghi",
       "ingredients": ["Pomodoro", "Mozzarella", "Funghi", "Prezzemolo", "Olio"],
-      "customCategories": ["Classiche", "Vegetariane"]
+      "categories": ["Classiche", "Vegetariane"]
     },
     {
       "name": "Gorgonzola e Pere",
       "ingredients": ["Mozzarella", "Gorgonzola", "Pere", "Pepe Nero", "Olio"],
-      "customCategories": ["Speciali", "Vegetariane"]
+      "categories": ["Speciali", "Vegetariane"]
     },
     {
       "name": "Hawaiana",
       "ingredients": ["Pomodoro", "Mozzarella", "Ananas", "Prosciutto Cotto"],
-      "customCategories": ["Speciali", "Carne"]
+      "categories": ["Speciali", "Carne"]
     },
     {
       "name": "Mare e Monti",
@@ -368,47 +368,47 @@
         "Cozze",
         "Aglio"
       ],
-      "customCategories": ["Speciali", "Pesce"]
+      "categories": ["Speciali", "Pesce"]
     },
     {
       "name": "Marinara",
       "ingredients": ["Pomodoro", "Aglio", "Origano", "Olio"],
-      "customCategories": ["Classiche", "Vegane"]
+      "categories": ["Classiche", "Vegane"]
     },
     {
       "name": "Mortadella e Pesto di Pistacchi",
       "ingredients": ["Mozzarella", "Mortadella", "Pesto di Pistacchi"],
-      "customCategories": ["Speciali", "Carne"]
+      "categories": ["Speciali", "Carne"]
     },
     {
       "name": "Napoletana",
       "ingredients": ["Pomodoro", "Acciughe", "Capperi", "Origano", "Olio"],
-      "customCategories": ["Classiche", "Pesce"]
+      "categories": ["Classiche", "Pesce"]
     },
     {
       "name": "Prosciutto",
       "ingredients": ["Pomodoro", "Mozzarella", "Prosciutto Cotto"],
-      "customCategories": ["Classiche", "Carne"]
+      "categories": ["Classiche", "Carne"]
     },
     {
       "name": "Prosciutto e Funghi",
       "ingredients": ["Pomodoro", "Mozzarella", "Prosciutto Cotto", "Funghi"],
-      "customCategories": ["Carne", "Classiche"]
+      "categories": ["Carne", "Classiche"]
     },
     {
       "name": "Tonno e Cipolla",
       "ingredients": ["Pomodoro", "Mozzarella", "Tonno", "Cipolla"],
-      "customCategories": ["Pesce", "Speciali"]
+      "categories": ["Pesce", "Speciali"]
     },
     {
       "name": "Viennese",
       "ingredients": ["Pomodoro", "Mozzarella", "Wurstel"],
-      "customCategories": ["Classiche", "Carne"]
+      "categories": ["Classiche", "Carne"]
     },
     {
       "name": "Romana",
       "ingredients": ["Pomodoro", "Mozzarella", "Acciughe", "Origano"],
-      "customCategories": ["Classiche", "Pesce"]
+      "categories": ["Classiche", "Pesce"]
     }
   ]
 }
