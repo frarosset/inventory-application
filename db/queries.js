@@ -65,7 +65,7 @@ exports.create.ingredient = async (data) => {
   //
   // Hence a transaction is used, to ensure a consistend update  and allowing a rollback in case of errors.
   //
-  // Currently, only the ingredients table is updated.
+  // Currently, only the ingredients and ingredients_categories_rules tables are updated.
   //
   // Sample data:
   // {
@@ -85,6 +85,40 @@ exports.create.ingredient = async (data) => {
     },
   ];
 
+  if (
+    data.enforcedCategories instanceof Array &&
+    data.enforcedCategories.length > 0
+  ) {
+    queries.push({
+      text: `
+         INSERT INTO ingredients_categories_rules (ingredient_id,category_id, rule_type)
+         SELECT ingredient_id, category_id, 'enforcing'
+         FROM ((
+            ${queryTextGetIdFromName("ingredients", "ingredient_id", "$1")}
+          ) CROSS JOIN (
+            ${queryTextGetIdFromName("categories", "category_id", "$2", true)}
+         ))`,
+      data: [data.name, data.enforcedCategories],
+    });
+  }
+
+  if (
+    data.incompatibleCategories instanceof Array &&
+    data.incompatibleCategories.length > 0
+  ) {
+    queries.push({
+      text: `
+         INSERT INTO ingredients_categories_rules (ingredient_id,category_id, rule_type)
+         SELECT ingredient_id, category_id, 'incompatible'
+         FROM ((
+            ${queryTextGetIdFromName("ingredients", "ingredient_id", "$1")}
+          ) CROSS JOIN (
+            ${queryTextGetIdFromName("categories", "category_id", "$2", true)}
+         ))`,
+      data: [data.name, data.incompatibleCategories],
+    });
+  }
+
   await makeTransaction(queries);
 };
 
@@ -93,8 +127,6 @@ exports.create.pizza = async (data) => {
   // pizzas, pizzas_categories, pizzas_ingredients
   //
   // Hence a transaction is used, to ensure a consistend update  and allowing a rollback in case of errors.
-  //
-  // Currently, only the pizzas table is updated.
   //
   // Sample data:
   // {
