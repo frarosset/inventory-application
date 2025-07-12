@@ -126,5 +126,24 @@ exports.create.pizza = async (data) => {
     });
   }
 
+  if (data.ingredients instanceof Array && data.ingredients.length > 0) {
+    queries.push({
+      text: `
+         INSERT INTO pizzas_ingredients (pizza_id,ingredient_id)
+         SELECT pizza_id, ingredient_id
+         FROM ((
+            ${queryTextGetIdFromName("pizzas", "pizza_id", "$1")}
+          ) CROSS JOIN (
+            ${queryTextGetIdFromName(
+              "ingredients",
+              "ingredient_id",
+              "$2",
+              true
+            )}
+         ))`,
+      data: [data.name, data.ingredients],
+    });
+  }
+
   await makeTransaction(queries);
 };
