@@ -28,12 +28,12 @@ const queries = require("./queries.js");
 const defaultColumns = `
         id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         name VARCHAR(${Number(process.env.NAME_MAX_LENGTH)}) UNIQUE NOT NULL,
-        is_protected BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        is_protected BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMPTZ DEFAULT NULL`;
 
 const createForeignKeyColumn = (id, tab, tabId = "id") => `
-        ${id} INTEGER,
+        ${id} INTEGER NOT NULL,
         FOREIGN KEY (${id}) REFERENCES ${tab}(${tabId})`;
 
 const SQL_drop = `
@@ -57,8 +57,8 @@ const SQL_create = `
 
     CREATE TABLE IF NOT EXISTS ingredients (
         ${defaultColumns},
-        price NUMERIC DEFAULT 1,
-        stock INTEGER DEFAULT 100
+        price NUMERIC NOT NULL DEFAULT 1,
+        stock INTEGER NOT NULL DEFAULT 100
     );
 
     CREATE TABLE IF NOT EXISTS pizzas_categories (
