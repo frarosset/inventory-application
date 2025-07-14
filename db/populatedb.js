@@ -34,6 +34,9 @@ const queries = require("./queries.js");
 //   * incompatible_categories_ids includes those marked as “incompatible.”
 //   Null values are removed from both arrays, and categories are ordered by their ID.
 
+// - ingredient_rules_per_category: rearranges ingredients_categories_rules table to summarize ingredient rules per category.
+//   Columns: category_id, enforcing_ingredients_ids, incompatible_ingredients_ids
+
 const defaultColumns = `
         id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         name VARCHAR(${Number(process.env.NAME_MAX_LENGTH)}) UNIQUE NOT NULL,
@@ -48,6 +51,7 @@ const createForeignKeyColumn = (id, tab, tabId = "id") => `
 
 const SQL_drop = `
     DROP VIEW IF EXISTS category_rules_per_ingredient;
+    DROP VIEW IF EXISTS ingredient_rules_per_category;
     
     DROP TABLE IF EXISTS pizzas_categories;
     DROP TABLE IF EXISTS pizzas_ingredients;
@@ -108,6 +112,24 @@ const SQL_create = `
 	  ) AS incompatible_categories_ids 
 	FROM ingredients_categories_rules
 	GROUP BY ingredient_id;
+
+    CREATE VIEW ingredient_rules_per_category AS
+    SELECT 
+      category_id, 
+      array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'enforcing' THEN ingredient_id END 
+          ORDER BY ingredient_id
+        ), NULL
+      ) AS enforcing_ingredients_ids, 
+      array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'incompatible' THEN ingredient_id END 
+          ORDER BY ingredient_id
+        ), NULL
+      ) AS incompatible_ingredients_ids 
+    FROM ingredients_categories_rules
+    GROUP BY category_id;
 `;
 
 const SQL_init = SQL_drop + SQL_create;
