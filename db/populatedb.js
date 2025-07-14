@@ -9,9 +9,9 @@ const queries = require("./queries.js");
 
 // - pizzas: stores pizza names, notes and their metadata
 
-// - categories: stores classification labels for pizzas and their metadata
+// - categories: stores classification labels for pizzas, with notes and their metadata
 
-// - ingredients: stores ingredients, with price, stock and their metadata
+// - ingredients: stores ingredients, with price, stock, notes and their metadata
 
 // - ingredients_categories_rules: many-to-many relation between
 //   ingredients and categories. The type of relationship is specified by
@@ -30,7 +30,8 @@ const defaultColumns = `
         name VARCHAR(${Number(process.env.NAME_MAX_LENGTH)}) UNIQUE NOT NULL,
         is_protected BOOLEAN NOT NULL DEFAULT FALSE,
         created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMPTZ DEFAULT NULL`;
+        updated_at TIMESTAMPTZ DEFAULT NULL,
+        notes VARCHAR(${Number(process.env.NOTES_MAX_LENGTH)})`;
 
 const createForeignKeyColumn = (id, tab, tabId = "id") => `
         ${id} INTEGER NOT NULL,
@@ -47,8 +48,7 @@ const SQL_drop = `
 
 const SQL_create = `
     CREATE TABLE IF NOT EXISTS pizzas(
-        ${defaultColumns},
-        notes VARCHAR(${Number(process.env.NOTES_MAX_LENGTH)})
+        ${defaultColumns}
     );
 
     CREATE TABLE IF NOT EXISTS categories(

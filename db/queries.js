@@ -44,6 +44,7 @@ exports.create.category = async (data) => {
   // {
   //    "name": "Bianche",
   //    "is_protected": false,
+  //    "notes": "Some notes"
   //    "enforcing_ingredients": ["Mozzarella"],
   //    "incompatible_ingredients": ["Pomodoro"],
   //    "pizzas": []
@@ -51,8 +52,8 @@ exports.create.category = async (data) => {
 
   const queries = [
     {
-      text: "INSERT INTO categories (name,is_protected) VALUES($1,$2);",
-      data: [data.name, data.is_protected ?? false],
+      text: "INSERT INTO categories (name,is_protected,notes) VALUES($1,$2,$3);",
+      data: [data.name, data.is_protected ?? false, data.notes ?? ""],
     },
   ];
 
@@ -71,6 +72,7 @@ exports.create.ingredient = async (data) => {
   // {
   //    "name": "Pomodoro",
   //    "is_protected": false,
+  //    "notes": "Some notes"
   //    "enforcedCategories": ["Rosse"],
   //    "incompatibleCategories": ["Bianche"],
   //    "price": "0.5",
@@ -80,8 +82,14 @@ exports.create.ingredient = async (data) => {
 
   const queries = [
     {
-      text: "INSERT INTO ingredients (name,is_protected,price,stock) VALUES($1,$2,$3,$4);",
-      data: [data.name, data.is_protected ?? false, data.price, data.stock],
+      text: "INSERT INTO ingredients (name,is_protected,notes,price,stock) VALUES($1,$2,$3,$4,$5);",
+      data: [
+        data.name,
+        data.is_protected ?? false,
+        data.notes ?? "",
+        data.price,
+        data.stock,
+      ],
     },
   ];
 
