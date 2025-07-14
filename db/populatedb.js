@@ -37,6 +37,9 @@ const queries = require("./queries.js");
 // - ingredient_rules_per_category: rearranges ingredients_categories_rules table to summarize ingredient rules per category.
 //   Columns: category_id, enforcing_ingredients_ids, incompatible_ingredients_ids
 
+// - ingredients_per_pizza: rearranges pizzas_ingredients table to summarize ingredients per pizza.
+//   Columns: pizza_id, ingredients_ids
+
 const defaultColumns = `
         id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         name VARCHAR(${Number(process.env.NAME_MAX_LENGTH)}) UNIQUE NOT NULL,
@@ -52,6 +55,7 @@ const createForeignKeyColumn = (id, tab, tabId = "id") => `
 const SQL_drop = `
     DROP VIEW IF EXISTS category_rules_per_ingredient;
     DROP VIEW IF EXISTS ingredient_rules_per_category;
+    DROP VIEW IF EXISTS ingredients_per_pizza;
     
     DROP TABLE IF EXISTS pizzas_categories;
     DROP TABLE IF EXISTS pizzas_ingredients;
@@ -130,6 +134,13 @@ const SQL_create = `
       ) AS incompatible_ingredients_ids 
     FROM ingredients_categories_rules
     GROUP BY category_id;
+
+    CREATE VIEW ingredients_per_pizza AS
+    SELECT 
+      pizza_id, 
+      ARRAY_AGG(ingredient_id) AS ingredients_ids
+    FROM pizzas_ingredients
+    GROUP BY pizza_id;
 `;
 
 const SQL_init = SQL_drop + SQL_create;
