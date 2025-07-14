@@ -46,6 +46,9 @@ const queries = require("./queries.js");
 // - categories_per_pizza: rearranges pizzas_categories table to summarize categories per pizza.
 //   Columns: pizza_id, categories_ids
 
+// - pizzas_per_category: rearranges pizzas_categories table to summarize pizzas per category.
+//   Columns: category_id, pizzas_ids
+
 const defaultColumns = `
         id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         name VARCHAR(${Number(process.env.NAME_MAX_LENGTH)}) UNIQUE NOT NULL,
@@ -64,6 +67,7 @@ const SQL_drop = `
     DROP VIEW IF EXISTS ingredients_per_pizza;
     DROP VIEW IF EXISTS pizzas_per_ingredient;
     DROP VIEW IF EXISTS categories_per_pizza;
+    DROP VIEW IF EXISTS pizzas_per_category;
 
     DROP TABLE IF EXISTS pizzas_categories;
     DROP TABLE IF EXISTS pizzas_ingredients;
@@ -163,6 +167,13 @@ const SQL_create = `
       ARRAY_AGG(category_id) AS categories_ids
     FROM pizzas_categories
     GROUP BY pizza_id;
+
+    CREATE VIEW pizzas_per_category AS
+    SELECT 
+      category_id, 
+      ARRAY_AGG(pizza_id) AS pizzas_ids
+    FROM pizzas_categories
+    GROUP BY category_id;
 `;
 
 const SQL_init = SQL_drop + SQL_create;
