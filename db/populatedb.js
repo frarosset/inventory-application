@@ -25,6 +25,15 @@ const queries = require("./queries.js");
 // - pizzas_ingredients: many-to-many relation between pizzas and their
 //   ingredient
 
+// Some views are created, too, to simplify querying:
+
+// - category_rules_per_ingredient: rearranges ingredients_categories_rules table to summarize category rules per ingredient.
+//   Columns: ingredient_id, enforced_categories_ids, incompatible_categories_ids
+//   For each ingredient_id, it generates two distinct arrays:
+//   * enforced_categories_ids includes the IDs of categories marked as “enforcing” rules,
+//   * incompatible_categories_ids includes those marked as “incompatible.”
+//   Null values are removed from both arrays, and categories are ordered by their ID.
+
 const defaultColumns = `
         id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         name VARCHAR(${Number(process.env.NAME_MAX_LENGTH)}) UNIQUE NOT NULL,
@@ -38,6 +47,8 @@ const createForeignKeyColumn = (id, tab, tabId = "id") => `
         FOREIGN KEY (${id}) REFERENCES ${tab}(${tabId})`;
 
 const SQL_drop = `
+    DROP VIEW IF EXISTS category_rules_per_ingredient;
+    
     DROP TABLE IF EXISTS pizzas_categories;
     DROP TABLE IF EXISTS pizzas_ingredients;
     DROP TABLE IF EXISTS ingredients_categories_rules;
@@ -79,6 +90,24 @@ const SQL_create = `
         rule_type VARCHAR(30) NOT NULL CHECK (rule_type IN ('enforcing', 'incompatible')),
         CONSTRAINT U_ingredient_category UNIQUE (ingredient_id,category_id)
     );
+
+	CREATE VIEW category_rules_per_ingredient AS
+	SELECT 
+	  ingredient_id, 
+	  array_remove(
+		ARRAY_AGG(
+		  CASE WHEN rule_type = 'enforcing' THEN category_id END 
+		  ORDER BY category_id
+		), NULL
+	  ) AS enforced_categories_ids, 
+	  array_remove(
+		ARRAY_AGG(
+		  CASE WHEN rule_type = 'incompatible' THEN category_id END 
+		  ORDER BY category_id
+		), NULL
+	  ) AS incompatible_categories_ids 
+	FROM ingredients_categories_rules
+	GROUP BY ingredient_id;
 `;
 
 const SQL_init = SQL_drop + SQL_create;
