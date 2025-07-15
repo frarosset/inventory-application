@@ -41,7 +41,7 @@ const queries = require("./queries.js");
 //   Columns: pizza_id, ingredients_ids, ingredients_names, ingredients_stocks, ingredients_prices, availability (maximum availability), ingredients_total_cost (total ingredients cost)
 
 // - pizzas_per_ingredient: rearranges pizzas_ingredients table to summarize pizzas per ingredient.
-//   Columns: ingredient_id, pizzas_ids
+//   Columns: ingredient_id, pizzas_ids, pizzas_names
 
 // - categories_per_pizza: rearranges pizzas_categories table to summarize categories per pizza.
 //   Columns: pizza_id, categories_ids
@@ -163,9 +163,12 @@ const SQL_create = `
 
     CREATE VIEW pizzas_per_ingredient AS
     SELECT 
-      ingredient_id, 
-      ARRAY_AGG(pizza_id) AS pizzas_ids
-    FROM pizzas_ingredients
+      pi.ingredient_id, 
+      ARRAY_AGG(pi.pizza_id ORDER BY pi.pizza_id) AS pizzas_ids,
+      ARRAY_AGG(p.name ORDER BY pi.pizza_id) AS pizzas_names
+    FROM pizzas_ingredients AS pi
+    LEFT JOIN pizzas AS p
+    ON pi.pizza_id = p.id
     GROUP BY ingredient_id;
 
     CREATE VIEW categories_per_pizza AS
