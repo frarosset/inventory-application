@@ -35,7 +35,7 @@ const queries = require("./queries.js");
 //   Null values are removed from both arrays, and categories are ordered by their ID.
 
 // - ingredient_rules_per_category: rearranges ingredients_categories_rules table to summarize ingredient rules per category.
-//   Columns: category_id, enforcing_ingredients_ids, incompatible_ingredients_ids
+//   Columns: category_id, enforcing_ingredients_ids, incompatible_ingredients_ids, enforcing_ingredients_names, incompatible_ingredients_names
 
 // - ingredients_per_pizza: rearranges pizzas_ingredients table to summarize ingredients per pizza.
 //   Columns: pizza_id, ingredients_ids, ingredients_names, ingredients_stocks, ingredients_prices, availability (maximum availability), ingredients_total_cost (total ingredients cost)
@@ -143,8 +143,22 @@ const SQL_create = `
           CASE WHEN rule_type = 'incompatible' THEN ingredient_id END 
           ORDER BY ingredient_id
         ), NULL
-      ) AS incompatible_ingredients_ids 
-    FROM ingredients_categories_rules
+      ) AS incompatible_ingredients_ids,
+      array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'enforcing' THEN i.name END 
+          ORDER BY ingredient_id
+        ), NULL
+      ) AS enforcing_ingredients_names, 
+      array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'incompatible' THEN i.name END 
+          ORDER BY ingredient_id
+        ), NULL
+      ) AS incompatible_ingredients_names  
+    FROM ingredients_categories_rules AS ic
+    LEFT JOIN ingredients AS i
+    ON ic.ingredient_id = i.id
     GROUP BY category_id;
 
     CREATE VIEW ingredients_per_pizza AS
