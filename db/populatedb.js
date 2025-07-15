@@ -28,7 +28,7 @@ const queries = require("./queries.js");
 // Some views are created, too, to simplify querying:
 
 // - category_rules_per_ingredient: rearranges ingredients_categories_rules table to summarize category rules per ingredient.
-//   Columns: ingredient_id, enforced_categories_ids, incompatible_categories_ids
+//   Columns: ingredient_id, enforced_categories_ids, incompatible_categories_ids, enforced_categories_names, incompatible_categories_names
 //   For each ingredient_id, it generates two distinct arrays:
 //   * enforced_categories_ids includes the IDs of categories marked as “enforcing” rules,
 //   * incompatible_categories_ids includes those marked as “incompatible.”
@@ -125,8 +125,22 @@ const SQL_create = `
 		  CASE WHEN rule_type = 'incompatible' THEN category_id END 
 		  ORDER BY category_id
 		), NULL
-	  ) AS incompatible_categories_ids 
-	FROM ingredients_categories_rules
+	  ) AS incompatible_categories_ids,
+      array_remove(
+		ARRAY_AGG(
+		  CASE WHEN rule_type = 'enforcing' THEN c.name END 
+		  ORDER BY category_id
+		), NULL
+	  ) AS enforced_categories_names, 
+	  array_remove(
+		ARRAY_AGG(
+		  CASE WHEN rule_type = 'incompatible' THEN c.name END 
+		  ORDER BY category_id
+		), NULL
+	  ) AS incompatible_categories_names  
+	FROM ingredients_categories_rules AS ic
+    LEFT JOIN categories AS c
+    ON ic.category_id = c.id
 	GROUP BY ingredient_id;
 
     CREATE VIEW ingredient_rules_per_category AS
