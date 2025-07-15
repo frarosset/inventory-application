@@ -27,6 +27,9 @@ const queries = require("./queries.js");
 
 // Some views are created, too, to simplify querying:
 
+// - pizzas_categories_rules: combines pizzas_ingredients with ingredients_categories_rules to link the category rules with the pizzas
+//   Columns: DISTINCT pizza_id, category_id, rule_type
+
 // - category_rules_per_ingredient: rearranges ingredients_categories_rules table to summarize category rules per ingredient.
 //   Columns: ingredient_id, enforced_categories_ids, incompatible_categories_ids, enforced_categories_names, incompatible_categories_names
 //   For each ingredient_id, it generates two distinct arrays:
@@ -68,6 +71,7 @@ const SQL_drop = `
     DROP VIEW IF EXISTS pizzas_per_ingredient;
     DROP VIEW IF EXISTS categories_per_pizza;
     DROP VIEW IF EXISTS pizzas_per_category;
+    DROP VIEW IF EXISTS pizzas_categories_rules;
 
     DROP TABLE IF EXISTS pizzas_categories;
     DROP TABLE IF EXISTS pizzas_ingredients;
@@ -110,6 +114,15 @@ const SQL_create = `
         rule_type VARCHAR(30) NOT NULL CHECK (rule_type IN ('enforcing', 'incompatible')),
         CONSTRAINT U_ingredient_category UNIQUE (ingredient_id,category_id)
     );
+
+    CREATE VIEW pizzas_categories_rules AS
+    SELECT DISTINCT 
+        pizza_id,
+        category_id, 
+        rule_type
+    FROM pizzas_ingredients AS pi
+    JOIN ingredients_categories_rules AS ci  -- ignore ingredients with no rules
+    ON pi.ingredient_id = ci.ingredient_id;
 
 	CREATE VIEW category_rules_per_ingredient AS
 	SELECT 
