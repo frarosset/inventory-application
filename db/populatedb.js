@@ -30,6 +30,11 @@ const queries = require("./queries.js");
 // - pizzas_categories_rules: combines pizzas_ingredients with ingredients_categories_rules to link the category rules with the pizzas
 //   Columns: DISTINCT pizza_id, category_id, rule_type
 
+// - pizzas_actual_categories: combines pizzas_categories table with pizzas_categories_rules view to get the many-to-many relationships
+//   between ingredients and their actual categories (which are the assigned categories united with the enforcing categories from all ingredients,
+//   minus the incompatible categories from the same ingredients)
+//   Columns: pizza_id, actual_category_id
+
 // - category_rules_per_ingredient: rearranges ingredients_categories_rules table to summarize category rules per ingredient.
 //   Columns: ingredient_id, enforced_categories_ids, incompatible_categories_ids, enforced_categories_names, incompatible_categories_names
 //   For each ingredient_id, it generates two distinct arrays:
@@ -71,6 +76,7 @@ const SQL_drop = `
     DROP VIEW IF EXISTS pizzas_per_ingredient;
     DROP VIEW IF EXISTS categories_per_pizza;
     DROP VIEW IF EXISTS pizzas_per_category;
+    DROP VIEW IF EXISTS pizzas_actual_categories;
     DROP VIEW IF EXISTS pizzas_categories_rules;
 
     DROP TABLE IF EXISTS pizzas_categories;
@@ -123,6 +129,28 @@ const SQL_create = `
     FROM pizzas_ingredients AS pi
     JOIN ingredients_categories_rules AS ci  -- ignore ingredients with no rules
     ON pi.ingredient_id = ci.ingredient_id;
+
+
+    CREATE VIEW pizzas_actual_categories AS
+    SELECT 
+    	pizza_id,
+	    category_id AS actual_category_id
+    FROM ((
+      (
+        SELECT pizza_id,
+               category_id
+        FROM pizzas_categories_rules
+        WHERE rule_type = 'enforcing'
+      ) UNION (
+        SELECT *
+        FROM pizzas_categories
+      )
+    ) EXCEPT (
+      SELECT pizza_id,
+             category_id
+      FROM pizzas_categories_rules
+      WHERE rule_type = 'incompatible'
+    ));
 
 	CREATE VIEW category_rules_per_ingredient AS
 	SELECT 
