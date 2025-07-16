@@ -51,8 +51,10 @@ const queries = require("./queries.js");
 // - pizzas_per_ingredient: rearranges pizzas_ingredients table to summarize pizzas per ingredient.
 //   Columns: ingredient_id, pizzas_ids, pizzas_names
 
-// - categories_per_pizza: rearranges pizzas_categories table to summarize categories per pizza.
-//   Columns: pizza_id, categories_ids
+// - categories_per_pizza: rearranges pizzas_actual_categories, pizzas_categories, pizzas_categories_rules, categories tables/views to summarize
+//   categories per pizza (considering assigned, enforced, incompatible, actual relations, too).
+//   Columns: pizza_id, categories_ids, enforced_categories_ids, incompatible_categories_ids, actual_categories_ids,
+//   categories_names, enforced_categories_names, incompatible_categories_names, actual_categories_names
 
 // - pizzas_per_category: rearranges pizzas_categories table to summarize pizzas per category.
 //   Columns: category_id, pizzas_ids
@@ -241,11 +243,58 @@ const SQL_create = `
     GROUP BY ingredient_id;
 
     CREATE VIEW categories_per_pizza AS
-    SELECT 
-      pizza_id, 
-      ARRAY_AGG(category_id) AS categories_ids
-    FROM pizzas_categories
-    GROUP BY pizza_id;
+    SELECT * -- or explicit, using:  COALESCE(pac_c.pizza_id, pc_c.pizza_id, pcr_c.pizza_id) AS pizza_id, ...
+    FROM (
+      SELECT 
+        pizza_id, 
+        ARRAY_AGG(actual_category_id ORDER BY actual_category_id) AS actual_categories_ids,
+        ARRAY_AGG(c.name ORDER BY actual_category_id) AS actual_categories_names
+      FROM pizzas_actual_categories AS pac
+      LEFT JOIN categories AS c
+      ON pac.actual_category_id = c.id
+      GROUP BY pizza_id
+    ) AS pac_c
+    FULL JOIN (
+      SELECT 
+        pizza_id, 
+        ARRAY_AGG(category_id ORDER BY category_id) AS categories_ids,
+        ARRAY_AGG(c.name ORDER BY category_id) AS categories_names
+      FROM pizzas_categories AS pc
+      LEFT JOIN categories AS c
+      ON pc.category_id = c.id
+      GROUP BY pizza_id
+    ) AS pc_c
+    USING(pizza_id) -- this is a common column, and is merged
+    FULL JOIN (
+      SELECT 
+        pizza_id,
+        array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'enforcing' THEN category_id END 
+          ORDER BY category_id
+        ), NULL) AS enforced_categories_ids, 
+        array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'incompatible' THEN category_id END 
+          ORDER BY category_id
+        ), NULL) AS incompatible_categories_ids,
+        array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'enforcing' THEN c.name END 
+          ORDER BY category_id
+        ), NULL) AS enforced_categories_names, 
+        array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'incompatible' THEN c.name END 
+          ORDER BY category_id
+        ), NULL
+        ) AS incompatible_categories_names  	   
+      FROM pizzas_categories_rules AS pc
+      LEFT JOIN categories AS c
+      ON pc.category_id = c.id
+      GROUP BY pizza_id
+    ) AS pcr_c
+    USING(pizza_id); -- or ON pcr_c.pizza_id = COALESCE(pac_c.pizza_id,pc_c.pizza_id);
 
     CREATE VIEW pizzas_per_category AS
     SELECT 
