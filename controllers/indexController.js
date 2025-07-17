@@ -1,3 +1,3 @@
 exports.get = (req, res) => {
-  res.send("Inventory Application (TODO)");
+  res.render("index", { title: process.env.TITLE });
 };
