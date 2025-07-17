@@ -56,8 +56,9 @@ const queries = require("./queries.js");
 //   Columns: pizza_id, categories_ids, enforced_categories_ids, incompatible_categories_ids, actual_categories_ids,
 //   categories_names, enforced_categories_names, incompatible_categories_names, actual_categories_names
 
-// - pizzas_per_category: rearranges pizzas_categories table to summarize pizzas per category.
-//   Columns: category_id, pizzas_ids
+// - pizzas_per_category: rearranges pizzas_actual_categories, pizzas_categories, pizzas_categories_rules, pizzas tables/views to summarize
+//   pizzas per category (considering assigned, enforced, incompatible, actual relations, too).
+//   Columns: category_id, actual_for_pizzas_ids, actual_for_pizzas_names, pizzas_ids, pizzas_names, enforced_in_pizzas_ids, incompatible_with_pizzas_ids, enforced_in_pizzas_names, incompatible_with_pizzas_names
 
 const defaultColumns = `
         id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -296,12 +297,59 @@ const SQL_create = `
     ) AS pcr_c
     USING(pizza_id); -- or ON pcr_c.pizza_id = COALESCE(pac_c.pizza_id,pc_c.pizza_id);
 
-    CREATE VIEW pizzas_per_category AS
-    SELECT 
-      category_id, 
-      ARRAY_AGG(pizza_id) AS pizzas_ids
-    FROM pizzas_categories
-    GROUP BY category_id;
+  CREATE VIEW pizzas_per_category AS	
+	SELECT *
+    FROM (
+      SELECT 
+        pac.actual_category_id AS category_id, 
+        ARRAY_AGG(p.id ORDER BY p.id) AS actual_for_pizzas_ids,
+        ARRAY_AGG(p.name ORDER BY p.id) AS actual_for_pizzas_names
+      FROM pizzas_actual_categories AS pac
+      LEFT JOIN pizzas AS p
+      ON pac.pizza_id = p.id
+      GROUP BY category_id
+    ) AS pac_p
+    FULL JOIN (
+      SELECT 
+        category_id, 
+        ARRAY_AGG(p.id ORDER BY p.id) AS pizzas_ids,
+        ARRAY_AGG(p.name ORDER BY p.id) AS pizzas_names
+      FROM pizzas_categories AS pc
+      LEFT JOIN pizzas AS p
+      ON pc.pizza_id = p.id
+      GROUP BY category_id
+	) AS pc_p
+    USING(category_id)
+    FULL JOIN (
+      SELECT 
+        category_id,
+        array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'enforcing' THEN p.id END 
+          ORDER BY p.id
+        ), NULL) AS enforced_in_pizzas_ids, 
+        array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'incompatible' THEN p.id END 
+          ORDER BY p.id
+        ), NULL) AS incompatible_with_pizzas_ids,
+        array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'enforcing' THEN p.name END 
+          ORDER BY p.id
+        ), NULL) AS enforced_in_pizzas_names, 
+        array_remove(
+        ARRAY_AGG(
+          CASE WHEN rule_type = 'incompatible' THEN p.name END 
+          ORDER BY p.id
+        ), NULL
+        ) AS incompatible_with_pizzas_names  	   
+      FROM pizzas_categories_rules AS pc
+      LEFT JOIN pizzas AS p
+      ON pc.pizza_id = p.id
+      GROUP BY category_id
+    ) AS pcr_c
+    USING(category_id);
 `;
 
 const SQL_init = SQL_drop + SQL_create;
