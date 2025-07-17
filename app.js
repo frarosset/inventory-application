@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("node:path");
 require("dotenv").config();
 
+const indexRouter = require("./routes/indexRouter.js");
+
 const app = express();
 
 // Init view Engine
@@ -15,7 +17,7 @@ app.use(express.static("public", { extensions: ["html"] }));
 app.use(express.urlencoded({ extended: true })); // to parse form data into req.body
 
 // Routes
-app.get("/", (req, res) => res.send("Inventory Application (TODO)"));
+app.use("/", indexRouter);
 
 // Ignore favicon icon / ... request
 app.get(
