@@ -187,3 +187,26 @@ exports.create.pizza = async (data) => {
 
   await makeTransaction(queries);
 };
+
+// This gets only the essential info for all pizzas in the db
+exports.read.pizzasBrief = async () => {
+  const { rows } = await pool.query(`
+    SELECT 
+      id,
+      name,
+      is_protected,
+      ingredients_ids,
+      ingredients_names,
+      ingredients_total_cost AS cost,
+      availability,
+      actual_categories_ids,
+      actual_categories_names
+    FROM pizzas AS p
+    LEFT JOIN ingredients_per_pizza AS ip
+    ON p.id = ip.pizza_id
+    LEFT JOIN categories_per_pizza AS cp
+    ON p.id = cp.pizza_id; 
+  `);
+
+  return rows;
+};
