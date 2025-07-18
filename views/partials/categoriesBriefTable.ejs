@@ -1,0 +1,16 @@
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Protected</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%_ categoriesBriefData.forEach(data => { _%>
+    <tr>
+      <td><%- include("categoryLink.ejs", data) %></td>
+      <td><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></td>
+    </tr>
+    <%_ }) _%>
+  </tbody>
+</table>
