@@ -210,3 +210,17 @@ exports.read.pizzasBrief = async () => {
 
   return rows;
 };
+
+exports.read.ingredientsBrief = async () => {
+  const { rows } = await pool.query(`
+    SELECT 
+      id,
+      name,
+      is_protected,
+      stock,
+      price
+    FROM ingredients;
+  `);
+
+  return rows;
+};
