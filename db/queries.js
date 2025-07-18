@@ -224,3 +224,15 @@ exports.read.ingredientsBrief = async () => {
 
   return rows;
 };
+
+exports.read.categoriesBrief = async () => {
+  const { rows } = await pool.query(`
+    SELECT 
+      id,
+      name,
+      is_protected
+    FROM categories;
+  `);
+
+  return rows;
+};
