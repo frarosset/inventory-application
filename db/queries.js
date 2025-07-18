@@ -211,6 +211,41 @@ exports.read.pizzasBrief = async () => {
   return rows;
 };
 
+exports.read.pizza = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        p.*,
+        ingredients_ids,
+        ingredients_names,
+        ingredients_prices,
+        ingredients_stocks,
+        ingredients_total_cost AS cost,
+        availability,
+        actual_categories_ids,
+        actual_categories_names,    
+        categories_ids,
+        categories_names,
+        enforced_categories_ids,
+        incompatible_categories_ids,
+        enforced_categories_names,
+        incompatible_categories_names 
+      FROM (
+      SELECT * 
+        FROM pizzas
+        WHERE id=$1
+      ) AS p
+      LEFT JOIN ingredients_per_pizza AS ip
+      ON p.id = ip.pizza_id
+      LEFT JOIN categories_per_pizza AS cp
+      ON p.id = cp.pizza_id;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
 exports.read.ingredientsBrief = async () => {
   const { rows } = await pool.query(`
     SELECT 
