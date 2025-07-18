@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const indexRouter = require("./routes/indexRouter.js");
 const pizzasRouter = require("./routes/pizzasRouter.js");
+const ingredientsRouter = require("./routes/ingredientsRouter.js");
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true })); // to parse form data into req.
 // Routes
 app.use("/", indexRouter);
 app.use("/pizzas", pizzasRouter);
+app.use("/ingredients", ingredientsRouter);
 
 // Ignore favicon icon / ... request
 app.get(
