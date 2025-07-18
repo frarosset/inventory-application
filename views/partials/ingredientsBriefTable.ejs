@@ -1,0 +1,20 @@
+<table>
+  <thead>
+    <tr>
+      <th>Ingredient</th>
+      <th>Stock</th>
+      <th>Price</th>
+      <th>Protected</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%_ ingredientsBriefData.forEach(data => { _%>
+    <tr>
+      <td><%- include("ingredientLink.ejs", data) %></td>
+      <td><%=data.stock %></td>
+      <td><%=data.price %></td>
+      <td><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></td>
+    </tr>
+    <%_ }) _%>
+  </tbody>
+</table>

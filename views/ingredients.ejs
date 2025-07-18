@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Ingredients</title>
+</head>
+
+<body>
+  <%- include("partials/header.ejs",{title,highlightLink: "ingredients"}) %>
+  <h2>Ingredients</h2>
+  <%- include("partials/ingredientsBriefTable.ejs", {ingredientsBriefData}) %>
+</body>
+
+</html>
