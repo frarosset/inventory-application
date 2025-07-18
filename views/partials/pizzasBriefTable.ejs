@@ -1,0 +1,30 @@
+<table>
+  <thead>
+    <tr>
+      <th>Pizza</th>
+      <th>Ingredients</th>
+      <th>Categories</th>
+      <th>Availability</th>
+      <th>Cost</th>
+      <th>Protected</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%_ pizzasBriefData.forEach(data => { _%>
+    <tr>
+      <td><%- include("pizzaLink.ejs", data) %></td>
+      <td>
+        <%- include("itemsList.ejs", {item: 'ingredientLink', names:
+        data.ingredients_names, ids: data.ingredients_ids}) %>
+      </td>
+      <td>
+        <%- include("itemsList.ejs", {item: 'categoryLink', names:
+        data.actual_categories_names, ids: data.actual_categories_ids}) %>
+      </td>
+      <td><%=data.availability %></td>
+      <td><%=data.cost %></td>
+      <td><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></td>
+    </tr>
+    <%_ }) _%>
+  </tbody>
+</table>

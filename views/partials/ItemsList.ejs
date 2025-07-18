@@ -1,0 +1,5 @@
+<ul>
+  <%_ names.forEach((name,idx) => { _%>
+  <li><%- include(`${item}.ejs`, {name,id:ids[idx]}); %></li>
+  <%_ }) _%>
+</ul>
