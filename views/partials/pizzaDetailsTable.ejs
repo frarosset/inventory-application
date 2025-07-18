@@ -1,0 +1,27 @@
+<table>
+  <tbody>
+    <tr>
+      <th scope="row">Ingredients</th>
+      <td><%- include("itemsList.ejs", {item: 'ingredientLink', names:
+        data.ingredients_names, ids: data.ingredients_ids}) %></td>
+    </tr>
+    <tr>
+      <th scope="row">Categories</th>
+      <td><%- include("itemsList.ejs", {item: 'categoryLink', names:
+        data.actual_categories_names, ids: data.actual_categories_ids}) %></td>
+    </tr>
+    <tr>
+      <th scope="row">Cost</th>
+      <td><%= data.cost %></td>
+    <tr>
+      <th scope="row">Availability</th>
+      <td><%= data.availability %></td>
+    </tr>
+    <%_ if(data.notes){ _%>
+    <tr>
+      <th scope="row">Notes</th>
+      <td><%= data.notes %></td>
+    </tr>
+    <%_ } _%>
+  </tbody>
+</table>

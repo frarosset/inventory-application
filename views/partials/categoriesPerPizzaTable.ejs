@@ -1,0 +1,19 @@
+<table>
+  <thead>
+    <tr>
+      <th scope="row">User-defined</th>
+      <th scope="row">Enforced by<br>Ingredients</th>
+      <th scope="row">Excluded by<br>Ingredients</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%- include("itemsList.ejs", {item: 'categoryLink', names:
+        categories_names, ids: categories_ids}) %></td>
+      <td><%- include("itemsList.ejs", {item: 'categoryLink', names:
+        categories_names, ids: categories_ids}) %></td>
+      <td><%- include("itemsList.ejs", {item: 'categoryLink', names:
+        incompatible_categories_names, ids: incompatible_categories_ids}) %></td>
+    </tr>
+  </tbody>
+</table>
