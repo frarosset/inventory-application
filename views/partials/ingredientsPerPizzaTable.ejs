@@ -7,11 +7,11 @@
     </tr>
   </thead>
   <tbody>
-    <%_ ingredients_ids.forEach((id,idx) => { _%>
+    <%_ ingredients.forEach(ingredient => { _%>
     <tr>
-      <td><%- include("ingredientLink.ejs", {id, name: ingredients_names[idx]}) %></td>
-      <td><%=ingredients_stocks[idx] %></td>
-      <td><%=ingredients_prices[idx] %></td>
+      <td><%- include("ingredientLink.ejs", ingredient) %></td>
+      <td><%=ingredient.stock %></td>
+      <td><%=ingredient.price %></td>
     </tr>
     <%_ }) _%>
   </tbody>

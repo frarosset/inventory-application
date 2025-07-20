@@ -155,64 +155,37 @@ const SQL_create = `
   ));
 
 	CREATE VIEW category_rules_per_ingredient AS
-	SELECT 
-	  ingredient_id, 
-	  array_remove(
-      ARRAY_AGG(
-        CASE WHEN rule_type = 'enforcing' THEN category_id END 
-        ORDER BY category_id
-      ), NULL
-	  ) AS enforced_categories_ids, 
-	  array_remove(
-      ARRAY_AGG(
-        CASE WHEN rule_type = 'incompatible' THEN category_id END 
-        ORDER BY category_id
-      ), NULL
-	  ) AS incompatible_categories_ids,
-    array_remove(
-      ARRAY_AGG(
-        CASE WHEN rule_type = 'enforcing' THEN c.name END 
-        ORDER BY category_id
-      ), NULL
-	  ) AS enforced_categories_names, 
-	  array_remove(
-      ARRAY_AGG(
-        CASE WHEN rule_type = 'incompatible' THEN c.name END 
-        ORDER BY category_id
-      ), NULL
-	  ) AS incompatible_categories_names  
-	FROM ingredients_categories_rules AS ic
-  LEFT JOIN categories AS c
-  ON ic.category_id = c.id
-	GROUP BY ingredient_id;
+  SELECT
+    ingredient_id,
+    -- Enforced categories as array of objects
+    JSON_AGG(
+      JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+      ORDER BY category_id
+    ) FILTER (WHERE rule_type = 'enforcing')
+    AS enforced_categories,
+    -- Incompatible categories as array of objects
+    JSON_AGG(
+      JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+      ORDER BY category_id
+    ) FILTER (WHERE rule_type = 'incompatible') 
+    AS incompatible_categories
+  FROM ingredients_categories_rules AS ic
+  LEFT JOIN categories AS c ON ic.category_id = c.id
+  GROUP BY ingredient_id;
 
   CREATE VIEW ingredient_rules_per_category AS
   SELECT 
-    category_id, 
-    array_remove(
-      ARRAY_AGG(
-        CASE WHEN rule_type = 'enforcing' THEN ingredient_id END 
-        ORDER BY ingredient_id
-      ), NULL
-    ) AS enforcing_ingredients_ids, 
-    array_remove(
-      ARRAY_AGG(
-        CASE WHEN rule_type = 'incompatible' THEN ingredient_id END 
-        ORDER BY ingredient_id
-      ), NULL
-    ) AS incompatible_ingredients_ids,
-    array_remove(
-      ARRAY_AGG(
-        CASE WHEN rule_type = 'enforcing' THEN i.name END 
-        ORDER BY ingredient_id
-      ), NULL
-    ) AS enforcing_ingredients_names, 
-    array_remove(
-      ARRAY_AGG(
-        CASE WHEN rule_type = 'incompatible' THEN i.name END 
-        ORDER BY ingredient_id
-      ), NULL
-    ) AS incompatible_ingredients_names  
+    category_id,
+    JSON_AGG(
+      JSON_BUILD_OBJECT('id', ingredient_id, 'name', i.name)
+      ORDER BY ingredient_id
+    ) FILTER (WHERE rule_type = 'enforcing')
+    AS enforced_categories,
+    JSON_AGG(
+      JSON_BUILD_OBJECT('id', ingredient_id, 'name', i.name)
+      ORDER BY ingredient_id
+    ) FILTER (WHERE rule_type = 'incompatible')
+    AS incompatible_categories
   FROM ingredients_categories_rules AS ic
   LEFT JOIN ingredients AS i
   ON ic.ingredient_id = i.id
@@ -221,10 +194,14 @@ const SQL_create = `
   CREATE VIEW ingredients_per_pizza AS
   SELECT 
     pi.pizza_id, 
-    ARRAY_AGG(pi.ingredient_id ORDER BY pi.ingredient_id) AS ingredients_ids,
-    ARRAY_AGG(i.name ORDER BY pi.ingredient_id) AS ingredients_names,
-    ARRAY_AGG(i.price ORDER BY pi.ingredient_id) AS ingredients_prices,
-    ARRAY_AGG(i.stock ORDER BY pi.ingredient_id) AS ingredients_stocks,
+    JSON_AGG(
+      JSON_BUILD_OBJECT(
+        'id', pi.ingredient_id, 
+        'name', i.name,
+        'price', i.price,
+        'stock', i.stock)
+      ORDER BY pi.ingredient_id
+    ) AS ingredients,
     SUM(i.price) AS ingredients_total_cost,
     MIN(i.stock) AS availability
   FROM pizzas_ingredients AS pi
@@ -234,9 +211,13 @@ const SQL_create = `
 
   CREATE VIEW pizzas_per_ingredient AS
   SELECT 
-    pi.ingredient_id, 
-    ARRAY_AGG(pi.pizza_id ORDER BY pi.pizza_id) AS pizzas_ids,
-    ARRAY_AGG(p.name ORDER BY pi.pizza_id) AS pizzas_names
+    pi.ingredient_id,
+    JSON_AGG(
+      JSON_BUILD_OBJECT(
+        'id', pi.pizza_id, 
+        'name', p.name)
+      ORDER BY pi.pizza_id
+    ) AS pizzas
   FROM pizzas_ingredients AS pi
   LEFT JOIN pizzas AS p
   ON pi.pizza_id = p.id
@@ -246,9 +227,11 @@ const SQL_create = `
   SELECT * -- or explicit, using:  COALESCE(pac_c.pizza_id, pc_c.pizza_id, pcr_c.pizza_id) AS pizza_id, ...
   FROM (
     SELECT 
-      pizza_id, 
-      ARRAY_AGG(actual_category_id ORDER BY actual_category_id) AS actual_categories_ids,
-      ARRAY_AGG(c.name ORDER BY actual_category_id) AS actual_categories_names
+      pizza_id,
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', actual_category_id, 'name', c.name)
+        ORDER BY actual_category_id
+      ) AS actual_categories
     FROM pizzas_actual_categories AS pac
     LEFT JOIN categories AS c
     ON pac.actual_category_id = c.id
@@ -256,9 +239,11 @@ const SQL_create = `
   ) AS pac_c
   FULL JOIN (
     SELECT 
-      pizza_id, 
-      ARRAY_AGG(category_id ORDER BY category_id) AS categories_ids,
-      ARRAY_AGG(c.name ORDER BY category_id) AS categories_names
+      pizza_id,
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+        ORDER BY category_id
+      ) AS categories
     FROM pizzas_categories AS pc
     LEFT JOIN categories AS c
     ON pc.category_id = c.id
@@ -268,30 +253,14 @@ const SQL_create = `
   FULL JOIN (
     SELECT 
       pizza_id,
-      array_remove(
-        ARRAY_AGG(
-          CASE WHEN rule_type = 'enforcing' THEN category_id END 
-          ORDER BY category_id
-        ), NULL
-      ) AS enforced_categories_ids, 
-      array_remove(
-        ARRAY_AGG(
-          CASE WHEN rule_type = 'incompatible' THEN category_id END 
-          ORDER BY category_id
-        ), NULL
-      ) AS incompatible_categories_ids,
-      array_remove(
-        ARRAY_AGG(
-          CASE WHEN rule_type = 'enforcing' THEN c.name END 
-          ORDER BY category_id
-        ), NULL
-      ) AS enforced_categories_names, 
-      array_remove(
-        ARRAY_AGG(
-          CASE WHEN rule_type = 'incompatible' THEN c.name END 
-          ORDER BY category_id
-        ), NULL
-      ) AS incompatible_categories_names  	   
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+        ORDER BY category_id
+      ) FILTER (WHERE rule_type = 'enforcing') AS enforced_categories,
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+        ORDER BY category_id
+      ) FILTER (WHERE rule_type = 'incompatible') AS incompatible_categories
       FROM pizzas_categories_rules AS pc
       LEFT JOIN categories AS c
       ON pc.category_id = c.id
@@ -303,9 +272,11 @@ const SQL_create = `
 	SELECT *
   FROM (
     SELECT 
-      pac.actual_category_id AS category_id, 
-      ARRAY_AGG(p.id ORDER BY p.id) AS actual_for_pizzas_ids,
-      ARRAY_AGG(p.name ORDER BY p.id) AS actual_for_pizzas_names
+      pac.actual_category_id AS category_id,
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
+        ORDER BY p.id
+      ) AS actual_for_pizzas
     FROM pizzas_actual_categories AS pac
     LEFT JOIN pizzas AS p
     ON pac.pizza_id = p.id
@@ -314,8 +285,10 @@ const SQL_create = `
   FULL JOIN (
     SELECT 
       category_id, 
-      ARRAY_AGG(p.id ORDER BY p.id) AS pizzas_ids,
-      ARRAY_AGG(p.name ORDER BY p.id) AS pizzas_names
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
+        ORDER BY p.id
+      ) AS pizzas
     FROM pizzas_categories AS pc
     LEFT JOIN pizzas AS p
     ON pc.pizza_id = p.id
@@ -325,36 +298,20 @@ const SQL_create = `
   FULL JOIN (
     SELECT 
       category_id,
-      array_remove(
-        ARRAY_AGG(
-          CASE WHEN rule_type = 'enforcing' THEN p.id END 
-          ORDER BY p.id
-        ), NULL
-      ) AS enforced_in_pizzas_ids, 
-      array_remove(
-        ARRAY_AGG(
-          CASE WHEN rule_type = 'incompatible' THEN p.id END 
-          ORDER BY p.id
-        ), NULL
-      ) AS incompatible_with_pizzas_ids,
-      array_remove(
-        ARRAY_AGG(
-          CASE WHEN rule_type = 'enforcing' THEN p.name END 
-          ORDER BY p.id
-        ), NULL
-      ) AS enforced_in_pizzas_names, 
-      array_remove(
-        ARRAY_AGG(
-          CASE WHEN rule_type = 'incompatible' THEN p.name END 
-          ORDER BY p.id
-        ), NULL
-      ) AS incompatible_with_pizzas_names  	   
-      FROM pizzas_categories_rules AS pc
-      LEFT JOIN pizzas AS p
-      ON pc.pizza_id = p.id
-      GROUP BY category_id
-    ) AS pcr_c
-    USING(category_id);
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
+        ORDER BY p.id
+      ) FILTER (WHERE rule_type = 'enforcing') AS enforced_in_pizzas,
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
+        ORDER BY p.id
+      ) FILTER (WHERE rule_type = 'incompatible') AS incompatible_with_pizzas
+    FROM pizzas_categories_rules AS pc
+    LEFT JOIN pizzas AS p
+    ON pc.pizza_id = p.id
+    GROUP BY category_id
+  ) AS pcr_c
+  USING(category_id);
 `;
 
 const SQL_init = SQL_drop + SQL_create;

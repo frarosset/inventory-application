@@ -1,0 +1,5 @@
+<ul>
+  <%_ items.forEach(item => { _%>
+  <li><%- include(`${itemType}.ejs`,item); %></li>
+  <%_ }) _%>
+</ul>

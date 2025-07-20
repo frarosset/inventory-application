@@ -195,12 +195,10 @@ exports.read.pizzasBrief = async () => {
       id,
       name,
       is_protected,
-      ingredients_ids,
-      ingredients_names,
+      ingredients,
       ingredients_total_cost AS cost,
       availability,
-      actual_categories_ids,
-      actual_categories_names
+      actual_categories
     FROM pizzas AS p
     LEFT JOIN ingredients_per_pizza AS ip
     ON p.id = ip.pizza_id
@@ -216,20 +214,13 @@ exports.read.pizza = async (id) => {
     `
       SELECT 
         p.*,
-        ingredients_ids,
-        ingredients_names,
-        ingredients_prices,
-        ingredients_stocks,
+        ingredients,
         ingredients_total_cost AS cost,
         availability,
-        actual_categories_ids,
-        actual_categories_names,    
-        categories_ids,
-        categories_names,
-        enforced_categories_ids,
-        incompatible_categories_ids,
-        enforced_categories_names,
-        incompatible_categories_names 
+        actual_categories,    
+        categories,
+        incompatible_categories,
+        enforced_categories 
       FROM (
       SELECT * 
         FROM pizzas
@@ -265,12 +256,9 @@ exports.read.ingredient = async (id) => {
     `
       SELECT 
         i.*,
-        pizzas_ids,
-        pizzas_names,
-        enforced_categories_ids,
-        incompatible_categories_ids,
-        enforced_categories_names,
-        incompatible_categories_names
+        pizzas,
+        enforced_categories,
+        incompatible_categories
       FROM (
       SELECT * 
         FROM ingredients
