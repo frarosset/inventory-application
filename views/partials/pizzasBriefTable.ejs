@@ -14,10 +14,10 @@
     <tr>
       <td><%- include("pizzaLink.ejs", data) %></td>
       <td>
-        <%- include("itemsList.ejs", {itemType: 'ingredientLink', items: data.ingredients}) %>
+        <%- include("itemsList.ejs", {itemType: 'ingredientLink', items: data.ingredients ?? []}) %>
       </td>
       <td>
-        <%- include("itemsList.ejs", {itemType: 'categoryLink', items: data.actual_categories}) %>
+        <%- include("itemsList.ejs", {itemType: 'categoryLink', items: data.actual_categories ?? []}) %>
       </td>
       <td><%=data.availability %></td>
       <td><%=data.cost %></td>

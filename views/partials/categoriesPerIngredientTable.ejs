@@ -1,14 +1,12 @@
 <table>
   <thead>
     <tr>
-      <th>User-defined</th>
-      <th>Enforced by<br>Ingredients</th>
-      <th>Excluded by<br>Ingredients</th>
+      <th>Enforced<br>Categories</th>
+      <th>Excluded<br>Categories</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><%- include("itemsList.ejs", {itemType: 'categoryLink', items: categories}) %></td>
       <td><%- include("itemsList.ejs", {itemType: 'categoryLink', items: enforced_categories}) %></td>
       <td><%- include("itemsList.ejs", {itemType: 'categoryLink', items: incompatible_categories}) %></td>
     </tr>

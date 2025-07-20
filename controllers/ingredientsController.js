@@ -11,5 +11,5 @@ exports.getById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const ingredientData = await db.read.ingredient(id);
 
-  res.send("ingredient " + id + JSON.stringify(ingredientData));
+  res.render("ingredient", { title: process.env.TITLE, ingredientData });
 });

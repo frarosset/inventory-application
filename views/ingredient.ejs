@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Ingredient: <%= ingredientData.name %></title>
+</head>
+
+<body>
+  <%- include("partials/header.ejs",{title,highlightLink: "ingredients"}) %>
+  <h2><%= ingredientData.name %></h2>
+
+  <td><%- include("partials/isProtectedSymbol.ejs", {is_protected: ingredientData.is_protected}) %></td>
+
+  <%- include("partials/ingredientDetailsTable.ejs", ingredientData) %>
+
+  <hr>
+  <section>
+    <h3>Pizzas using this Ingredient</h3>
+    <%- include("partials/pizzasBriefTable.ejs", {pizzasBriefData: ingredientData.pizzas}) %>
+  </section>
+
+  <hr>
+  <section>
+    <h3>Categories Rules</h3>
+    <%- include("partials/categoriesPerIngredientTable.ejs", ingredientData) %>
+  </section>
+
+  <hr>
+  <%- include("partials/dateInfoP.ejs", ingredientData) %>
+
+</body>
+
+</html>
