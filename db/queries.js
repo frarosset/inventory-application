@@ -260,6 +260,33 @@ exports.read.ingredientsBrief = async () => {
   return rows;
 };
 
+exports.read.ingredient = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        i.*,
+        pizzas_ids,
+        pizzas_names,
+        enforced_categories_ids,
+        incompatible_categories_ids,
+        enforced_categories_names,
+        incompatible_categories_names
+      FROM (
+      SELECT * 
+        FROM ingredients
+        WHERE id=$1
+      ) AS i
+      LEFT JOIN pizzas_per_ingredient AS pi
+      ON i.id = pi.ingredient_id
+      LEFT JOIN category_rules_per_ingredient AS ci
+      ON i.id = ci.ingredient_id;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
 exports.read.categoriesBrief = async () => {
   const { rows } = await pool.query(`
     SELECT 

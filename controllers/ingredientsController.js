@@ -7,7 +7,9 @@ exports.get = asyncHandler(async (req, res) => {
   res.render("ingredients", { title: process.env.TITLE, ingredientsBriefData });
 });
 
-exports.getById = (req, res) => {
+exports.getById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  res.send("ingredient" + id);
-};
+  const ingredientData = await db.read.ingredient(id);
+
+  res.send("ingredient " + id + JSON.stringify(ingredientData));
+});
