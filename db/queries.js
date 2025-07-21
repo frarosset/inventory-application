@@ -195,15 +195,16 @@ exports.read.pizzasBrief = async () => {
       id,
       name,
       is_protected,
-      ingredients,
+      COALESCE(ingredients,'[]'::json) AS ingredients,
       ingredients_total_cost AS cost,
       availability,
-      actual_categories
+      COALESCE(actual_categories,'[]'::json) AS actual_categories
     FROM pizzas AS p
     LEFT JOIN ingredients_per_pizza AS ip
     ON p.id = ip.pizza_id
     LEFT JOIN categories_per_pizza AS cp
-    ON p.id = cp.pizza_id; 
+    ON p.id = cp.pizza_id
+    ORDER BY p.id; 
   `);
 
   return rows;
@@ -214,13 +215,13 @@ exports.read.pizza = async (id) => {
     `
       SELECT 
         p.*,
-        ingredients,
+        COALESCE(ingredients,'[]'::json) AS ingredients,
         ingredients_total_cost AS cost,
         availability,
-        actual_categories,    
-        categories,
-        incompatible_categories,
-        enforced_categories 
+        COALESCE(actual_categories,'[]'::json) AS actual_categories,    
+        COALESCE(categories,'[]'::json) AS categories,
+        COALESCE(incompatible_categories,'[]'::json) AS incompatible_categories,
+        COALESCE(enforced_categories,'[]'::json) AS enforced_categories
       FROM (
       SELECT * 
         FROM pizzas
@@ -245,7 +246,8 @@ exports.read.ingredientsBrief = async () => {
       is_protected,
       stock,
       price
-    FROM ingredients;
+    FROM ingredients
+    ORDER BY id;
   `);
 
   return rows;
@@ -256,9 +258,9 @@ exports.read.ingredient = async (id) => {
     `
       SELECT 
         i.*,
-        pizzas,
-        enforced_categories,
-        incompatible_categories
+        COALESCE(pizzas,'[]'::json) AS pizzas,
+        COALESCE(enforced_categories,'[]'::json) AS enforced_categories,
+        COALESCE(incompatible_categories,'[]'::json) AS incompatible_categories
       FROM (
       SELECT * 
         FROM ingredients
@@ -281,7 +283,8 @@ exports.read.categoriesBrief = async () => {
       id,
       name,
       is_protected
-    FROM categories;
+    FROM categories
+    ORDER BY id;
   `);
 
   return rows;

@@ -158,16 +158,20 @@ const SQL_create = `
   SELECT
     ingredient_id,
     -- Enforced categories as array of objects
-    JSON_AGG(
-      JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
-      ORDER BY category_id
-    ) FILTER (WHERE rule_type = 'enforcing')
+    COALESCE(
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+        ORDER BY category_id
+      ) FILTER (WHERE rule_type = 'enforcing')
+      , '[]'::json)
     AS enforced_categories,
     -- Incompatible categories as array of objects
-    JSON_AGG(
-      JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
-      ORDER BY category_id
-    ) FILTER (WHERE rule_type = 'incompatible') 
+    COALESCE(
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+        ORDER BY category_id
+      ) FILTER (WHERE rule_type = 'incompatible')
+      , '[]'::json)
     AS incompatible_categories
   FROM ingredients_categories_rules AS ic
   LEFT JOIN categories AS c ON ic.category_id = c.id
@@ -176,15 +180,19 @@ const SQL_create = `
   CREATE VIEW ingredient_rules_per_category AS
   SELECT 
     category_id,
-    JSON_AGG(
-      JSON_BUILD_OBJECT('id', ingredient_id, 'name', i.name)
-      ORDER BY ingredient_id
-    ) FILTER (WHERE rule_type = 'enforcing')
+    COALESCE(
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', ingredient_id, 'name', i.name)
+        ORDER BY ingredient_id
+      ) FILTER (WHERE rule_type = 'enforcing')
+      , '[]'::json)
     AS enforced_categories,
-    JSON_AGG(
-      JSON_BUILD_OBJECT('id', ingredient_id, 'name', i.name)
-      ORDER BY ingredient_id
-    ) FILTER (WHERE rule_type = 'incompatible')
+    COALESCE(
+      JSON_AGG(
+        JSON_BUILD_OBJECT('id', ingredient_id, 'name', i.name)
+        ORDER BY ingredient_id
+      ) FILTER (WHERE rule_type = 'incompatible')
+      , '[]'::json)
     AS incompatible_categories
   FROM ingredients_categories_rules AS ic
   LEFT JOIN ingredients AS i
@@ -194,14 +202,16 @@ const SQL_create = `
   CREATE VIEW ingredients_per_pizza AS
   SELECT 
     pi.pizza_id, 
-    JSON_AGG(
-      JSON_BUILD_OBJECT(
-        'id', pi.ingredient_id, 
-        'name', i.name,
-        'price', i.price,
-        'stock', i.stock)
-      ORDER BY pi.ingredient_id
-    ) AS ingredients,
+    COALESCE(
+      JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', pi.ingredient_id, 
+          'name', i.name,
+          'price', i.price,
+          'stock', i.stock
+        ) ORDER BY pi.ingredient_id
+      ), '[]'::json)
+    AS ingredients,
     SUM(i.price) AS ingredients_total_cost,
     MIN(i.stock) AS availability
   FROM pizzas_ingredients AS pi
@@ -212,26 +222,35 @@ const SQL_create = `
   CREATE VIEW pizzas_per_ingredient AS
   SELECT 
     pi.ingredient_id,
-    JSON_AGG(
-      JSON_BUILD_OBJECT(
-        'id', pi.pizza_id, 
-        'name', p.name)
-      ORDER BY pi.pizza_id
-    ) AS pizzas
+    COALESCE(
+      JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', pi.pizza_id, 
+          'name', p.name
+        ) ORDER BY pi.pizza_id
+      ), '[]'::json)
+    AS pizzas
   FROM pizzas_ingredients AS pi
   LEFT JOIN pizzas AS p
   ON pi.pizza_id = p.id
   GROUP BY ingredient_id;
 
   CREATE VIEW categories_per_pizza AS
-  SELECT * -- or explicit, using:  COALESCE(pac_c.pizza_id, pc_c.pizza_id, pcr_c.pizza_id) AS pizza_id, ...
+  SELECT -- or explicit, using:  COALESCE(pac_c.pizza_id, pc_c.pizza_id, pcr_c.pizza_id) AS pizza_id, ...
+    COALESCE(pac_c.pizza_id, pc_c.pizza_id, pcr_c.pizza_id) AS pizza_id,
+    COALESCE(actual_categories, '[]'::json) AS actual_categories,
+    COALESCE(categories, '[]'::json) AS categories,
+    COALESCE(enforced_categories, '[]'::json) AS enforced_categories,
+    COALESCE(incompatible_categories, '[]'::json) AS incompatible_categories
   FROM (
     SELECT 
       pizza_id,
-      JSON_AGG(
-        JSON_BUILD_OBJECT('id', actual_category_id, 'name', c.name)
-        ORDER BY actual_category_id
-      ) AS actual_categories
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT('id', actual_category_id, 'name', c.name)
+          ORDER BY actual_category_id
+        ), '[]'::json)
+      AS actual_categories
     FROM pizzas_actual_categories AS pac
     LEFT JOIN categories AS c
     ON pac.actual_category_id = c.id
@@ -240,10 +259,12 @@ const SQL_create = `
   FULL JOIN (
     SELECT 
       pizza_id,
-      JSON_AGG(
-        JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
-        ORDER BY category_id
-      ) AS categories
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+          ORDER BY category_id
+        ), '[]'::json)
+      AS categories
     FROM pizzas_categories AS pc
     LEFT JOIN categories AS c
     ON pc.category_id = c.id
@@ -253,14 +274,20 @@ const SQL_create = `
   FULL JOIN (
     SELECT 
       pizza_id,
-      JSON_AGG(
-        JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
-        ORDER BY category_id
-      ) FILTER (WHERE rule_type = 'enforcing') AS enforced_categories,
-      JSON_AGG(
-        JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
-        ORDER BY category_id
-      ) FILTER (WHERE rule_type = 'incompatible') AS incompatible_categories
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+          ORDER BY category_id
+        ) FILTER (WHERE rule_type = 'enforcing')
+        , '[]'::json)
+      AS enforced_categories,
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+          ORDER BY category_id
+        ) FILTER (WHERE rule_type = 'incompatible')
+        , '[]'::json)
+      AS incompatible_categories
       FROM pizzas_categories_rules AS pc
       LEFT JOIN categories AS c
       ON pc.category_id = c.id
@@ -269,14 +296,21 @@ const SQL_create = `
   USING(pizza_id); -- or ON pcr_c.pizza_id = COALESCE(pac_c.pizza_id,pc_c.pizza_id);
 
   CREATE VIEW pizzas_per_category AS	
-	SELECT *
+	SELECT
+    COALESCE(pac_p.category_id, pc_p.category_id, pcr_c.category_id) AS category_id,
+    COALESCE(actual_for_pizzas, '[]'::json) AS actual_for_pizzas,
+    COALESCE(pizzas, '[]'::json) AS pizzas,
+    COALESCE(enforced_in_pizzas, '[]'::json) AS enforced_in_pizzas,
+    COALESCE(incompatible_with_pizzas, '[]'::json) AS incompatible_with_pizzas
   FROM (
     SELECT 
       pac.actual_category_id AS category_id,
-      JSON_AGG(
-        JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
-        ORDER BY p.id
-      ) AS actual_for_pizzas
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
+          ORDER BY p.id
+        ), '[]'::json)
+      AS actual_for_pizzas
     FROM pizzas_actual_categories AS pac
     LEFT JOIN pizzas AS p
     ON pac.pizza_id = p.id
@@ -285,10 +319,12 @@ const SQL_create = `
   FULL JOIN (
     SELECT 
       category_id, 
-      JSON_AGG(
-        JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
-        ORDER BY p.id
-      ) AS pizzas
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
+          ORDER BY p.id
+        ), '[]'::json)
+      AS pizzas
     FROM pizzas_categories AS pc
     LEFT JOIN pizzas AS p
     ON pc.pizza_id = p.id
@@ -298,14 +334,20 @@ const SQL_create = `
   FULL JOIN (
     SELECT 
       category_id,
-      JSON_AGG(
-        JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
-        ORDER BY p.id
-      ) FILTER (WHERE rule_type = 'enforcing') AS enforced_in_pizzas,
-      JSON_AGG(
-        JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
-        ORDER BY p.id
-      ) FILTER (WHERE rule_type = 'incompatible') AS incompatible_with_pizzas
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
+          ORDER BY p.id
+        ) FILTER (WHERE rule_type = 'enforcing')
+        , '[]'::json)
+      AS enforced_in_pizzas,
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
+          ORDER BY p.id
+        ) FILTER (WHERE rule_type = 'incompatible')
+        , '[]'::json)
+      AS incompatible_with_pizzas
     FROM pizzas_categories_rules AS pc
     LEFT JOIN pizzas AS p
     ON pc.pizza_id = p.id
