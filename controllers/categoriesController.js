@@ -6,3 +6,8 @@ exports.get = asyncHandler(async (req, res) => {
 
   res.render("categories", { title: process.env.TITLE, categoriesBriefData });
 });
+
+exports.getById = (req, res) => {
+  const { id } = req.params;
+  res.send("category" + id);
+};
