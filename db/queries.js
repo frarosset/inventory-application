@@ -289,3 +289,30 @@ exports.read.categoriesBrief = async () => {
 
   return rows;
 };
+
+exports.read.category = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        c.*,
+        COALESCE(actual_for_pizzas,'[]'::json) AS actual_for_pizzas,
+        COALESCE(pizzas,'[]'::json) AS pizzas,
+        COALESCE(enforced_in_pizzas,'[]'::json) AS enforced_in_pizzas,
+        COALESCE(incompatible_with_pizzas,'[]'::json) AS incompatible_with_pizzas,
+        COALESCE(enforcing_ingredients,'[]'::json) AS enforcing_ingredients,
+        COALESCE(incompatible_ingredients,'[]'::json) AS incompatible_ingredients
+      FROM (
+      SELECT * 
+        FROM categories
+        WHERE id=$1
+      ) AS c
+      LEFT JOIN pizzas_per_category AS pc
+      ON c.id = pc.category_id
+      LEFT JOIN ingredient_rules_per_category AS ic
+      ON c.id = ic.category_id;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};

@@ -186,14 +186,14 @@ const SQL_create = `
         ORDER BY ingredient_id
       ) FILTER (WHERE rule_type = 'enforcing')
       , '[]'::json)
-    AS enforced_categories,
+    AS enforcing_ingredients,
     COALESCE(
       JSON_AGG(
         JSON_BUILD_OBJECT('id', ingredient_id, 'name', i.name)
         ORDER BY ingredient_id
       ) FILTER (WHERE rule_type = 'incompatible')
       , '[]'::json)
-    AS incompatible_categories
+    AS incompatible_ingredients
   FROM ingredients_categories_rules AS ic
   LEFT JOIN ingredients AS i
   ON ic.ingredient_id = i.id
