@@ -191,20 +191,8 @@ exports.create.pizza = async (data) => {
 // This gets only the essential info for all pizzas in the db
 exports.read.pizzasBrief = async () => {
   const { rows } = await pool.query(`
-    SELECT 
-      id,
-      name,
-      is_protected,
-      COALESCE(ingredients,'[]'::json) AS ingredients,
-      ingredients_total_cost AS cost,
-      availability,
-      COALESCE(actual_categories,'[]'::json) AS actual_categories
-    FROM pizzas AS p
-    LEFT JOIN ingredients_per_pizza AS ip
-    ON p.id = ip.pizza_id
-    LEFT JOIN categories_per_pizza AS cp
-    ON p.id = cp.pizza_id
-    ORDER BY p.id; 
+    SELECT *
+    FROM pizzas_brief; 
   `);
 
   return rows;

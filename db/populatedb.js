@@ -75,10 +75,11 @@ const createForeignKeyColumn = (id, tab, tabId = "id") => `
 const SQL_drop = `
   DROP VIEW IF EXISTS category_rules_per_ingredient;
   DROP VIEW IF EXISTS ingredient_rules_per_category;
-  DROP VIEW IF EXISTS ingredients_per_pizza;
   DROP VIEW IF EXISTS pizzas_per_ingredient;
-  DROP VIEW IF EXISTS categories_per_pizza;
   DROP VIEW IF EXISTS pizzas_per_category;
+  DROP VIEW IF EXISTS pizzas_brief;
+  DROP VIEW IF EXISTS ingredients_per_pizza;
+  DROP VIEW IF EXISTS categories_per_pizza;
   DROP VIEW IF EXISTS pizzas_actual_categories;
   DROP VIEW IF EXISTS pizzas_categories_rules;
 
@@ -219,22 +220,6 @@ const SQL_create = `
   ON pi.ingredient_id = i.id
   GROUP BY pizza_id;
 
-  CREATE VIEW pizzas_per_ingredient AS
-  SELECT 
-    pi.ingredient_id,
-    COALESCE(
-      JSON_AGG(
-        JSON_BUILD_OBJECT(
-          'id', pi.pizza_id, 
-          'name', p.name
-        ) ORDER BY pi.pizza_id
-      ), '[]'::json)
-    AS pizzas
-  FROM pizzas_ingredients AS pi
-  LEFT JOIN pizzas AS p
-  ON pi.pizza_id = p.id
-  GROUP BY ingredient_id;
-
   CREATE VIEW categories_per_pizza AS
   SELECT -- or explicit, using:  COALESCE(pac_c.pizza_id, pc_c.pizza_id, pcr_c.pizza_id) AS pizza_id, ...
     COALESCE(pac_c.pizza_id, pc_c.pizza_id, pcr_c.pizza_id) AS pizza_id,
@@ -295,6 +280,33 @@ const SQL_create = `
     ) AS pcr_c
   USING(pizza_id); -- or ON pcr_c.pizza_id = COALESCE(pac_c.pizza_id,pc_c.pizza_id);
 
+  CREATE VIEW pizzas_brief AS
+  SELECT 
+      id,
+      name,
+      is_protected,
+      COALESCE(ingredients,'[]'::json) AS ingredients,
+      ingredients_total_cost AS cost,
+      availability,
+      COALESCE(actual_categories,'[]'::json) AS actual_categories
+    FROM pizzas AS p
+    LEFT JOIN ingredients_per_pizza AS ip
+    ON p.id = ip.pizza_id
+    LEFT JOIN categories_per_pizza AS cp
+    ON p.id = cp.pizza_id
+    ORDER BY p.id; 
+
+  CREATE VIEW pizzas_per_ingredient AS
+  SELECT 
+    pi.ingredient_id,
+    COALESCE(
+      JSON_AGG(p.*), '[]'::json)
+    AS pizzas
+  FROM pizzas_ingredients AS pi
+  LEFT JOIN pizzas_brief AS p
+  ON pi.pizza_id = p.id
+  GROUP BY ingredient_id;
+
   CREATE VIEW pizzas_per_category AS	
 	SELECT
     COALESCE(pac_p.category_id, pc_p.category_id, pcr_c.category_id) AS category_id,
@@ -306,13 +318,10 @@ const SQL_create = `
     SELECT 
       pac.actual_category_id AS category_id,
       COALESCE(
-        JSON_AGG(
-          JSON_BUILD_OBJECT('id', p.id, 'name', p.name)
-          ORDER BY p.id
-        ), '[]'::json)
+        JSON_AGG(p.*), '[]'::json)
       AS actual_for_pizzas
     FROM pizzas_actual_categories AS pac
-    LEFT JOIN pizzas AS p
+    LEFT JOIN pizzas_brief AS p
     ON pac.pizza_id = p.id
     GROUP BY category_id
   ) AS pac_p
