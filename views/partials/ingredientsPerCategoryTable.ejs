@@ -1,0 +1,14 @@
+<table>
+  <thead>
+    <tr>
+      <th>Enforcing<br>Ingredients</th>
+      <th>Incompatible<br>Ingredients</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%- include("itemsList.ejs", {itemType: 'ingredientLink', items: enforcing_ingredients}) %></td>
+      <td><%- include("itemsList.ejs", {itemType: 'ingredientLink', items: incompatible_ingredients}) %></td>
+    </tr>
+  </tbody>
+</table>

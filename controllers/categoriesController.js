@@ -11,5 +11,5 @@ exports.getById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const categoryData = await db.read.category(id);
 
-  res.send("category" + id + JSON.stringify(categoryData));
+  res.render("category", { title: process.env.TITLE, categoryData });
 });
