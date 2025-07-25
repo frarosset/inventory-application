@@ -13,3 +13,7 @@ exports.getById = asyncHandler(async (req, res) => {
 
   res.render("pizza", { title: process.env.TITLE, pizzaData });
 });
+
+exports.getNew = (req, res) => {
+  res.send("New pizza form");
+};
