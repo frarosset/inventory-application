@@ -1,0 +1,8 @@
+<fieldset>
+  <legend>Protection</legend>
+  <%- include("checkbox.ejs", {name: "protected", value: "Protected", id: "protected", label: "Protect this item from edits or deletion. Admin password is required to enable protection or apply changes." }) _%>
+  <div>
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password">
+  </div>
+</fieldset>

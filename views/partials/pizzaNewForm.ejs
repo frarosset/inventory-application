@@ -1,0 +1,26 @@
+<form action="/pizzas/new" method="POST">
+  <fieldset>
+    <div>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name">
+    </div>
+    <div>
+      <label for="notes">Notes</label>
+      <textarea type="text" id="notes" name="notes"></textarea>
+    </div>
+  </fieldset>
+  <%- include("protectedFieldset.ejs") _%>
+  <fieldset>
+    <legend>Ingredients</legend>
+    <%- include("checkboxInputList.ejs", {name: "ingredients", list: ingredients}) _%>
+  </fieldset>
+  <fieldset>
+    <legend>Categories</legend>
+    <p>The final categories include those enforced by the selected ingredients and exclude any that are incompatible with them.</p>
+    <%- include("checkboxInputList.ejs", {name: "categories", list: categories}) _%>
+  </fieldset>
+  <div>
+    <a href="/pizzas">Back</a>
+    <button>SUBMIT</button>
+  </div>
+</form>

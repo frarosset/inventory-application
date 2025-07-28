@@ -14,6 +14,13 @@ exports.getById = asyncHandler(async (req, res) => {
   res.render("pizza", { title: process.env.TITLE, pizzaData });
 });
 
-exports.getNew = (req, res) => {
-  res.send("New pizza form");
-};
+exports.getNew = asyncHandler(async (req, res) => {
+  const ingredients = await db.read.ingredientsNames();
+  const categories = await db.read.categoriesNames();
+
+  res.render("pizzaNew", {
+    title: process.env.TITLE,
+    ingredients: ingredients.map((i) => i.name),
+    categories: categories.map((i) => i.name),
+  });
+});

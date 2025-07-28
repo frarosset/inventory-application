@@ -241,6 +241,17 @@ exports.read.ingredientsBrief = async () => {
   return rows;
 };
 
+exports.read.ingredientsNames = async () => {
+  const { rows } = await pool.query(`
+    SELECT 
+      name
+    FROM ingredients
+    ORDER BY id;
+  `);
+
+  return rows;
+};
+
 exports.read.ingredient = async (id) => {
   const { rows } = await pool.query(
     `
@@ -271,6 +282,17 @@ exports.read.categoriesBrief = async () => {
       id,
       name,
       is_protected
+    FROM categories
+    ORDER BY id;
+  `);
+
+  return rows;
+};
+
+exports.read.categoriesNames = async () => {
+  const { rows } = await pool.query(`
+    SELECT 
+      name
     FROM categories
     ORDER BY id;
   `);

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Add New Pizza</title>
+</head>
+
+<body>
+  <%- include("partials/header.ejs",{title,highlightLink: "pizzas"}) %>
+  <h2>Add New Pizza</h2>
+  <%- include("partials/pizzaNewForm.ejs", {ingredients, categories}) %>
+</body>
+
+</html>
