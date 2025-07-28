@@ -24,3 +24,9 @@ exports.getNew = asyncHandler(async (req, res) => {
     categories: categories.map((i) => i.name),
   });
 });
+
+exports.postNew = (req, res) => {
+  const body = req.body;
+
+  res.send(body);
+};
