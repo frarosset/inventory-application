@@ -1,4 +1,3 @@
 <label>
-  <input type="checkbox" name=<%= name %> value=<%= value %>>
-  <%= locals.label || value %>
+  <input type="checkbox" <%= locals.id ? `id=${locals.id}` : "" %> name=<%= name %> value=<%= value %>><%= locals.label || value -%>
 </label>

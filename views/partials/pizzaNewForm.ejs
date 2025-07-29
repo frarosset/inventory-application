@@ -2,11 +2,11 @@
   <fieldset>
     <div>
       <label for="name">Name</label>
-      <input type="text" id="name" name="name">
+      <input type="text" id="name" name="name" maxlength="<%= process.env.NAME_MAX_LENGTH %>" pattern="<%= process.env.NAME_REGEX %>" title="<%= process.env.NAME_REGEX_MSG %>" required>
     </div>
     <div>
       <label for="notes">Notes</label>
-      <textarea type="text" id="notes" name="notes"></textarea>
+      <textarea type="text" id="notes" name="notes" maxlength="<%= process.env.NOTES_MAX_LENGTH %>" pattern="<%= process.env.NOTES_REGEX %>" title="<%= process.env.NOTES_REGEX_MSG %>"></textarea>
     </div>
   </fieldset>
   <%- include("protectedFieldset.ejs") _%>

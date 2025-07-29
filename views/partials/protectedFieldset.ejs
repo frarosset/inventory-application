@@ -1,8 +1,27 @@
 <fieldset>
   <legend>Protection</legend>
-  <%- include("checkbox.ejs", {name: "protected", value: "Protected", id: "protected", label: "Protect this item from edits or deletion. Admin password is required to enable protection or apply changes." }) _%>
+  <%- include("checkbox.ejs", {name: "protected", value: true, id: "protected", label: "Protect this item from edits or deletion. Admin password is required to enable protection or apply changes." }) _%>
   <div>
     <label for="password">Password</label>
-    <input type="password" id="password" name="password">
+    <input type="password" id="password" name="password" maxlength="<%= process.env.PWD_MAX_LENGTH %>">
   </div>
+  <script>
+    const protectedInput = document.querySelector("#protected");
+    const passwordInput = document.querySelector("#password");
+
+    const setPasswordInputConstraints = () => {
+      if (protectedInput.checked) {
+        passwordInput.required = true;
+        passwordInput.disabled = false;
+        passwordInput.parentElement.style.visibility = "visible";
+      } else {
+        passwordInput.required = false;
+        passwordInput.disabled = true;
+        passwordInput.parentElement.style.visibility = "hidden";
+      }
+    }
+
+    protectedInput.onchange = setPasswordInputConstraints;
+    setPasswordInputConstraints();
+  </script>
 </fieldset>
