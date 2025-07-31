@@ -1,6 +1,6 @@
 <fieldset>
   <legend>Protection</legend>
-  <%- include("checkbox.ejs", {name: "protected", value: true, id: "protected", label: "Protect this item from edits or deletion. Admin password is required to enable protection or apply changes." }) _%>
+  <%- include("checkbox.ejs", {name: "protected", id: "protected", label: "Protect this item from edits or deletion. Admin password is required to enable protection or apply changes." }) _%>
   <div>
     <label for="password">Password</label>
     <input type="password" id="password" name="password" maxlength="<%= process.env.PWD_MAX_LENGTH %>">
