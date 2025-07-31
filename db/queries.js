@@ -198,6 +198,17 @@ exports.read.pizzasBrief = async () => {
   return rows;
 };
 
+exports.read.pizzasNames = async () => {
+  const { rows } = await pool.query(`
+    SELECT 
+      name
+    FROM pizzas
+    ORDER BY id;
+  `);
+
+  return rows;
+};
+
 exports.read.pizza = async (id) => {
   const { rows } = await pool.query(
     `

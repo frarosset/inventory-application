@@ -1,5 +1,7 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
+const newValidation = require("./validation/pizzasValidator.js");
+const { matchedData } = require("express-validator");
 
 exports.get = asyncHandler(async (req, res) => {
   const pizzasBriefData = await db.read.pizzasBrief();
@@ -25,8 +27,11 @@ exports.getNew = asyncHandler(async (req, res) => {
   });
 });
 
-exports.postNew = (req, res) => {
-  const body = req.body;
+exports.postNew = [
+  newValidation,
+  (req, res) => {
+    const body = matchedData(req); // req.body
 
-  res.send(body);
-};
+    res.send(body);
+  },
+];
