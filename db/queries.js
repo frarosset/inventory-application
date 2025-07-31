@@ -6,7 +6,8 @@ exports.update = {};
 exports.delete = {};
 
 const makeTransaction = async (queries) => {
-  // This assumes the queries results are not used
+  // This assumes the queries results are not used within the queries
+  const results = [];
 
   const client = await pool.connect();
 
@@ -14,10 +15,13 @@ const makeTransaction = async (queries) => {
     await client.query("BEGIN");
 
     for (const query of queries) {
-      await client.query(query.text, query.data ?? []);
+      const res = await client.query(query.text, query.data ?? []);
+      results.push(res.rows || []);
     }
 
     await client.query("COMMIT");
+
+    return results;
   } catch (e) {
     await client.query("ROLLBACK");
     throw e;
@@ -147,7 +151,7 @@ exports.create.pizza = async (data) => {
 
   const queries = [
     {
-      text: "INSERT INTO pizzas (name,is_protected,notes) VALUES($1,$2,$3);",
+      text: "INSERT INTO pizzas (name,is_protected,notes) VALUES($1,$2,$3) RETURNING id;",
       data: [data.name, data.is_protected ?? false, data.notes ?? ""],
     },
   ];
@@ -185,7 +189,9 @@ exports.create.pizza = async (data) => {
     });
   }
 
-  await makeTransaction(queries);
+  const results = await makeTransaction(queries);
+
+  return results[0][0].id;
 };
 
 // This gets only the essential info for all pizzas in the db
