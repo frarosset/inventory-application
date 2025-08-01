@@ -207,17 +207,6 @@ exports.read.pizzasBrief = async () => {
 exports.read.pizzasNames = async () => {
   const { rows } = await pool.query(`
     SELECT 
-      name
-    FROM pizzas
-    ORDER BY id;
-  `);
-
-  return rows;
-};
-
-exports.read.pizzasNamesAndProtection = async () => {
-  const { rows } = await pool.query(`
-    SELECT 
       name,
       is_protected
     FROM pizzas

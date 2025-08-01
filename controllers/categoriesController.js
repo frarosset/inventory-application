@@ -1,5 +1,6 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
+const newValidation = require("./validation/categoriesValidator.js");
 
 exports.get = asyncHandler(async (req, res) => {
   const categoriesBriefData = await db.read.categoriesBrief();
@@ -16,7 +17,7 @@ exports.getById = asyncHandler(async (req, res) => {
 
 exports.getNew = asyncHandler(async (req, res) => {
   const ingredients = await db.read.ingredientsNames();
-  const pizzas = await db.read.pizzasNamesAndProtection();
+  const pizzas = await db.read.pizzasNames();
 
   res.render("categoryNew", {
     title: process.env.TITLE,
@@ -26,8 +27,10 @@ exports.getNew = asyncHandler(async (req, res) => {
   });
 });
 
-exports.postNew = (req, res) => {
-  const body = req.body;
-
-  res.send(body);
-};
+exports.postNew = [
+  newValidation,
+  (req, res) => {
+    const body = req.body;
+    res.send(body);
+  },
+];

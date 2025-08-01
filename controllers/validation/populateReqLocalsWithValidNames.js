@@ -12,6 +12,10 @@ const populateReqLocalsWithValidNames = async (req, res, next) => {
   req.locals.allIngredients = allIngredients.map((i) => i.name);
   req.locals.allCategories = allCategories.map((i) => i.name);
 
+  req.locals.allProtectedPizzas = allPizzas
+    .filter((i) => i.is_protected)
+    .map((i) => i.name);
+
   next();
 };
 
