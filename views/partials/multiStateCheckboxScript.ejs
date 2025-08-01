@@ -1,0 +1,17 @@
+<%# Instantiate this script once in the page to use multiStateCheckbox.ejs %>
+<script>
+  function cycleMultiStateCheckboxState(input, states) {
+    let current = input.name || 'none';
+    let nextIndex = (states.indexOf(current) + 1) % states.length;
+    let nextState = states[nextIndex];
+
+    // Apply the new state
+    input.name = nextState;
+
+    if (nextState === 'none') {
+      input.checked = false;
+    } else {
+      input.checked = true;
+    }
+  }
+</script>
