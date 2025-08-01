@@ -1,0 +1,40 @@
+<%- include("checkboxInputList.ejs", {name, list}) _%>
+<div>
+  <p>Some protected items have been selected. Type the admin password to edit them.</p>
+  <label for="password">Password</label>
+  <input type="password" id="password-checkbox-list" name="password-checkbox-list" maxlength="<%= process.env.PWD_MAX_LENGTH %>">
+</div>
+<script>
+  (() => {
+    const protectedValuesSet = new Set(<%- JSON.stringify(protectedValues) %>);
+    const checkboxInputs = Array.from(document.querySelectorAll('input[name="<%= name %>"]'));
+    const passwordCheckboxList = document.querySelector("#password-checkbox-list");
+
+    function hasProtectedSelected() {
+      const selected = checkboxInputs.filter(input => input.checked);
+      return selected.some(input => protectedValuesSet.has(input.value));
+    }
+
+    const setPasswordCheckboxListConstraints = () => {
+      if (hasProtectedSelected()) {
+        passwordCheckboxList.required = true;
+        passwordCheckboxList.disabled = false;
+        passwordCheckboxList.parentElement.style.visibility = "visible";
+      } else {
+        passwordCheckboxList.required = false;
+        passwordCheckboxList.disabled = true;
+        passwordCheckboxList.parentElement.style.visibility = "hidden";
+      }
+    }
+
+    checkboxInputs.forEach(input => {
+      input.onchange = setPasswordCheckboxListConstraints;
+
+      // add protected symbol to help the user identifying protected items
+      if (protectedValuesSet.has(input.value))
+        input.parentElement.insertAdjacentHTML("beforeend", "<%- include('isProtectedSymbol.ejs', {is_protected: true}) %>");
+    });
+
+    window.addEventListener('pageshow', setPasswordCheckboxListConstraints);
+  })();
+</script>

@@ -14,6 +14,14 @@ exports.getById = asyncHandler(async (req, res) => {
   res.render("category", { title: process.env.TITLE, categoryData });
 });
 
-exports.getNew = (req, res) => {
-  res.send("New category form");
-};
+exports.getNew = asyncHandler(async (req, res) => {
+  const ingredients = await db.read.ingredientsNames();
+  const pizzas = await db.read.pizzasNamesAndProtection();
+
+  res.render("categoryNew", {
+    title: process.env.TITLE,
+    ingredients: ingredients.map((i) => i.name),
+    pizzas: pizzas.map((i) => i.name),
+    protectedPizzas: pizzas.filter((p) => p.is_protected).map((p) => p.name),
+  });
+});

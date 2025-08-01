@@ -215,6 +215,18 @@ exports.read.pizzasNames = async () => {
   return rows;
 };
 
+exports.read.pizzasNamesAndProtection = async () => {
+  const { rows } = await pool.query(`
+    SELECT 
+      name,
+      is_protected
+    FROM pizzas
+    ORDER BY id;
+  `);
+
+  return rows;
+};
+
 exports.read.pizza = async (id) => {
   const { rows } = await pool.query(
     `

@@ -6,23 +6,25 @@
     <input type="password" id="password" name="password" maxlength="<%= process.env.PWD_MAX_LENGTH %>">
   </div>
   <script>
-    const protectedInput = document.querySelector("#is_protected");
-    const passwordInput = document.querySelector("#password");
+    (() => {
+      const protectedInput = document.querySelector("#is_protected");
+      const passwordInput = document.querySelector("#password");
 
-    const setPasswordInputConstraints = () => {
-      if (protectedInput.checked) {
-        passwordInput.required = true;
-        passwordInput.disabled = false;
-        passwordInput.parentElement.style.visibility = "visible";
-      } else {
-        passwordInput.required = false;
-        passwordInput.disabled = true;
-        passwordInput.parentElement.style.visibility = "hidden";
+      const setPasswordInputConstraints = () => {
+        if (protectedInput.checked) {
+          passwordInput.required = true;
+          passwordInput.disabled = false;
+          passwordInput.parentElement.style.visibility = "visible";
+        } else {
+          passwordInput.required = false;
+          passwordInput.disabled = true;
+          passwordInput.parentElement.style.visibility = "hidden";
+        }
       }
-    }
 
-    protectedInput.onchange = setPasswordInputConstraints;
-    window.addEventListener('pageshow', setPasswordInputConstraints);
-    // setPasswordInputConstraints();
+      protectedInput.onchange = setPasswordInputConstraints;
+      window.addEventListener('pageshow', setPasswordInputConstraints);
+      // setPasswordInputConstraints();
+    })();
   </script>
 </fieldset>
