@@ -1,0 +1,41 @@
+<form action="/ingredients/new" method="POST">
+  <fieldset>
+    <div>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" maxlength="<%= process.env.NAME_MAX_LENGTH %>" pattern="<%= process.env.NAME_REGEX %>" title="<%= process.env.NAME_REGEX_MSG %>" required>
+    </div>
+    <div>
+      <label for="price">Price</label>
+      <input type="number" id="price" name="price" min="0" step="0.01" required>
+    </div>
+    <div>
+      <label for="stock">Stock</label>
+      <input type="number" id="stock" name="stock" min="0" step="1" required>
+    </div>
+    <div>
+      <label for="notes">Notes</label>
+      <textarea type="text" id="notes" name="notes" maxlength="<%= process.env.NOTES_MAX_LENGTH %>" pattern="<%= process.env.NOTES_REGEX %>" title="<%= process.env.NOTES_REGEX_MSG %>"></textarea>
+    </div>
+  </fieldset>
+  <%- include("protectedFieldset.ejs") _%>
+  <fieldset>
+    <legend>Categories Rules</legend>
+    <p>
+      Select the categories that are
+      <span class="enforcing" title="These categories are automatically added when this ingredient is used (unless incompatible)">enforced</span>
+      by this ingredient or
+      <span class="incompatible" title="These categories are automatically excluded this when this ingredient is used">incompatible</span>
+      with it.
+    </p>
+    <%- include("multiStateCheckboxInputList.ejs", {name: "categories", list: categories, states: ["none","enforcedCategories","incompatibleCategories"]}) _%>
+  </fieldset>
+  <fieldset>
+    <legend>Add to these Pizzas</legend>
+    <%- include("protectedCheckboxInputList.ejs", {name: "pizzas", list: pizzas, protectedValues: protectedPizzas}) _%>
+  </fieldset>
+  <div>
+    <a href="/ingredients">Back</a>
+    <button>SUBMIT</button>
+  </div>
+</form>
+<%- include("multiStateCheckboxScript.ejs") _%>

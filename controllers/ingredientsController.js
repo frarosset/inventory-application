@@ -17,3 +17,14 @@ exports.getById = asyncHandler(async (req, res) => {
 exports.getNew = (req, res) => {
   res.send("New ingredient form");
 };
+exports.getNew = asyncHandler(async (req, res) => {
+  const categories = await db.read.categoriesNames();
+  const pizzas = await db.read.pizzasNames();
+
+  res.render("ingredientNew", {
+    title: process.env.TITLE,
+    categories: categories.map((i) => i.name),
+    pizzas: pizzas.map((i) => i.name),
+    protectedPizzas: pizzas.filter((p) => p.is_protected).map((p) => p.name),
+  });
+});
