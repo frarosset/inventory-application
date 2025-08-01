@@ -6,20 +6,6 @@ const handleValidationErrors = require("./handleValidationErrors.js");
 const newValidation = [
   protectedValidation,
   populateReqLocalsWithValidNames,
-  // wrap single string in array)
-  (req, res, next) => {
-    const { ingredients, categories } = req.body;
-
-    if (typeof ingredients === "string") {
-      req.body.ingredients = [ingredients];
-    }
-
-    if (typeof categories === "string") {
-      req.body.categories = [categories];
-    }
-
-    next();
-  },
   body("name")
     .trim()
     .notEmpty()
@@ -59,8 +45,10 @@ const newValidation = [
     ),
   body("ingredients")
     .optional({ nullable: true })
+    .customSanitizer((value) => (typeof value === "string" ? [value] : value))
     .isArray()
-    .withMessage("Invalid format for ingredients."),
+    .withMessage("Invalid format for ingredients.")
+    .customSanitizer((value) => [...new Set(value)]), // remove duplicates
   body("ingredients.*").custom(async (value, { req }) => {
     if (!req.locals.allIngredients.includes(value)) {
       throw new Error(`Ingredient '${value}' is not allowed.`);
@@ -69,8 +57,10 @@ const newValidation = [
   }),
   body("categories")
     .optional({ nullable: true })
+    .customSanitizer((value) => (typeof value === "string" ? [value] : value))
     .isArray()
-    .withMessage("Invalid format for categories."),
+    .withMessage("Invalid format for categories.")
+    .customSanitizer((value) => [...new Set(value)]), // remove duplicates,
   body("categories.*").custom(async (value, { req }) => {
     if (!req.locals.allCategories.includes(value)) {
       throw new Error(`Category '${value}' is not allowed.`);

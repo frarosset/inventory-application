@@ -29,11 +29,11 @@ exports.getNew = asyncHandler(async (req, res) => {
 
 exports.postNew = [
   newValidation,
-  async (req, res) => {
+  asyncHandler(async (req, res) => {
     const body = matchedData(req); // req.body
 
     const id = await db.create.pizza(body);
 
     res.redirect("/pizzas/" + id);
-  },
+  }),
 ];
