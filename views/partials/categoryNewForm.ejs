@@ -19,7 +19,7 @@
       <span class="incompatible" title="These ingredients automatically exclude this category">incompatible</span>
       with it.
     </p>
-    <%- include("multiStateCheckboxInputList.ejs", {name: "ingredients", list: ingredients, states: ["none","enforcing","incompatible"]}) _%>
+    <%- include("multiStateCheckboxInputList.ejs", {name: "ingredients", list: ingredients, states: ["none","enforcingIngredients","incompatibleIngredients"]}) _%>
   </fieldset>
   <fieldset>
     <legend>Apply to these Pizzas</legend>

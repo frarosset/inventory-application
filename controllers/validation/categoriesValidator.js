@@ -43,25 +43,25 @@ const newValidation = [
     .withMessage(
       "Notes have some invalid characters." + process.env.NOTES_REGEX_MSG
     ),
-  body("incompatible")
+  body("incompatibleIngredients")
     .optional({ nullable: true })
     .customSanitizer((value) => (typeof value === "string" ? [value] : value))
     .isArray()
     .withMessage("Invalid format for incompatible ingredients.")
     .customSanitizer((value) => [...new Set(value)]), // remove duplicates,
-  body("incompatible.*").custom(async (value, { req }) => {
+  body("incompatibleIngredients.*").custom(async (value, { req }) => {
     if (!req.locals.allIngredients.includes(value)) {
       throw new Error(`Ingredient '${value}' is not allowed.`);
     }
     return true;
   }),
-  body("enforcing")
+  body("enforcingIngredients")
     .optional({ nullable: true })
     .customSanitizer((value) => (typeof value === "string" ? [value] : value))
     .isArray()
     .withMessage("Invalid format for enforcing ingredients.")
     .customSanitizer((value) => [...new Set(value)]), // remove duplicates,
-  body("enforcing.*")
+  body("enforcingIngredients.*")
     .custom(async (value, { req }) => {
       if (!req.locals.allIngredients.includes(value)) {
         throw new Error(`Ingredient '${value}' is not allowed.`);
@@ -69,7 +69,10 @@ const newValidation = [
       return true;
     })
     .custom(async (value, { req }) => {
-      if (req.body.incompatible && req.body.incompatible.includes(value)) {
+      if (
+        req.body.incompatibleIngredients &&
+        req.body.incompatibleIngredients.includes(value)
+      ) {
         throw new Error(
           `Ingredient '${value}' cannot be both enforcing and incompatible.`
         );

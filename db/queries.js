@@ -42,26 +42,84 @@ exports.create.category = async (data) => {
   //
   // Hence a transaction is used, to ensure a consistend update  and allowing a rollback in case of errors.
   //
-  // Currently, only the categories table is updated.
-  //
   // Sample data:
   // {
   //    "name": "Bianche",
   //    "is_protected": false,
   //    "notes": "Some notes"
-  //    "enforcing_ingredients": ["Mozzarella"],
-  //    "incompatible_ingredients": ["Pomodoro"],
+  //    "enforcingIngredients": ["Mozzarella"],
+  //    "incompatibleIngredients": ["Pomodoro"],
   //    "pizzas": []
   // }
 
   const queries = [
     {
-      text: "INSERT INTO categories (name,is_protected,notes) VALUES($1,$2,$3);",
+      text: "INSERT INTO categories (name,is_protected,notes) VALUES($1,$2,$3) RETURNING id;",
       data: [data.name, data.is_protected ?? false, data.notes ?? ""],
     },
   ];
 
-  await makeTransaction(queries);
+  if (
+    data.enforcingIngredients instanceof Array &&
+    data.enforcingIngredients.length > 0
+  ) {
+    queries.push({
+      text: `
+         INSERT INTO ingredients_categories_rules (ingredient_id,category_id, rule_type)
+         SELECT ingredient_id, category_id, 'enforcing'
+         FROM ((
+            ${queryTextGetIdFromName(
+              "ingredients",
+              "ingredient_id",
+              "$1",
+              true
+            )}
+          ) CROSS JOIN (
+            ${queryTextGetIdFromName("categories", "category_id", "$2")}
+         ))`,
+      data: [data.enforcingIngredients, data.name],
+    });
+  }
+
+  if (
+    data.incompatibleIngredients instanceof Array &&
+    data.incompatibleIngredients.length > 0
+  ) {
+    queries.push({
+      text: `
+         INSERT INTO ingredients_categories_rules (ingredient_id,category_id, rule_type)
+         SELECT ingredient_id, category_id, 'incompatible'
+         FROM ((
+            ${queryTextGetIdFromName(
+              "ingredients",
+              "ingredient_id",
+              "$1",
+              true
+            )}
+          ) CROSS JOIN (
+            ${queryTextGetIdFromName("categories", "category_id", "$2")}
+         ))`,
+      data: [data.incompatibleIngredients, data.name],
+    });
+  }
+
+  if (data.pizzas instanceof Array && data.pizzas.length > 0) {
+    queries.push({
+      text: `
+         INSERT INTO pizzas_categories (pizza_id,category_id)
+         SELECT pizza_id, category_id
+         FROM ((
+            ${queryTextGetIdFromName("pizzas", "pizza_id", "$1", true)}
+          ) CROSS JOIN (
+            ${queryTextGetIdFromName("categories", "category_id", "$2")}
+         ))`,
+      data: [data.pizzas, data.name],
+    });
+  }
+
+  const results = await makeTransaction(queries);
+
+  return results[0][0].id;
 };
 
 exports.create.ingredient = async (data) => {
