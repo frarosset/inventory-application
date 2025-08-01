@@ -25,3 +25,9 @@ exports.getNew = asyncHandler(async (req, res) => {
     protectedPizzas: pizzas.filter((p) => p.is_protected).map((p) => p.name),
   });
 });
+
+exports.postNew = (req, res) => {
+  const body = req.body;
+
+  res.send(body);
+};
