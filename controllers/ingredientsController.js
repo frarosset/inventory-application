@@ -13,3 +13,7 @@ exports.getById = asyncHandler(async (req, res) => {
 
   res.render("ingredient", { title: process.env.TITLE, ingredientData });
 });
+
+exports.getNew = (req, res) => {
+  res.send("New ingredient form");
+};

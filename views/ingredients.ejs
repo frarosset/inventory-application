@@ -10,6 +10,7 @@
 <body>
   <%- include("partials/header.ejs",{title,highlightLink: "ingredients"}) %>
   <h2>Ingredients</h2>
+  <a href="/ingredients/new">New</a>
   <%- include("partials/ingredientsBriefTable.ejs", {ingredientsBriefData}) %>
 </body>
 
