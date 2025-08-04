@@ -144,7 +144,7 @@ exports.create.ingredient = async (data) => {
 
   const queries = [
     {
-      text: "INSERT INTO ingredients (name,is_protected,notes,price,stock) VALUES($1,$2,$3,$4,$5);",
+      text: "INSERT INTO ingredients (name,is_protected,notes,price,stock) VALUES($1,$2,$3,$4,$5) RETURNING id;",
       data: [
         data.name,
         data.is_protected ?? false,
@@ -189,7 +189,23 @@ exports.create.ingredient = async (data) => {
     });
   }
 
-  await makeTransaction(queries);
+  if (data.pizzas instanceof Array && data.pizzas.length > 0) {
+    queries.push({
+      text: `
+         INSERT INTO pizzas_ingredients (pizza_id,ingredient_id)
+         SELECT pizza_id, ingredient_id
+         FROM ((
+            ${queryTextGetIdFromName("pizzas", "pizza_id", "$1", true)}
+          ) CROSS JOIN (
+            ${queryTextGetIdFromName("ingredients", "ingredient_id", "$2")}
+         ))`,
+      data: [data.pizzas, data.name],
+    });
+  }
+
+  const results = await makeTransaction(queries);
+
+  return results[0][0].id;
 };
 
 exports.create.pizza = async (data) => {

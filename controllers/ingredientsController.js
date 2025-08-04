@@ -36,9 +36,11 @@ exports.postNew = (req, res) => {
 };
 exports.postNew = [
   newValidation,
-  (req, res) => {
+  asyncHandler(async (req, res) => {
     const body = matchedData(req); // req.body
 
-    res.send(body);
-  },
+    const id = await db.create.ingredient(body);
+
+    res.redirect("/ingredients/" + id);
+  }),
 ];
