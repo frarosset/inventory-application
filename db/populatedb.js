@@ -176,7 +176,8 @@ const SQL_create = `
     AS incompatible_categories
   FROM ingredients_categories_rules AS ic
   LEFT JOIN categories AS c ON ic.category_id = c.id
-  GROUP BY ingredient_id;
+  GROUP BY ingredient_id
+  ORDER BY ingredient_id;
 
   CREATE VIEW ingredient_rules_per_category AS
   SELECT 
@@ -198,7 +199,8 @@ const SQL_create = `
   FROM ingredients_categories_rules AS ic
   LEFT JOIN ingredients AS i
   ON ic.ingredient_id = i.id
-  GROUP BY category_id;
+  GROUP BY category_id
+  ORDER BY category_id;
 
   CREATE VIEW ingredients_per_pizza AS
   SELECT 
@@ -218,7 +220,8 @@ const SQL_create = `
   FROM pizzas_ingredients AS pi
   LEFT JOIN ingredients AS i
   ON pi.ingredient_id = i.id
-  GROUP BY pizza_id;
+  GROUP BY pizza_id
+  ORDER BY pizza_id;
 
   CREATE VIEW categories_per_pizza AS
   SELECT -- or explicit, using:  COALESCE(pac_c.pizza_id, pc_c.pizza_id, pcr_c.pizza_id) AS pizza_id, ...
@@ -278,7 +281,8 @@ const SQL_create = `
       ON pc.category_id = c.id
       GROUP BY pizza_id
     ) AS pcr_c
-  USING(pizza_id); -- or ON pcr_c.pizza_id = COALESCE(pac_c.pizza_id,pc_c.pizza_id);
+  USING(pizza_id) -- or ON pcr_c.pizza_id = COALESCE(pac_c.pizza_id,pc_c.pizza_id)
+  ORDER BY pizza_id;
 
   CREATE VIEW pizzas_brief AS
   SELECT 
@@ -305,7 +309,8 @@ const SQL_create = `
   FROM pizzas_ingredients AS pi
   LEFT JOIN pizzas_brief AS p
   ON pi.pizza_id = p.id
-  GROUP BY ingredient_id;
+  GROUP BY ingredient_id
+  ORDER BY ingredient_id;
 
   CREATE VIEW pizzas_per_category AS	
 	SELECT
@@ -362,7 +367,8 @@ const SQL_create = `
     ON pc.pizza_id = p.id
     GROUP BY category_id
   ) AS pcr_c
-  USING(category_id);
+  USING(category_id)
+  ORDER BY category_id;
 `;
 
 const SQL_init = SQL_drop + SQL_create;
