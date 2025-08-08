@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %> | Ingredients</title>
+  <title><%= pageTitle %> | Ingredients</title>
 </head>
 
 <body>
-  <%- include("partials/header.ejs",{title,highlightLink: "ingredients"}) %>
+  <%- include("partials/header.ejs",{pageTitle,highlightLink: "ingredients"}) %>
   <h2>Ingredients</h2>
   <a href="/ingredients/new">New</a>
   <%- include("partials/ingredientsBriefTable.ejs", {ingredientsBriefData}) %>

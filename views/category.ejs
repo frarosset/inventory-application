@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %> | Category: <%= categoryData.name %></title>
+  <title><%= pageTitle %> | Category: <%= categoryData.name %></title>
 </head>
 
 <body>
-  <%- include("partials/header.ejs",{title,highlightLink: "categories"}) %>
+  <%- include("partials/header.ejs",{pageTitle,highlightLink: "categories"}) %>
   <h2><%= categoryData.name %></h2>
 
   <td><%- include("partials/isProtectedSymbol.ejs", {is_protected: categoryData.is_protected}) %></td>

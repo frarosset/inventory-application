@@ -6,14 +6,17 @@ const { matchedData } = require("express-validator");
 exports.get = asyncHandler(async (req, res) => {
   const ingredientsBriefData = await db.read.ingredientsBrief();
 
-  res.render("ingredients", { title: process.env.TITLE, ingredientsBriefData });
+  res.render("ingredients", {
+    pageTitle: process.env.TITLE,
+    ingredientsBriefData,
+  });
 });
 
 exports.getById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const ingredientData = await db.read.ingredient(id);
 
-  res.render("ingredient", { title: process.env.TITLE, ingredientData });
+  res.render("ingredient", { pageTitle: process.env.TITLE, ingredientData });
 });
 
 exports.getNew = (req, res) => {
@@ -24,7 +27,7 @@ exports.getNew = asyncHandler(async (req, res) => {
   const pizzas = await db.read.pizzasNames();
 
   res.render("ingredientNew", {
-    title: process.env.TITLE,
+    pageTitle: process.env.TITLE,
     categories: categories.map((i) => i.name),
     pizzas: pizzas.map((i) => i.name),
     protectedPizzas: pizzas.filter((p) => p.is_protected).map((p) => p.name),

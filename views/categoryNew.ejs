@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %> | Add New Category</title>
+  <title><%= pageTitle %> | Add New Category</title>
 </head>
 
 <body>
-  <%- include("partials/header.ejs",{title,highlightLink: "categories"}) %>
+  <%- include("partials/header.ejs",{pageTitle,highlightLink: "categories"}) %>
   <h2>Add New Category</h2>
   <%- include("partials/categoryNewForm.ejs", {ingredients, pizzas, protectedPizzas}) %>
 </body>
