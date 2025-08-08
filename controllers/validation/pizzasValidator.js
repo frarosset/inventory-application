@@ -32,7 +32,7 @@ const newValidation = [
     .trim()
     .optional({ values: "falsy" })
     .isLength({
-      max: process.env.NAME_MAX_LENGTH,
+      max: process.env.NOTES_MAX_LENGTH,
     })
     .withMessage(
       `Notes can have at most ${process.env.NOTES_MAX_LENGTH}  ${
