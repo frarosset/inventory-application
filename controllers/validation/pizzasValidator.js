@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 const protectedValidation = require("./protectedValidation.js");
 const populateReqLocalsWithValidNames = require("./populateReqLocalsWithValidNames.js");
-const handleValidationErrors = require("./handleValidationErrors.js");
+const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
 
 const newValidation = [
   protectedValidation,
@@ -67,7 +67,7 @@ const newValidation = [
     }
     return true;
   }),
-  handleValidationErrors,
+  handleValidationErrorsFcn("pizzaNew"),
 ];
 
 module.exports = newValidation;
