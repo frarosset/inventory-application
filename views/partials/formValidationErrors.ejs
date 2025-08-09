@@ -1,0 +1,12 @@
+<%_ if(locals.validationErrors){ _%>
+<div role="alert" aria-live="assertive">
+  <p><strong>The action cannot be performed.</strong> Please fix the following errors:</p>
+  <ul>
+    <%_ validationErrors.orderedMsgNames.forEach((errName) => { _%>
+    <%_ validationErrors.groupedMsg[errName].forEach((msg) => { _%>
+    <li><%= msg %></li>
+    <%_ }) _%>
+    <%_ }) _%>
+  </ul>
+</div>
+<%_ } _%>
