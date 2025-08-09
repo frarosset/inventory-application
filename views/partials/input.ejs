@@ -1,0 +1,4 @@
+<label>
+  <span><%= label %></span>
+  <input <%- include("inputParams.ejs",{...locals, value: locals.data?.[name]}) _%>>
+</label>

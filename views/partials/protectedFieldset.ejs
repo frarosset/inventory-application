@@ -1,24 +1,26 @@
 <fieldset>
   <legend>Protection</legend>
-  <%- include("checkbox.ejs", {name: "is_protected", id: "is_protected", label: "Protect this item from edits or deletion. Admin password is required to enable protection or apply changes." }) _%>
-  <div>
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" maxlength="<%= process.env.PWD_MAX_LENGTH %>">
+  <%- include("checkbox.ejs", {name: "is_protected", id: "is_protected", checked: locals.data?.is_protected, label: "Protect this item from edits or deletion." }) _%>
+
+  <div id="passwordDiv">
+    <p>Admin password is required to enable protection or apply changes.</p>
+    <%- include("input.ejs",{...locals, type: "password", name: "password", label: "Password", maxlength: process.env.PWD_MAX_LENGTH}) _%>
   </div>
   <script>
     (() => {
       const protectedInput = document.querySelector("#is_protected");
-      const passwordInput = document.querySelector("#password");
+      const passwordInputDiv = document.querySelector("#passwordDiv");
+      const passwordInput = passwordInputDiv.querySelector('input[type="password"]');
 
       const setPasswordInputConstraints = () => {
         if (protectedInput.checked) {
           passwordInput.required = true;
           passwordInput.disabled = false;
-          passwordInput.parentElement.style.visibility = "visible";
+          passwordInputDiv.style.visibility = "visible";
         } else {
           passwordInput.required = false;
           passwordInput.disabled = true;
-          passwordInput.parentElement.style.visibility = "hidden";
+          passwordInputDiv.style.visibility = "hidden";
         }
       }
 

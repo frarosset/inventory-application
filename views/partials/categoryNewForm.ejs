@@ -1,13 +1,7 @@
 <form action="/categories/new" method="POST">
   <fieldset>
-    <div>
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" maxlength="<%= process.env.NAME_MAX_LENGTH %>" pattern="<%= process.env.NAME_REGEX %>" title="<%= process.env.NAME_REGEX_MSG %>" required>
-    </div>
-    <div>
-      <label for="notes">Notes</label>
-      <textarea type="text" id="notes" name="notes" maxlength="<%= process.env.NOTES_MAX_LENGTH %>" pattern="<%= process.env.NOTES_REGEX %>" title="<%= process.env.NOTES_REGEX_MSG %>"></textarea>
-    </div>
+    <%- include("input.ejs",{...locals, type: "text", name: "name", label: "Name", maxlength: process.env.NAME_MAX_LENGTH, required: true,  pattern: process.env.NAME_REGEX, title: process.env.NAME_REGEX_MSG}) _%>
+    <%- include("textarea.ejs",{...locals, name: "notes", label: "Notes", maxlength: process.env.NOTES_MAX_LENGTH, pattern: process.env.NOTES_REGEX, title: process.env.NOTES_REGEX_MSG}) _%>
   </fieldset>
   <%- include("protectedFieldset.ejs") _%>
   <fieldset>
@@ -19,7 +13,7 @@
       <span class="incompatible" title="These ingredients automatically exclude this category">incompatible</span>
       with it.
     </p>
-    <%- include("multiStateCheckboxInputList.ejs", {name: "ingredients", list: ingredients, states: ["none","enforcingIngredients","incompatibleIngredients"]}) _%>
+    <%- include("multiStateCheckboxInputList.ejs", {list: ingredients, states: ["none","enforcingIngredients","incompatibleIngredients"]}) _%>
   </fieldset>
   <fieldset>
     <legend>Apply to these Pizzas</legend>

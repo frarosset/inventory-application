@@ -1,14 +1,14 @@
 <%- include("checkboxInputList.ejs", {name, list}) _%>
-<div>
-  <p>Some protected items have been selected. Type the admin password to edit them.</p>
-  <label for="password">Password</label>
-  <input type="password" id="password-checkbox-list" name="passwordCheckboxList" maxlength="<%= process.env.PWD_MAX_LENGTH %>">
+<div id="passwordCheckboxListDiv">
+  <p>Some protected items have been selected. Admin password is required to to edit them.</p>
+  <%- include("input.ejs",{...locals, type: "password", name: "passwordCheckboxList", label: "Password", maxlength: process.env.PWD_MAX_LENGTH}) _%>
 </div>
 <script>
   (() => {
-    const protectedValuesSet = new Set(<%- JSON.stringify(protectedValues) %>);
+    const protectedValuesSet = new Set(<%- JSON.stringify(protectedValues) _%>);
     const checkboxInputs = Array.from(document.querySelectorAll('input[name="<%= name %>"]'));
-    const passwordCheckboxList = document.querySelector("#password-checkbox-list");
+    const passwordCheckboxListDiv = document.querySelector("#passwordCheckboxListDiv");
+    const passwordCheckboxList = passwordCheckboxListDiv.querySelector('input[type="password"]');
 
     function hasProtectedSelected() {
       const selected = checkboxInputs.filter(input => input.checked);
@@ -19,11 +19,11 @@
       if (hasProtectedSelected()) {
         passwordCheckboxList.required = true;
         passwordCheckboxList.disabled = false;
-        passwordCheckboxList.parentElement.style.visibility = "visible";
+        passwordCheckboxListDiv.style.visibility = "visible";
       } else {
         passwordCheckboxList.required = false;
         passwordCheckboxList.disabled = true;
-        passwordCheckboxList.parentElement.style.visibility = "hidden";
+        passwordCheckboxListDiv.style.visibility = "hidden";
       }
     }
 

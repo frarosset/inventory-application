@@ -1,0 +1,21 @@
+<%_ 
+if (locals.validationErrors) {
+  const err = locals.validationErrors.orderedMsgNames;
+  if (err.includes(name)) {
+    locals.class = (locals.class ? locals.class + ' ' : '') + 'validation-error';
+  }
+  if (err[0] === name) {
+    locals.autofocus = true;
+    locals.onfocus = 'this.setSelectionRange(-1,-1)'
+  }
+}
+const params = ["id","class","type","name","value","maxlength","min","max","step","pattern","title","onclick","onfocus"];
+params.forEach(param => {
+if (locals[param] != null) { _%>
+<%= param %>="<%= locals[param] %>"
+<%_ }}) _%>
+<%_ const paramsShort = ["required","checked","autofocus"];
+paramsShort.forEach(param => {
+if (locals[param]) { _%>
+<%= param %>
+<%_ }}) _%>

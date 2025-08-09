@@ -1,5 +1,7 @@
 <ul>
-  <%_ list.forEach(value => { _%>
-  <li><%- include("multiStateCheckbox.ejs", {name,value,states}) _%></li>
+  <%_ list.forEach(value => {
+    const name = locals.states.find(state => locals.data?.[state]?.includes?.(value)) ?? locals.states[0];
+  _%>
+  <li><%- include("multiStateCheckbox.ejs", {name,value, states}) _%></li>
   <%_ }) _%>
 </ul>

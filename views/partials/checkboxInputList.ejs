@@ -1,5 +1,6 @@
 <ul>
-  <%_ list.forEach(value => { _%>
-  <li><%- include("checkbox.ejs", {name,value}) _%></li>
+  <%_ list.forEach((value,idx) => { 
+    const checked = locals.data?.[name]?.includes(value) _%>
+  <li><%- include("checkbox.ejs", {name, value, checked}) _%></li>
   <%_ }) _%>
 </ul>

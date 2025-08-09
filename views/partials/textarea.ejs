@@ -1,0 +1,4 @@
+<label>
+  <span><%= label %></span>
+  <textarea <%- include("inputParams.ejs",{...locals}) _%>><%= locals.data?.[name] || "" %></textarea>
+</label>

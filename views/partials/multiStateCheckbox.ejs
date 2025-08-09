@@ -1,5 +1,7 @@
 <%# Instantiate multiStateCheckboxScript.ejs once in the page to use this component %>
 <%# the first state in the locals.states must be the unchecked state %>
 <label>
-  <input type="checkbox" onclick="cycleMultiStateCheckboxState(this,<%= JSON.stringify(states) %>)" <% if (typeof id !== 'undefined') { %> id="<%= id %>" <% } %> name="<%= states[0] %>" <% if (typeof value !== 'undefined') { %> value="<%= value %>" <% } %>><%= locals.label || value -%>
+  <%_ const callback =  `cycleMultiStateCheckboxState(this,${JSON.stringify(locals.states)})`;
+      const checked = name !== locals.states[0]; _%>
+  <input <%- include("inputParams.ejs",{...locals, type: "checkbox", onclick: callback, checked}) _%>><%= locals.label || value -%>
 </label>
