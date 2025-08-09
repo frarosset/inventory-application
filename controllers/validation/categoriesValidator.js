@@ -84,36 +84,35 @@ const newValidation = [
     .customSanitizer((value) => (typeof value === "string" ? [value] : value))
     .isArray()
     .withMessage("Invalid format for pizzas to be assigned to this category.")
-    .customSanitizer((value) => [...new Set(value)]) // remove duplicates,
-    .custom((value, { req }) => {
-      const anyProtectedPizzas = value.some((pizza) =>
-        req.locals.allProtectedPizzas.includes(pizza)
-      );
-
-      if (anyProtectedPizzas) {
-        if (!req.body.passwordCheckboxList) {
-          throw new Error(
-            "The admin password is required to assign this category to the selected protected pizzas."
-          );
-        }
-
-        if (
-          typeof req.body.passwordCheckboxList !== "string" ||
-          req.body.passwordCheckboxList.length >
-            parseInt(process.env.PWD_MAX_LENGTH) ||
-          req.body.passwordCheckboxList !== process.env.ADMIN_PASSWORD
-        ) {
-          throw new Error(
-            "The admin password to assign this category to the selected protected pizzas is incorrect."
-          );
-        }
-      }
-
-      return true;
-    }),
+    .customSanitizer((value) => [...new Set(value)]), // remove duplicates,
   body("pizzas.*").custom(async (value, { req }) => {
     if (!req.locals.allPizzas.includes(value)) {
       throw new Error(`Pizza '${value}' is not allowed.`);
+    }
+    return true;
+  }),
+  body("passwordCheckboxList").custom((value, { req }) => {
+    const anyProtectedPizzas = req.body.pizzas?.some((pizza) =>
+      req.locals.allProtectedPizzas.includes(pizza)
+    );
+
+    if (anyProtectedPizzas) {
+      if (!req.body.passwordCheckboxList) {
+        throw new Error(
+          "The admin password is required to assign this category to the selected protected pizzas."
+        );
+      }
+
+      if (
+        typeof req.body.passwordCheckboxList !== "string" ||
+        req.body.passwordCheckboxList.length >
+          parseInt(process.env.PWD_MAX_LENGTH) ||
+        req.body.passwordCheckboxList !== process.env.ADMIN_PASSWORD
+      ) {
+        throw new Error(
+          "The admin password to assign this category to the selected protected pizzas is incorrect."
+        );
+      }
     }
     return true;
   }),
