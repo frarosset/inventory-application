@@ -79,7 +79,9 @@ const SQL_drop = `
   DROP VIEW IF EXISTS pizzas_per_category;
   DROP VIEW IF EXISTS pizzas_brief;
   DROP VIEW IF EXISTS ingredients_per_pizza;
+  DROP VIEW IF EXISTS ingredients_names_per_pizza;
   DROP VIEW IF EXISTS categories_per_pizza;
+  DROP VIEW IF EXISTS categories_names_per_pizza;
   DROP VIEW IF EXISTS pizzas_actual_categories;
   DROP VIEW IF EXISTS pizzas_categories_rules;
 
@@ -223,6 +225,19 @@ const SQL_create = `
   GROUP BY pizza_id
   ORDER BY pizza_id;
 
+  CREATE VIEW ingredients_names_per_pizza AS
+  SELECT 
+    pi.pizza_id, 
+    COALESCE(
+      JSON_AGG(i.name ORDER BY pi.ingredient_id
+      ), '[]'::json)
+    AS ingredients
+  FROM pizzas_ingredients AS pi
+  LEFT JOIN ingredients AS i
+  ON pi.ingredient_id = i.id
+  GROUP BY pizza_id
+  ORDER BY pizza_id;
+
   CREATE VIEW categories_per_pizza AS
   SELECT -- or explicit, using:  COALESCE(pac_c.pizza_id, pc_c.pizza_id, pcr_c.pizza_id) AS pizza_id, ...
     COALESCE(pac_c.pizza_id, pc_c.pizza_id, pcr_c.pizza_id) AS pizza_id,
@@ -282,6 +297,19 @@ const SQL_create = `
       GROUP BY pizza_id
     ) AS pcr_c
   USING(pizza_id) -- or ON pcr_c.pizza_id = COALESCE(pac_c.pizza_id,pc_c.pizza_id)
+  ORDER BY pizza_id;
+
+  CREATE VIEW categories_names_per_pizza AS
+  SELECT 
+    pc.pizza_id, 
+    COALESCE(
+      JSON_AGG(c.name ORDER BY pc.category_id
+      ), '[]'::json)
+    AS categories
+  FROM pizzas_categories AS pc
+  LEFT JOIN categories AS c
+  ON pc.category_id = c.id
+  GROUP BY pizza_id
   ORDER BY pizza_id;
 
   CREATE VIEW pizzas_brief AS

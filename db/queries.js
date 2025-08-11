@@ -318,6 +318,30 @@ exports.read.pizza = async (id) => {
   return rows[0];
 };
 
+// This gets only the essential info for edit a pizza
+exports.read.pizzaEdit = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        p.*,
+        COALESCE(ingredients,'[]'::json) AS ingredients,    
+        COALESCE(categories,'[]'::json) AS categories
+      FROM (
+      SELECT * 
+        FROM pizzas
+        WHERE id=$1
+      ) AS p
+      LEFT JOIN ingredients_names_per_pizza AS ip
+      ON p.id = ip.pizza_id
+      LEFT JOIN categories_names_per_pizza AS cp
+      ON p.id = cp.pizza_id;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
 exports.read.ingredientsBrief = async () => {
   const { rows } = await pool.query(`
     SELECT 
