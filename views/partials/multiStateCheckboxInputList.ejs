@@ -1,7 +1,12 @@
-<ul>
-  <%_ list.forEach(value => {
+<div>
+  <%_ locals.states.forEach(name => { _%>
+  <%- include("inputValidationErrors.ejs", {name}) _%>
+  <%_ }) _%>
+  <ul>
+    <%_ list.forEach(value => {
     const name = locals.states.find(state => locals.data?.[state]?.includes?.(value)) ?? locals.states[0];
   _%>
-  <li><%- include("multiStateCheckbox.ejs", {name,value, states}) _%></li>
-  <%_ }) _%>
-</ul>
+    <li><%- include("multiStateCheckbox.ejs", {name,value, states, validationErrors: null}) _%></li>
+    <%_ }) _%>
+  </ul>
+</div>
