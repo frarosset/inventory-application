@@ -1,10 +1,10 @@
 <form action="/pizzas/new" method="POST">
   <%- include("formValidationErrors.ejs") _%>
   <fieldset>
-    <%- include("input.ejs",{...locals, type: "text", name: "name", label: "Name", maxlength: process.env.NAME_MAX_LENGTH, required: true,  pattern: process.env.NAME_REGEX, title: process.env.NAME_REGEX_MSG}) _%>
-    <%- include("textarea.ejs",{...locals, name: "notes", label: "Notes", maxlength: process.env.NOTES_MAX_LENGTH, pattern: process.env.NOTES_REGEX, title: process.env.NOTES_REGEX_MSG}) _%>
+    <%- include("input.ejs",{type: "text", name: "name", label: "Name", maxlength: process.env.NAME_MAX_LENGTH, required: true,  pattern: process.env.NAME_REGEX, title: process.env.NAME_REGEX_MSG}) _%>
+    <%- include("textarea.ejs",{name: "notes", label: "Notes", maxlength: process.env.NOTES_MAX_LENGTH, pattern: process.env.NOTES_REGEX, title: process.env.NOTES_REGEX_MSG}) _%>
   </fieldset>
-  <%- include("protectedFieldset.ejs", {data: locals.data}) _%>
+  <%- include("protectedFieldset.ejs") _%>
   <fieldset>
     <legend>Ingredients</legend>
     <%- include("checkboxInputList.ejs", {name: "ingredients", list: ingredients, data: locals.data}) _%>

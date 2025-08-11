@@ -8,10 +8,10 @@
 </head>
 
 <body>
-  <%- include("partials/header.ejs",{pageTitle,highlightLink: "ingredients"}) %>
+  <%- include("partials/header.ejs",{highlightLink: "ingredients"}) %>
   <h2>Ingredients</h2>
   <a href="/ingredients/new">New</a>
-  <%- include("partials/ingredientsBriefTable.ejs", {ingredientsBriefData}) %>
+  <%- include("partials/ingredientsBriefTable.ejs") %>
 </body>
 
 </html>

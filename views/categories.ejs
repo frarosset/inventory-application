@@ -8,10 +8,10 @@
 </head>
 
 <body>
-  <%- include("partials/header.ejs",{pageTitle,highlightLink: "categories"}) %>
+  <%- include("partials/header.ejs",{highlightLink: "categories"}) %>
   <h2>Categories</h2>
   <a href="/categories/new">New</a>
-  <%- include("partials/categoriesBriefTable.ejs", {categoriesBriefData}) %>
+  <%- include("partials/categoriesBriefTable.ejs") %>
 </body>
 
 </html>

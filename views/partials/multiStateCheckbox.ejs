@@ -3,6 +3,6 @@
 <label>
   <%_ const callback =  `cycleMultiStateCheckboxState(this,${JSON.stringify(locals.states)})`;
       const checked = name !== locals.states[0]; _%>
-  <input <%- include("inputParams.ejs",{...locals, type: "checkbox", onclick: callback, checked}) _%>><%= locals.label || value -%>
+  <input <%- include("inputParams.ejs",{type: "checkbox", onclick: callback, checked}) _%>><%= locals.label || value -%>
   <%- include("inputValidationErrors.ejs") _%>
 </label>

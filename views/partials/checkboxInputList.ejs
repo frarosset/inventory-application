@@ -3,7 +3,7 @@
   <ul>
     <%_ list.forEach((value,idx) => { 
     const checked = locals.data?.[name]?.includes(value) _%>
-    <li><%- include("checkbox.ejs", {name, value, checked, validationErrors: null}) _%></li>
+    <li><%- include("checkbox.ejs", {value, checked, validationErrors: null}) _%></li>
     <%_ }) _%>
   </ul>
 </div>

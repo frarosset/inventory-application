@@ -8,7 +8,7 @@
 </head>
 
 <body>
-  <%- include("partials/header.ejs",{pageTitle,highlightLink: "ingredients"}) %>
+  <%- include("partials/header.ejs",{highlightLink: "ingredients"}) %>
   <h2><%= ingredientData.name %></h2>
 
   <td><%- include("partials/isProtectedSymbol.ejs", {is_protected: ingredientData.is_protected}) %></td>

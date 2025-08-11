@@ -8,9 +8,9 @@
 </head>
 
 <body>
-  <%- include("partials/header.ejs",{pageTitle,highlightLink: "ingredients"}) %>
+  <%- include("partials/header.ejs",{highlightLink: "ingredients"}) %>
   <h2>Add New Ingredient</h2>
-  <%- include("partials/ingredientNewForm.ejs", {categories, pizzas, protectedPizzas}) %>
+  <%- include("partials/ingredientNewForm.ejs") %>
 </body>
 
 </html>

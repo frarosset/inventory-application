@@ -6,7 +6,7 @@
     <%_ list.forEach(value => {
     const name = locals.states.find(state => locals.data?.[state]?.includes?.(value)) ?? locals.states[0];
   _%>
-    <li><%- include("multiStateCheckbox.ejs", {name,value, states, validationErrors: null}) _%></li>
+    <li><%- include("multiStateCheckbox.ejs", {name,value, validationErrors: null}) _%></li>
     <%_ }) _%>
   </ul>
 </div>
