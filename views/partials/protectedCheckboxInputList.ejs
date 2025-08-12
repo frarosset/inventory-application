@@ -1,6 +1,6 @@
 <%- include("checkboxInputList.ejs") _%>
 <div id="passwordCheckboxListDiv">
-  <p>Some protected items have been selected. Admin password is required to to edit them.</p>
+  <p><strong>Some protected items have been selected.</strong> Admin password is required to apply changes to them.</p>
   <%- include("input.ejs",{type: "password", name: "passwordCheckboxList", label: "Password", maxlength: process.env.PWD_MAX_LENGTH}) _%>
 </div>
 <script>

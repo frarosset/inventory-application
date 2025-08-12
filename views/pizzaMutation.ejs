@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<%_ const subtitle = locals.edit ? `Edit Pizza "${data.name}"` : "Add New Pizza" _%>
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= pageTitle %> | Add New Pizza</title>
+  <title><%= pageTitle %> | <%= subtitle %></title>
 </head>
 
 <body>
   <%- include("partials/header.ejs",{highlightLink: "pizzas"}) %>
-  <h2>Add New Pizza</h2>
-  <%- include("partials/pizzaNewForm.ejs") %>
+  <h2><%= subtitle %></h2>
+  <%- include("partials/pizzaMutationForm.ejs") %>
 </body>
 
 </html>

@@ -20,7 +20,7 @@ exports.getNew = asyncHandler(async (req, res) => {
   const ingredients = await db.read.ingredientsNames();
   const categories = await db.read.categoriesNames();
 
-  res.render("pizzaNew", {
+  res.render("pizzaMutation", {
     pageTitle: process.env.TITLE,
     ingredients: ingredients.map((i) => i.name),
     categories: categories.map((i) => i.name),
@@ -44,10 +44,11 @@ exports.editById = asyncHandler(async (req, res) => {
   const ingredients = await db.read.ingredientsNames();
   const categories = await db.read.categoriesNames();
 
-  res.render("pizzaNew", {
+  res.render("pizzaMutation", {
     pageTitle: process.env.TITLE,
     ingredients: ingredients.map((i) => i.name),
     categories: categories.map((i) => i.name),
     data: pizzaData,
+    edit: true,
   });
 });

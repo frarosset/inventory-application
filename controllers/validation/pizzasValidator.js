@@ -67,7 +67,7 @@ const newValidation = [
     }
     return true;
   }),
-  handleValidationErrorsFcn("pizzaNew"),
+  handleValidationErrorsFcn("pizzaMutation"),
 ];
 
 module.exports = newValidation;

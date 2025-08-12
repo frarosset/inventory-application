@@ -3,9 +3,18 @@
   <%- include("checkbox.ejs", {name: "is_protected", id: "is_protected", checked: locals.data?.is_protected, label: "Protect this item from edits or deletion." }) _%>
 
   <div id="passwordDiv">
-    <p>Admin password is required to enable protection or apply changes.</p>
-    <%- include("input.ejs",{type: "password", name: "password", label: "Password", maxlength: process.env.PWD_MAX_LENGTH}) _%>
+    <%_ 
+    const editProtectedItem = locals.edit && locals.data?.is_protected;
+
+    const inputParams = {type: "password", name: "password", label: "Password", maxlength: process.env.PWD_MAX_LENGTH, required: editProtectedItem};
+    const inputP = editProtectedItem ? "<strong>This item is protected.</strong> Admin password is required to apply changes." : "Admin password is required to enable protection or apply changes later on.";
+    _%>
+
+    <p><%- inputP _%></p>
+    <%- include("input.ejs", inputParams) _%>
   </div>
+
+  <%_ if(!editProtectedItem){ _%>
   <script>
     (() => {
       const protectedInput = document.querySelector("#is_protected");
@@ -29,4 +38,5 @@
       // setPasswordInputConstraints();
     })();
   </script>
+  <%_ } _%>
 </fieldset>
