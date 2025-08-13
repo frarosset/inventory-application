@@ -41,3 +41,19 @@ exports.postNew = [
     res.redirect("/categories/" + id);
   }),
 ];
+
+exports.getEditById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const categoryData = await db.read.categoryEdit(id);
+  const ingredients = await db.read.ingredientsNames();
+  const pizzas = await db.read.pizzasNames();
+
+  res.render("categoryNew", {
+    pageTitle: process.env.TITLE,
+    ingredients: ingredients.map((i) => i.name),
+    pizzas: pizzas.map((i) => i.name),
+    protectedPizzas: pizzas.filter((p) => p.is_protected).map((p) => p.name),
+    data: categoryData,
+    edit: true,
+  });
+});

@@ -76,9 +76,11 @@ const SQL_drop = `
   DROP VIEW IF EXISTS category_rules_per_ingredient;
   DROP VIEW IF EXISTS category_names_rules_per_ingredient;
   DROP VIEW IF EXISTS ingredient_rules_per_category;
+  DROP VIEW IF EXISTS ingredient_names_rules_per_category;
   DROP VIEW IF EXISTS pizzas_per_ingredient;
   DROP VIEW IF EXISTS pizzas_names_per_ingredient;
   DROP VIEW IF EXISTS pizzas_per_category;
+  DROP VIEW IF EXISTS pizzas_names_per_category;
   DROP VIEW IF EXISTS pizzas_brief;
   DROP VIEW IF EXISTS ingredients_per_pizza;
   DROP VIEW IF EXISTS ingredients_names_per_pizza;
@@ -221,6 +223,25 @@ const SQL_create = `
       JSON_AGG(
         JSON_BUILD_OBJECT('id', ingredient_id, 'name', i.name)
         ORDER BY ingredient_id
+      ) FILTER (WHERE rule_type = 'incompatible')
+      , '[]'::json)
+    AS incompatible_ingredients
+  FROM ingredients_categories_rules AS ic
+  LEFT JOIN ingredients AS i
+  ON ic.ingredient_id = i.id
+  GROUP BY category_id
+  ORDER BY category_id;
+
+  CREATE VIEW ingredient_names_rules_per_category AS
+  SELECT 
+    category_id,
+    COALESCE(
+      JSON_AGG(i.name ORDER BY ingredient_id
+      ) FILTER (WHERE rule_type = 'enforcing')
+      , '[]'::json)
+    AS enforcing_ingredients,
+    COALESCE(
+      JSON_AGG(i.name ORDER BY ingredient_id
       ) FILTER (WHERE rule_type = 'incompatible')
       , '[]'::json)
     AS incompatible_ingredients
@@ -435,6 +456,19 @@ const SQL_create = `
   ) AS pcr_c
   USING(category_id)
   ORDER BY category_id;
+
+ CREATE VIEW pizzas_names_per_category AS	
+    SELECT 
+      category_id, 
+      COALESCE(
+        JSON_AGG(p.name ORDER BY p.id
+        ), '[]'::json)
+      AS pizzas
+    FROM pizzas_categories AS pc
+    LEFT JOIN pizzas AS p
+    ON pc.pizza_id = p.id
+    GROUP BY category_id
+    ORDER BY category_id;
 `;
 
 const SQL_init = SQL_drop + SQL_create;
