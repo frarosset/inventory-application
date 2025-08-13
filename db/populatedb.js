@@ -74,8 +74,10 @@ const createForeignKeyColumn = (id, tab, tabId = "id") => `
 
 const SQL_drop = `
   DROP VIEW IF EXISTS category_rules_per_ingredient;
+  DROP VIEW IF EXISTS category_names_rules_per_ingredient;
   DROP VIEW IF EXISTS ingredient_rules_per_category;
   DROP VIEW IF EXISTS pizzas_per_ingredient;
+  DROP VIEW IF EXISTS pizzas_names_per_ingredient;
   DROP VIEW IF EXISTS pizzas_per_category;
   DROP VIEW IF EXISTS pizzas_brief;
   DROP VIEW IF EXISTS ingredients_per_pizza;
@@ -172,6 +174,30 @@ const SQL_create = `
     COALESCE(
       JSON_AGG(
         JSON_BUILD_OBJECT('id', category_id, 'name', c.name)
+        ORDER BY category_id
+      ) FILTER (WHERE rule_type = 'incompatible')
+      , '[]'::json)
+    AS incompatible_categories
+  FROM ingredients_categories_rules AS ic
+  LEFT JOIN categories AS c ON ic.category_id = c.id
+  GROUP BY ingredient_id
+  ORDER BY ingredient_id;
+
+  CREATE VIEW category_names_rules_per_ingredient AS
+  SELECT
+    ingredient_id,
+    -- Enforced categories as array of objects
+    COALESCE(
+      JSON_AGG(
+        c.name
+        ORDER BY category_id
+      ) FILTER (WHERE rule_type = 'enforcing')
+      , '[]'::json)
+    AS enforced_categories,
+    -- Incompatible categories as array of objects
+    COALESCE(
+      JSON_AGG(
+        c.name
         ORDER BY category_id
       ) FILTER (WHERE rule_type = 'incompatible')
       , '[]'::json)
@@ -336,6 +362,18 @@ const SQL_create = `
     AS pizzas
   FROM pizzas_ingredients AS pi
   LEFT JOIN pizzas_brief AS p
+  ON pi.pizza_id = p.id
+  GROUP BY ingredient_id
+  ORDER BY ingredient_id;
+
+  CREATE VIEW pizzas_names_per_ingredient AS
+  SELECT 
+    pi.ingredient_id,
+    COALESCE(
+      JSON_AGG(p.name ORDER BY pi.pizza_id), '[]'::json)
+    AS pizzas
+  FROM pizzas_ingredients AS pi
+  LEFT JOIN pizzas AS p
   ON pi.pizza_id = p.id
   GROUP BY ingredient_id
   ORDER BY ingredient_id;

@@ -34,9 +34,6 @@ exports.getNew = asyncHandler(async (req, res) => {
   });
 });
 
-exports.postNew = (req, res) => {
-  res.send(req.body);
-};
 exports.postNew = [
   newValidation,
   asyncHandler(async (req, res) => {
@@ -47,3 +44,19 @@ exports.postNew = [
     res.redirect("/ingredients/" + id);
   }),
 ];
+
+exports.getEditById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const ingredientData = await db.read.ingredientEdit(id);
+  const categories = await db.read.categoriesNames();
+  const pizzas = await db.read.pizzasNames();
+
+  res.render("ingredientNew", {
+    pageTitle: process.env.TITLE,
+    categories: categories.map((i) => i.name),
+    pizzas: pizzas.map((i) => i.name),
+    protectedPizzas: pizzas.filter((p) => p.is_protected).map((p) => p.name),
+    data: ingredientData,
+    edit: true,
+  });
+});

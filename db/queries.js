@@ -392,6 +392,31 @@ exports.read.ingredient = async (id) => {
   return rows[0];
 };
 
+// This gets only the essential info for edit an ingredient
+exports.read.ingredientEdit = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        i.*,
+        COALESCE(pizzas,'[]'::json) AS pizzas,
+        COALESCE(enforced_categories,'[]'::json) AS "enforcedCategories",
+        COALESCE(incompatible_categories,'[]'::json) AS "incompatibleCategories"
+      FROM (
+      SELECT * 
+        FROM ingredients
+        WHERE id=$1
+      ) AS i
+      LEFT JOIN pizzas_names_per_ingredient AS pi
+      ON i.id = pi.ingredient_id
+      LEFT JOIN category_names_rules_per_ingredient AS ci
+      ON i.id = ci.ingredient_id;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
 exports.read.categoriesBrief = async () => {
   const { rows } = await pool.query(`
     SELECT 
