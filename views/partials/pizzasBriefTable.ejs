@@ -7,6 +7,7 @@
       <th>Availability</th>
       <th>Cost</th>
       <th>Protected</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -22,6 +23,7 @@
       <td><%=data.availability %></td>
       <td><%=data.cost %></td>
       <td><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></td>
+      <td><%- include("itemActions.ejs", {baseRoute: "/pizzas", id: data.id}) %></td>
     </tr>
     <%_ }) _%>
   </tbody>

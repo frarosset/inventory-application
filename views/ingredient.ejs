@@ -11,7 +11,8 @@
   <%- include("partials/header.ejs",{highlightLink: "ingredients"}) %>
   <h2><%= ingredientData.name %></h2>
 
-  <td><%- include("partials/isProtectedSymbol.ejs", {is_protected: ingredientData.is_protected}) %></td>
+  <%- include("partials/isProtectedSymbol.ejs", {is_protected: ingredientData.is_protected}) %>
+  <%- include("partials/itemActions.ejs", {baseRoute: "/ingredients", id: ingredientData.id}) %>
 
   <%- include("partials/ingredientDetailsTable.ejs", ingredientData) %>
 

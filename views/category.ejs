@@ -11,7 +11,8 @@
   <%- include("partials/header.ejs",{highlightLink: "categories"}) %>
   <h2><%= categoryData.name %></h2>
 
-  <td><%- include("partials/isProtectedSymbol.ejs", {is_protected: categoryData.is_protected}) %></td>
+  <%- include("partials/isProtectedSymbol.ejs", {is_protected: categoryData.is_protected}) %>
+  <%- include("partials/itemActions.ejs", {baseRoute: "/categories", id: categoryData.id}) %>
 
   <%- include("partials/categoryDetailsTable.ejs", categoryData) %>
 

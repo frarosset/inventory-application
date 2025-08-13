@@ -5,6 +5,7 @@
       <th>Stock</th>
       <th>Price</th>
       <th>Protected</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -14,6 +15,7 @@
       <td><%=data.stock %></td>
       <td><%=data.price %></td>
       <td><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></td>
+      <td><%- include("itemActions.ejs", {baseRoute: "/ingredients", id: data.id}) %></td>
     </tr>
     <%_ }) _%>
   </tbody>

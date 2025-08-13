@@ -3,6 +3,7 @@
     <tr>
       <th>Category</th>
       <th>Protected</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -10,6 +11,7 @@
     <tr>
       <td><%- include("categoryLink.ejs", data) %></td>
       <td><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></td>
+      <td><%- include("itemActions.ejs", {baseRoute: "/categories", id: data.id}) %></td>
     </tr>
     <%_ }) _%>
   </tbody>
