@@ -26,7 +26,7 @@ exports.getNew = asyncHandler(async (req, res) => {
   const categories = await db.read.categoriesNames();
   const pizzas = await db.read.pizzasNames();
 
-  res.render("ingredientNew", {
+  res.render("ingredientMutation", {
     pageTitle: process.env.TITLE,
     categories: categories.map((i) => i.name),
     pizzas: pizzas.map((i) => i.name),
@@ -51,7 +51,7 @@ exports.getEditById = asyncHandler(async (req, res) => {
   const categories = await db.read.categoriesNames();
   const pizzas = await db.read.pizzasNames();
 
-  res.render("ingredientNew", {
+  res.render("ingredientMutation", {
     pageTitle: process.env.TITLE,
     categories: categories.map((i) => i.name),
     pizzas: pizzas.map((i) => i.name),
