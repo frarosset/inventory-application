@@ -4,7 +4,7 @@ const populateReqLocalsWithValidNames = require("./populateReqLocalsWithValidNam
 const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
 
 const newValidation = [
-  protectedValidation,
+  protectedValidation(),
   populateReqLocalsWithValidNames,
   body("name")
     .trim()
@@ -116,7 +116,7 @@ const newValidation = [
     }
     return true;
   }),
-  handleValidationErrorsFcn("categoryNew"),
+  handleValidationErrorsFcn("categoryMutation"),
 ];
 
 module.exports = newValidation;

@@ -1,4 +1,5 @@
-<form action="/categories/new" method="POST">
+<%_ const postUrl = locals.edit ? `/categories/${data.id}/edit` : "/categories/new" _%>
+<form action=<%= postUrl %> method="POST">
   <%- include("formValidationErrors.ejs") _%>
   <fieldset>
     <%- include("input.ejs",{type: "text", name: "name", label: "Name", maxlength: process.env.NAME_MAX_LENGTH, required: true,  pattern: process.env.NAME_REGEX, title: process.env.NAME_REGEX_MSG}) _%>
@@ -21,8 +22,8 @@
     <%- include("protectedCheckboxInputList.ejs", {name: "pizzas", list: pizzas, protectedValues: protectedPizzas}) _%>
   </fieldset>
   <div>
-    <a href="/categories">Back</a>
-    <button>SUBMIT</button>
+    <button type="button" onclick="history.back()">Back</button>
+    <button><%= locals.edit ? "UPDATE" : "EDIT" _%></button>
   </div>
 </form>
 <%- include("multiStateCheckboxScript.ejs") _%>
