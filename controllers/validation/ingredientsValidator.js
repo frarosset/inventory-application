@@ -7,7 +7,7 @@ const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
 const ingredientsValidator = [
   populateReqLocalsWithValidNames,
   populateRouteType,
-  protectedValidation("allProtectedIngredientsIdsNameMap"),
+  protectedValidation("allProtectedIngredientsIdNameMap"),
   body("name")
     .trim()
     .notEmpty()

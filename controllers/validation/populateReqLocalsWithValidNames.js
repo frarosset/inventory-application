@@ -19,21 +19,21 @@ const populateReqLocalsWithValidNames = async (req, res, next) => {
   req.locals.allProtectedPizzas = allProtectedPizzas.map((i) => i.name);
 
   req.locals.allPizzasIdNameMap = new Map(allPizzas.map((i) => [i.id, i.name]));
-  req.locals.allProtectedPizzasIdsNameMap = new Map(
+  req.locals.allProtectedPizzasIdNameMap = new Map(
     allProtectedPizzas.map((i) => [i.id, i.name])
   );
 
   req.locals.allIngredientsIdNameMap = new Map(
     allIngredients.map((i) => [i.id, i.name])
   );
-  req.locals.allProtectedIngredientsIdsNameMap = new Map(
+  req.locals.allProtectedIngredientsIdNameMap = new Map(
     allProtectedIngredients.map((i) => [i.id, i.name])
   );
 
   req.locals.allCategoriesIdNameMap = new Map(
     allCategories.map((i) => [i.id, i.name])
   );
-  req.locals.allProtectedCategoriesIdsNameMap = new Map(
+  req.locals.allProtectedCategoriesIdNameMap = new Map(
     allProtectedCategories.map((i) => [i.id, i.name])
   );
 
