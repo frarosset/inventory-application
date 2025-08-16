@@ -10,7 +10,6 @@ const handleValidationErrorsFcn = (ejsTemplate) => (req, res, next) => {
       path: itm.path,
     }));
 
-    // todo: show the form with submitted data already filled
     return res.status(400).render(ejsTemplate, {
       pageTitle: process.env.TITLE,
       ingredients: req.locals.allIngredients,
@@ -22,6 +21,7 @@ const handleValidationErrorsFcn = (ejsTemplate) => (req, res, next) => {
         groupedMsg: groupedErrors(errors),
       },
       data: matchedData(req, { onlyValidData: false, includeOptionals: true }),
+      edit: req.locals.isEdit,
     });
   }
   // no errors

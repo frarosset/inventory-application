@@ -1,26 +1,27 @@
 const { body } = require("express-validator");
 
-const protectedValidation = [
-  body("password").custom((password, { req }) => {
-    if (req.path === "/new") {
-      if (req.body.is_protected) {
-        if (!req.body.password) {
-          throw new Error(
-            `The admin password is required for enabling protection on this item.`
-          );
-        }
+const protectedValidation = (validIdsMapName) => [
+  body("password").custom(async (password, { req }) => {
+    const validIdsMap = req.locals[validIdsMapName];
 
-        // Verify password
-        if (
-          typeof req.body.password !== "string" ||
-          req.body.password.length > parseInt(process.env.PWD_MAX_LENGTH) ||
-          req.body.password !== process.env.ADMIN_PASSWORD
-        ) {
-          throw new Error(
-            "The admin password to enable protection on this item is incorrect."
-          );
+    if (req.locals.isNew) {
+      if (req.body.is_protected) {
+        checkPassword(req.body.password);
+      }
+    } else if (req.locals.isEdit) {
+      // Check if the item is protected (from the id)
+      const editProtectedItem = validIdsMap.has(req.params.id);
+
+      if (editProtectedItem) {
+        checkPassword(req.body.password, true);
+      } else {
+        // if request to set item as protected
+        if (req.body.is_protected) {
+          checkPassword(req.body.password);
         }
       }
+    } else {
+      throw new Error("Unknown protectedValdation route");
     }
 
     return true;
@@ -29,5 +30,28 @@ const protectedValidation = [
     .customSanitizer((value) => value === "on")
     .toBoolean(),
 ];
+
+function checkPassword(password, editProtectedItem = false) {
+  if (!password) {
+    throw new Error(
+      `The admin password is required for ${
+        editProtectedItem ? "mutating" : "enabling protection on"
+      } this item.`
+    );
+  }
+
+  // Verify password
+  if (
+    typeof password !== "string" ||
+    password.length > parseInt(process.env.PWD_MAX_LENGTH) ||
+    password !== process.env.ADMIN_PASSWORD
+  ) {
+    throw new Error(
+      `The admin password to ${
+        editProtectedItem ? "mutate" : "enable protection on"
+      } this item is incorrect.`
+    );
+  }
+}
 
 module.exports = protectedValidation;

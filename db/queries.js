@@ -281,6 +281,7 @@ exports.read.pizzasBrief = async () => {
 exports.read.pizzasNames = async () => {
   const { rows } = await pool.query(`
     SELECT 
+      id,
       name,
       is_protected
     FROM pizzas

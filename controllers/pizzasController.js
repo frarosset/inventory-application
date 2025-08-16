@@ -1,6 +1,6 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
-const newValidation = require("./validation/pizzasValidator.js");
+const pizzasValidator = require("./validation/pizzasValidator.js");
 const { matchedData } = require("express-validator");
 
 exports.get = asyncHandler(async (req, res) => {
@@ -28,7 +28,7 @@ exports.getNew = asyncHandler(async (req, res) => {
 });
 
 exports.postNew = [
-  newValidation,
+  pizzasValidator,
   asyncHandler(async (req, res) => {
     const body = matchedData(req); // req.body
 
@@ -38,7 +38,7 @@ exports.postNew = [
   }),
 ];
 
-exports.editById = asyncHandler(async (req, res) => {
+exports.getEditById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const pizzaData = await db.read.pizzaEdit(id);
   const ingredients = await db.read.ingredientsNames();
@@ -52,3 +52,8 @@ exports.editById = asyncHandler(async (req, res) => {
     edit: true,
   });
 });
+
+exports.postEditById = [
+  pizzasValidator,
+  (req, res) => res.send(JSON.stringify(matchedData(req))),
+];
