@@ -14,6 +14,7 @@ const populateReqLocalsWithValidNames = async (req, res, next) => {
 
   const allProtectedPizzas = allPizzas.filter((i) => i.is_protected);
   const allProtectedIngredients = allIngredients.filter((i) => i.is_protected);
+  const allProtectedCategories = allCategories.filter((i) => i.is_protected);
 
   req.locals.allProtectedPizzas = allProtectedPizzas.map((i) => i.name);
 
@@ -27,6 +28,13 @@ const populateReqLocalsWithValidNames = async (req, res, next) => {
   );
   req.locals.allProtectedIngredientsIdsNameMap = new Map(
     allProtectedIngredients.map((i) => [i.id, i.name])
+  );
+
+  req.locals.allCategoriesIdNameMap = new Map(
+    allCategories.map((i) => [i.id, i.name])
+  );
+  req.locals.allProtectedCategoriesIdsNameMap = new Map(
+    allProtectedCategories.map((i) => [i.id, i.name])
   );
 
   next();

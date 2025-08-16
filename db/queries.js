@@ -436,7 +436,9 @@ exports.read.categoriesBrief = async () => {
 exports.read.categoriesNames = async () => {
   const { rows } = await pool.query(`
     SELECT 
-      name
+      id,
+      name,
+      is_protected
     FROM categories
     ORDER BY id;
   `);

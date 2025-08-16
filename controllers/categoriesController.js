@@ -1,6 +1,6 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
-const newValidation = require("./validation/categoriesValidator.js");
+const categoryValidator = require("./validation/categoriesValidator.js");
 const { matchedData } = require("express-validator");
 
 exports.get = asyncHandler(async (req, res) => {
@@ -32,7 +32,7 @@ exports.getNew = asyncHandler(async (req, res) => {
 });
 
 exports.postNew = [
-  newValidation,
+  categoryValidator,
   asyncHandler(async (req, res) => {
     const body = matchedData(req); // req.body
 
@@ -57,3 +57,10 @@ exports.getEditById = asyncHandler(async (req, res) => {
     edit: true,
   });
 });
+
+exports.postEditById = [
+  categoryValidator,
+  (req, res) => {
+    res.send(JSON.stringify(matchedData(req)));
+  },
+];

@@ -1,17 +1,22 @@
 const { body } = require("express-validator");
 const protectedValidation = require("./protectedValidation.js");
 const populateReqLocalsWithValidNames = require("./populateReqLocalsWithValidNames.js");
+const populateRouteType = require("./populateRouteType.js");
 const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
 
-const newValidation = [
-  protectedValidation(),
+const categoriesValiator = [
   populateReqLocalsWithValidNames,
+  populateRouteType,
+  protectedValidation("allProtectedCategoriesIdsNameMap"),
   body("name")
     .trim()
     .notEmpty()
     .withMessage("The name cannot be empty.")
     .custom((value, { req }) => {
-      if (req.locals.allCategories.includes(value)) {
+      if (
+        req.locals.allCategories.includes(value) &&
+        value !== req.locals.allCategoriesIdNameMap.get(req.params.id)
+      ) {
         throw new Error(`A category named '${value}' already exists.`);
       }
       return true;
@@ -119,4 +124,4 @@ const newValidation = [
   handleValidationErrorsFcn("categoryMutation"),
 ];
 
-module.exports = newValidation;
+module.exports = categoriesValiator;
