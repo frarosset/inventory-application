@@ -361,7 +361,9 @@ exports.read.ingredientsBrief = async () => {
 exports.read.ingredientsNames = async () => {
   const { rows } = await pool.query(`
     SELECT 
-      name
+      id,
+      name,
+      is_protected
     FROM ingredients
     ORDER BY id;
   `);
