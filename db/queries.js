@@ -424,6 +424,94 @@ exports.update.ingredient = async (data) => {
   return results[0][0]?.id;
 };
 
+exports.update.category = async (data) => {
+  const queries = [
+    {
+      text: `UPDATE categories 
+             SET name = $1, 
+             is_protected = $2,
+             notes = $3
+             WHERE id = $4 
+             AND (name IS DISTINCT FROM $1 OR 
+             is_protected IS DISTINCT FROM $2 OR
+             notes IS DISTINCT FROM $3
+             ) 
+             RETURNING id;`,
+      data: [data.name, data.is_protected ?? false, data.notes ?? "", data.id],
+    },
+    {
+      text: `
+         -- Delete all existing links (they are re-created (updated) next)
+         DELETE FROM pizzas_categories
+         WHERE category_id = $1;`,
+      data: [data.id],
+    },
+    {
+      text: `
+         -- Delete all existing links (they are re-created (updated) next)
+         DELETE FROM ingredients_categories_rules
+         WHERE category_id = $1;`,
+      data: [data.id],
+    },
+  ];
+
+  if (
+    data.enforcingIngredients instanceof Array &&
+    data.enforcingIngredients.length > 0
+  ) {
+    queries.push({
+      text: `
+         INSERT INTO ingredients_categories_rules (ingredient_id,category_id, rule_type)
+         SELECT ingredient_id, $1, 'enforcing'
+         FROM (
+            ${queryTextGetIdFromName(
+              "ingredients",
+              "ingredient_id",
+              "$2",
+              true
+            )}
+         )`,
+      data: [data.id, data.enforcingIngredients],
+    });
+  }
+
+  if (
+    data.incompatibleIngredients instanceof Array &&
+    data.incompatibleIngredients.length > 0
+  ) {
+    queries.push({
+      text: `
+         INSERT INTO ingredients_categories_rules (ingredient_id,category_id, rule_type)
+         SELECT ingredient_id, $1, 'incompatible'
+         FROM (
+            ${queryTextGetIdFromName(
+              "ingredients",
+              "ingredient_id",
+              "$2",
+              true
+            )}
+         )`,
+      data: [data.id, data.incompatibleIngredients],
+    });
+  }
+
+  if (data.pizzas instanceof Array && data.pizzas.length > 0) {
+    queries.push({
+      text: `
+         INSERT INTO pizzas_categories (pizza_id,category_id)
+         SELECT pizza_id, $1
+         FROM (
+            ${queryTextGetIdFromName("pizzas", "pizza_id", "$2", true)}
+          )`,
+      data: [data.id, data.pizzas],
+    });
+  }
+
+  const results = await makeTransaction(queries);
+
+  return results[0][0]?.id;
+};
+
 // This gets only the essential info for all pizzas in the db
 exports.read.pizzasBrief = async () => {
   const { rows } = await pool.query(`
