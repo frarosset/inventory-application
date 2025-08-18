@@ -63,7 +63,14 @@ exports.getEditById = asyncHandler(async (req, res) => {
 
 exports.postEditById = [
   ingredientsValidator,
-  (req, res) => {
-    res.send(JSON.stringify(matchedData(req)));
-  },
+  asyncHandler(async (req, res) => {
+    const data = matchedData(req); // req.body + req.params.id
+
+    const id = await db.update.ingredient(data);
+
+    // id is undefined if no change are made. Use data.id instead
+    // Possibly, use id to possibly show a message of no edit done
+
+    res.redirect("/ingredients/" + data.id);
+  }),
 ];
