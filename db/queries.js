@@ -268,6 +268,73 @@ exports.create.pizza = async (data) => {
   return results[0][0].id;
 };
 
+exports.update.pizza = async (data) => {
+  const queries = [
+    {
+      text: `UPDATE pizzas 
+             SET name = $1, 
+             is_protected = $2,
+             notes = $3
+             WHERE id = $4 
+             AND (name IS DISTINCT FROM $1 OR 
+             is_protected IS DISTINCT FROM $2 OR
+             notes IS DISTINCT FROM $3) 
+             RETURNING id;`,
+      data: [data.name, data.is_protected ?? false, data.notes ?? "", data.id],
+    },
+    {
+      text: `
+         -- Delete all existing links (they are re-created (updated) next)
+         DELETE FROM pizzas_categories
+         WHERE pizza_id = $1;`,
+      data: [data.id],
+    },
+    {
+      text: `
+         -- Delete all existing links (they are re-created (updated) next)
+         DELETE FROM pizzas_ingredients
+         WHERE pizza_id = $1;`,
+      data: [data.id],
+    },
+  ];
+
+  if (data.categories instanceof Array && data.categories.length > 0) {
+    queries.push({
+      text: `
+         -- Insert new links
+         INSERT INTO pizzas_categories (pizza_id,category_id)
+         SELECT $1, category_id
+         FROM (${queryTextGetIdFromName(
+           "categories",
+           "category_id",
+           "$2",
+           true
+         )});`,
+      data: [data.id, data.categories],
+    });
+  }
+
+  if (data.ingredients instanceof Array && data.ingredients.length > 0) {
+    queries.push({
+      text: `
+         -- Insert new links
+         INSERT INTO pizzas_ingredients (pizza_id,ingredient_id)
+         SELECT $1, ingredient_id
+         FROM (${queryTextGetIdFromName(
+           "ingredients",
+           "ingredient_id",
+           "$2",
+           true
+         )});`,
+      data: [data.id, data.ingredients],
+    });
+  }
+
+  const results = await makeTransaction(queries);
+
+  return results[0][0]?.id;
+};
+
 // This gets only the essential info for all pizzas in the db
 exports.read.pizzasBrief = async () => {
   const { rows } = await pool.query(`
