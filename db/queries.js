@@ -5,7 +5,10 @@ exports.read = {};
 exports.update = {};
 exports.delete = {};
 
-const makeTransaction = async (queries) => {
+const makeTransaction = async (
+  queries,
+  beforeCommitCallback = async () => {}
+) => {
   // This assumes the queries results are not used within the queries
   const results = [];
 
@@ -18,6 +21,12 @@ const makeTransaction = async (queries) => {
       const res = await client.query(query.text, query.data ?? []);
       results.push(res.rows || []);
     }
+
+    const beforeCommitCallbackResult = await beforeCommitCallback(
+      client,
+      results
+    );
+    results.push(beforeCommitCallbackResult);
 
     await client.query("COMMIT");
 
@@ -271,6 +280,21 @@ exports.create.pizza = async (data) => {
 exports.update.pizza = async (data) => {
   const queries = [
     {
+      // Lock relevant rows
+      text: `SELECT * FROM pizzas WHERE id = $1 FOR UPDATE;`,
+      data: [data.id],
+    },
+    {
+      // Lock relevant rows
+      text: `SELECT * FROM pizzas_categories WHERE pizza_id = $1 FOR UPDATE;`,
+      data: [data.id],
+    },
+    {
+      // Lock relevant rows
+      text: `SELECT * FROM pizzas_ingredients WHERE pizza_id = $1 FOR UPDATE;`,
+      data: [data.id],
+    },
+    {
       text: `UPDATE pizzas 
              SET name = $1, 
              is_protected = $2,
@@ -286,17 +310,22 @@ exports.update.pizza = async (data) => {
       text: `
          -- Delete all existing links (they are re-created (updated) next)
          DELETE FROM pizzas_categories
-         WHERE pizza_id = $1;`,
+         WHERE pizza_id = $1
+         RETURNING category_id;`,
       data: [data.id],
     },
     {
       text: `
          -- Delete all existing links (they are re-created (updated) next)
          DELETE FROM pizzas_ingredients
-         WHERE pizza_id = $1;`,
+         WHERE pizza_id = $1
+         RETURNING ingredient_id;`,
       data: [data.id],
     },
   ];
+
+  let nextIdx = queries.length;
+  const idxCreated = {};
 
   if (data.categories instanceof Array && data.categories.length > 0) {
     queries.push({
@@ -309,9 +338,11 @@ exports.update.pizza = async (data) => {
            "category_id",
            "$2",
            true
-         )});`,
+         )})
+         RETURNING category_id;`,
       data: [data.id, data.categories],
     });
+    idxCreated.categories = nextIdx++;
   }
 
   if (data.ingredients instanceof Array && data.ingredients.length > 0) {
@@ -325,18 +356,71 @@ exports.update.pizza = async (data) => {
            "ingredient_id",
            "$2",
            true
-         )});`,
+         )})
+         RETURNING ingredient_id;`,
       data: [data.id, data.ingredients],
     });
+    idxCreated.ingredients = nextIdx++;
   }
 
-  const results = await makeTransaction(queries);
+  async function beforeCommitCallback(client, results) {
+    const updatedPizza = results[3]?.[0]?.id;
+    const updatedCategories = updatedItems(
+      results,
+      4,
+      idxCreated.categories,
+      "category_id"
+    );
+    const updatedIngredients = updatedItems(
+      results,
+      5,
+      idxCreated.ingredients,
+      "ingredient_id"
+    );
 
-  return results[0][0]?.id;
+    // updating a pizza's ingredients / categories just count as an update to the pizza,
+    // but not to the ingredients / categories
+    const wasUpdated =
+      updatedPizza != null ||
+      updatedCategories.length > 0 ||
+      updatedIngredients.length > 0;
+
+    // Note: CURRENT_TIMESTAMP returns the start time of the current transaction
+    if (wasUpdated)
+      await client.query(
+        `
+        UPDATE pizzas 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE id = $1;
+      `,
+        [data.id]
+      );
+
+    return wasUpdated;
+  }
+
+  const results = await makeTransaction(queries, beforeCommitCallback);
+
+  return results[results.length - 1];
 };
 
 exports.update.ingredient = async (data) => {
   const queries = [
+    {
+      // Lock relevant rows
+      text: `SELECT * FROM ingredients WHERE id = $1 FOR UPDATE;`,
+      data: [data.id],
+    },
+    {
+      // Lock relevant rows
+      text: `SELECT * FROM ingredients_categories_rules WHERE ingredient_id = $1 FOR UPDATE;`,
+      data: [data.id],
+    },
+    {
+      // Lock relevant rows
+      text: `SELECT * FROM pizzas_ingredients WHERE ingredient_id = $1 FOR UPDATE;`,
+      data: [data.id],
+    },
     {
       text: `UPDATE ingredients 
              SET name = $1, 
@@ -364,18 +448,31 @@ exports.update.ingredient = async (data) => {
     {
       text: `
          -- Delete all existing links (they are re-created (updated) next)
-         DELETE FROM pizzas_ingredients
-         WHERE ingredient_id = $1;`,
+         DELETE FROM ingredients_categories_rules
+         WHERE ingredient_id = $1 AND rule_type='enforcing'
+         RETURNING category_id;`,
       data: [data.id],
     },
     {
       text: `
          -- Delete all existing links (they are re-created (updated) next)
          DELETE FROM ingredients_categories_rules
-         WHERE ingredient_id = $1;`,
+         WHERE ingredient_id = $1 AND rule_type='incompatible'
+         RETURNING category_id;`,
+      data: [data.id],
+    },
+    {
+      text: `
+         -- Delete all existing links (they are re-created (updated) next)
+         DELETE FROM pizzas_ingredients
+         WHERE ingredient_id = $1
+         RETURNING pizza_id;`,
       data: [data.id],
     },
   ];
+
+  let nextIdx = queries.length;
+  const idxCreated = {};
 
   if (
     data.enforcedCategories instanceof Array &&
@@ -387,9 +484,11 @@ exports.update.ingredient = async (data) => {
          SELECT $1, category_id, 'enforcing'
          FROM (
             ${queryTextGetIdFromName("categories", "category_id", "$2", true)}
-         )`,
+         )
+         RETURNING category_id`,
       data: [data.id, data.enforcedCategories],
     });
+    idxCreated.enforcedCategories = nextIdx++;
   }
 
   if (
@@ -402,9 +501,11 @@ exports.update.ingredient = async (data) => {
          SELECT $1, category_id, 'incompatible'
          FROM (
             ${queryTextGetIdFromName("categories", "category_id", "$2", true)}
-         )`,
+         )
+         RETURNING category_id`,
       data: [data.id, data.incompatibleCategories],
     });
+    idxCreated.incompatibleCategories = nextIdx++;
   }
 
   if (data.pizzas instanceof Array && data.pizzas.length > 0) {
@@ -414,18 +515,105 @@ exports.update.ingredient = async (data) => {
          SELECT pizza_id, $1
          FROM (
             ${queryTextGetIdFromName("pizzas", "pizza_id", "$2", true)}
-          )`,
+         )
+         RETURNING pizza_id`,
       data: [data.id, data.pizzas],
     });
+    idxCreated.pizzas = nextIdx++;
   }
 
-  const results = await makeTransaction(queries);
+  async function beforeCommitCallback(client, results) {
+    const updatedIngredient = results[3]?.[0]?.id;
+    const updatedEnforcedCategories = updatedItems(
+      results,
+      4,
+      idxCreated.enforcedCategories,
+      "category_id"
+    );
+    const updatedIncompatibleCategories = updatedItems(
+      results,
+      5,
+      idxCreated.incompatibleCategories,
+      "category_id"
+    );
+    const updatedCategories = merge(
+      updatedEnforcedCategories,
+      updatedIncompatibleCategories
+    );
+    const updatedPizzas = updatedItems(
+      results,
+      6,
+      idxCreated.pizzas,
+      "pizza_id"
+    );
 
-  return results[0][0]?.id;
+    // updating a pizza's ingredients / categories just count as an update to the pizza,
+    // but not to the ingredients / categories
+    // updating a ingredient - category rule, count as an update of both
+    const pizzasWereUpdated = updatedPizzas.length > 0;
+    const categoriesWereUpdated = updatedCategories.length > 0;
+    const thisIngredientWasUpdated =
+      updatedIngredient != null || categoriesWereUpdated;
+    const anyUpdated = thisIngredientWasUpdated || pizzasWereUpdated;
+
+    // Note: CURRENT_TIMESTAMP returns the start time of the current transaction
+    if (thisIngredientWasUpdated)
+      await client.query(
+        `
+        UPDATE ingredients 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE id = $1;
+      `,
+        [data.id]
+      );
+
+    if (pizzasWereUpdated) {
+      await client.query(
+        `
+        UPDATE pizzas 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE id = ANY($1::int[]);
+      `,
+        [updatedPizzas]
+      );
+    }
+
+    if (categoriesWereUpdated) {
+      await client.query(
+        `
+        UPDATE categories 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE id = ANY($1::int[]);
+      `,
+        [updatedCategories]
+      );
+    }
+
+    return anyUpdated;
+  }
+
+  const results = await makeTransaction(queries, beforeCommitCallback);
+
+  return results[results.length - 1];
 };
 
 exports.update.category = async (data) => {
   const queries = [
+    {
+      // Lock relevant rows
+      text: `SELECT * FROM categories WHERE id = $1 FOR UPDATE;`,
+      data: [data.id],
+    },
+    {
+      // Lock relevant rows
+      text: `SELECT * FROM ingredients_categories_rules WHERE category_id = $1 FOR UPDATE;`,
+      data: [data.id],
+    },
+    {
+      // Lock relevant rows
+      text: `SELECT * FROM pizzas_categories WHERE category_id = $1 FOR UPDATE;`,
+      data: [data.id],
+    },
     {
       text: `UPDATE categories 
              SET name = $1, 
@@ -442,18 +630,31 @@ exports.update.category = async (data) => {
     {
       text: `
          -- Delete all existing links (they are re-created (updated) next)
-         DELETE FROM pizzas_categories
-         WHERE category_id = $1;`,
+         DELETE FROM ingredients_categories_rules
+         WHERE category_id = $1 AND rule_type='enforcing'
+         returning ingredient_id;`,
       data: [data.id],
     },
     {
       text: `
          -- Delete all existing links (they are re-created (updated) next)
          DELETE FROM ingredients_categories_rules
-         WHERE category_id = $1;`,
+         WHERE category_id = $1 AND rule_type='incompatible'
+         returning ingredient_id;`,
+      data: [data.id],
+    },
+    {
+      text: `
+         -- Delete all existing links (they are re-created (updated) next)
+         DELETE FROM pizzas_categories
+         WHERE category_id = $1
+         RETURNING pizza_id;`,
       data: [data.id],
     },
   ];
+
+  let nextIdx = queries.length;
+  const idxCreated = {};
 
   if (
     data.enforcingIngredients instanceof Array &&
@@ -470,9 +671,11 @@ exports.update.category = async (data) => {
               "$2",
               true
             )}
-         )`,
+         )
+         RETURNING ingredient_id`,
       data: [data.id, data.enforcingIngredients],
     });
+    idxCreated.enforcingIngredients = nextIdx++;
   }
 
   if (
@@ -490,9 +693,11 @@ exports.update.category = async (data) => {
               "$2",
               true
             )}
-         )`,
+         )
+         RETURNING ingredient_id`,
       data: [data.id, data.incompatibleIngredients],
     });
+    idxCreated.incompatibleIngredients = nextIdx++;
   }
 
   if (data.pizzas instanceof Array && data.pizzas.length > 0) {
@@ -502,14 +707,87 @@ exports.update.category = async (data) => {
          SELECT pizza_id, $1
          FROM (
             ${queryTextGetIdFromName("pizzas", "pizza_id", "$2", true)}
-          )`,
+         )
+         RETURNING pizza_id`,
       data: [data.id, data.pizzas],
     });
+    idxCreated.pizzas = nextIdx++;
   }
 
-  const results = await makeTransaction(queries);
+  async function beforeCommitCallback(client, results) {
+    const now = new Date().toISOString();
 
-  return results[0][0]?.id;
+    const updatedCategory = results[3]?.[0]?.id;
+    const updatedEnforcingIngredients = updatedItems(
+      results,
+      4,
+      idxCreated.enforcingIngredients,
+      "ingredient_id"
+    );
+    const updatedIncompatibleIngredients = updatedItems(
+      results,
+      5,
+      idxCreated.incompatibleIngredients,
+      "ingredient_id"
+    );
+    const updatedIngredients = merge(
+      updatedEnforcingIngredients,
+      updatedIncompatibleIngredients
+    );
+    const updatedPizzas = updatedItems(
+      results,
+      6,
+      idxCreated.pizzas,
+      "pizza_id"
+    );
+
+    // updating a pizza's ingredients / categories just count as an update to the pizza,
+    // but not to the ingredients / categories
+    // updating a ingredient - category rule, count as an update of both
+    const pizzasWereUpdated = updatedPizzas.length > 0;
+    const ingredientsWereUpdated = updatedIngredients.length > 0;
+    const thisCategoryWasUpdated =
+      updatedCategory != null || ingredientsWereUpdated;
+    const anyUpdated = thisCategoryWasUpdated || pizzasWereUpdated;
+
+    // Note: CURRENT_TIMESTAMP returns the start time of the current transaction
+    if (thisCategoryWasUpdated)
+      await client.query(
+        `
+        UPDATE categories 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE id = $1;
+      `,
+        [data.id]
+      );
+
+    if (pizzasWereUpdated) {
+      await client.query(
+        `
+        UPDATE pizzas 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE id = ANY($1::int[]);
+      `,
+        [updatedPizzas]
+      );
+    }
+
+    if (ingredientsWereUpdated) {
+      await client.query(
+        `
+        UPDATE ingredients 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE id = ANY($1::int[]);
+      `,
+        [updatedIngredients]
+      );
+    }
+
+    return anyUpdated;
+  }
+  const results = await makeTransaction(queries, beforeCommitCallback);
+
+  return results[results.length - 1];
 };
 
 // This gets only the essential info for all pizzas in the db
@@ -741,3 +1019,30 @@ exports.read.categoryEdit = async (id) => {
 
   return rows[0];
 };
+
+function symmetricDifference(a, b) {
+  const setA = new Set(a);
+  const setB = new Set(b);
+
+  const result = [
+    ...a.filter((x) => !setB.has(x)),
+    ...b.filter((x) => !setA.has(x)),
+  ];
+
+  return result;
+}
+
+function merge(a, b) {
+  return [...new Set([...a, ...b])];
+}
+
+function getItems(results, idx, itemLabel) {
+  return results[idx]?.map((itm) => itm[itemLabel]) || [];
+}
+
+function updatedItems(results, deletedIdx, createdIdx, itemLabel) {
+  const deletedItems = getItems(results, deletedIdx, itemLabel);
+  const createdItems = getItems(results, createdIdx, itemLabel);
+
+  return symmetricDifference(deletedItems, createdItems);
+}
