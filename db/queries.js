@@ -61,6 +61,9 @@ exports.create.category = async (data) => {
   //    "pizzas": []
   // }
 
+  // Setting a pizza's ingredients / categories just count as an operation to the pizza,
+  // but not to the ingredients / categories
+
   const queries = [
     {
       text: "INSERT INTO categories (name,is_protected,notes) VALUES($1,$2,$3) RETURNING id;",
@@ -88,6 +91,14 @@ exports.create.category = async (data) => {
          ))`,
       data: [data.enforcingIngredients, data.name],
     });
+
+    queries.push({
+      text: `
+        UPDATE ingredients 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE name = ANY($1::text[]);`,
+      data: [data.enforcingIngredients],
+    });
   }
 
   if (
@@ -110,6 +121,14 @@ exports.create.category = async (data) => {
          ))`,
       data: [data.incompatibleIngredients, data.name],
     });
+
+    queries.push({
+      text: `
+        UPDATE ingredients 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE name = ANY($1::text[]);`,
+      data: [data.incompatibleIngredients],
+    });
   }
 
   if (data.pizzas instanceof Array && data.pizzas.length > 0) {
@@ -124,6 +143,14 @@ exports.create.category = async (data) => {
          ))`,
       data: [data.pizzas, data.name],
     });
+
+    queries.push({
+      text: `
+        UPDATE pizzas 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE name = ANY($1::text[]);`,
+      data: [data.pizzas],
+    });
   }
 
   const results = await makeTransaction(queries);
@@ -137,8 +164,6 @@ exports.create.ingredient = async (data) => {
   //
   // Hence a transaction is used, to ensure a consistend update  and allowing a rollback in case of errors.
   //
-  // Currently, only the ingredients and ingredients_categories_rules tables are updated.
-  //
   // Sample data:
   // {
   //    "name": "Pomodoro",
@@ -150,6 +175,10 @@ exports.create.ingredient = async (data) => {
   //    "stock": "200"
   //    "pizzas": []
   // }
+
+  // Setting a pizza's ingredients / categories just count as an operation to the pizza,
+  // but not to the ingredients / categories
+  // Setting a ingredient - category rule, count as an operation of both
 
   const queries = [
     {
@@ -179,6 +208,14 @@ exports.create.ingredient = async (data) => {
          ))`,
       data: [data.name, data.enforcedCategories],
     });
+
+    queries.push({
+      text: `
+        UPDATE categories 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE name = ANY($1::text[]);`,
+      data: [data.enforcedCategories],
+    });
   }
 
   if (
@@ -196,6 +233,14 @@ exports.create.ingredient = async (data) => {
          ))`,
       data: [data.name, data.incompatibleCategories],
     });
+
+    queries.push({
+      text: `
+        UPDATE categories 
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE name = ANY($1::text[]);`,
+      data: [data.incompatibleCategories],
+    });
   }
 
   if (data.pizzas instanceof Array && data.pizzas.length > 0) {
@@ -209,6 +254,14 @@ exports.create.ingredient = async (data) => {
             ${queryTextGetIdFromName("ingredients", "ingredient_id", "$2")}
          ))`,
       data: [data.pizzas, data.name],
+    });
+
+    queries.push({
+      text: `
+        UPDATE pizzas
+        SET updated_at = CURRENT_TIMESTAMP
+        WHERE name = ANY($1::text[]);`,
+      data: [data.pizzas],
     });
   }
 
@@ -231,6 +284,9 @@ exports.create.pizza = async (data) => {
   //    "is_protected": false,
   //    "notes": "Some notes"
   // }
+
+  // Setting a pizza's ingredients / categories just count as an operation to the pizza,
+  // but not to the ingredients / categories
 
   const queries = [
     {
