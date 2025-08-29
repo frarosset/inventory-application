@@ -921,6 +921,23 @@ exports.read.pizzaEdit = async (id) => {
   return rows[0];
 };
 
+// This gets only the essential info for edit a pizza
+exports.read.pizzaDelete = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        name,
+        id,
+        is_protected
+      FROM pizzas
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
 exports.read.ingredientsBrief = async () => {
   const { rows } = await pool.query(`
     SELECT 

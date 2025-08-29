@@ -1,0 +1,14 @@
+ <%_ if(locals.data?.is_protected){ _%>
+ <fieldset>
+   <legend>Protection</legend>
+   <div id="passwordDiv">
+     <%_ 
+       const inputParams = {type: "password", name: "password", label: "Password", maxlength: process.env.PWD_MAX_LENGTH, required: true};
+       const inputP = "<strong>This item is protected.</strong> Admin password is required to delete it.";
+    _%>
+
+     <p><%- inputP _%></p>
+     <%- include("input.ejs", inputParams) _%>
+   </div>
+ </fieldset>
+ <%_ } _%>

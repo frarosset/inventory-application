@@ -69,6 +69,10 @@ exports.postEditById = [
 
 exports.getDeleteById = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const pizzaData = await db.read.pizzaDelete(id);
 
-  res.send(`Confirm delete of pizza ${id}?`);
+  res.render("pizzaDelete", {
+    pageTitle: process.env.TITLE,
+    data: pizzaData,
+  });
 });
