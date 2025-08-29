@@ -66,3 +66,9 @@ exports.postEditById = [
     res.redirect("/pizzas/" + data.id);
   }),
 ];
+
+exports.getDeleteById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  res.send(`Confirm delete of pizza ${id}?`);
+});
