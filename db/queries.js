@@ -938,6 +938,20 @@ exports.read.pizzaDelete = async (id) => {
   return rows[0];
 };
 
+exports.read.pizzaProtected = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        is_protected
+      FROM pizzas
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0].is_protected;
+};
+
 exports.read.ingredientsBrief = async () => {
   const { rows } = await pool.query(`
     SELECT 
@@ -1013,6 +1027,20 @@ exports.read.ingredientEdit = async (id) => {
   );
 
   return rows[0];
+};
+
+exports.read.ingredientProtected = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        is_protected
+      FROM ingredients
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0].is_protected;
 };
 
 exports.read.categoriesBrief = async () => {
@@ -1091,6 +1119,20 @@ exports.read.categoryEdit = async (id) => {
   );
 
   return rows[0];
+};
+
+exports.read.categoryProtected = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        is_protected
+      FROM categories
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0].is_protected;
 };
 
 function symmetricDifference(a, b) {

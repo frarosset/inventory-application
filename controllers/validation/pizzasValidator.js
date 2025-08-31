@@ -7,7 +7,7 @@ const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
 const pizzasValidator = [
   populateReqLocalsWithValidNames,
   populateRouteType,
-  protectedValidation("allProtectedPizzasIdNameMap"),
+  protectedValidation,
   body("name")
     .trim()
     .notEmpty()

@@ -1,18 +1,17 @@
 const { body } = require("express-validator");
+const db = require("../../db/queries.js");
 
-const protectedValidation = (validIdsMapName) => [
+const protectedValidation = [
   body("password").custom(async (password, { req }) => {
-    const validIdsMap = req.locals[validIdsMapName];
-
     if (req.locals.isNew) {
       if (req.body.is_protected) {
         checkPassword(req.body.password);
       }
     } else if (req.locals.isEdit) {
-      // Check if the item is protected (from the id)
-      const editProtectedItem = validIdsMap.has(req.params.id);
+      const isItemProtected = await checkIfItemIsProtected(req);
 
-      if (editProtectedItem) {
+      // Check if the item is protected
+      if (isItemProtected) {
         checkPassword(req.body.password, true);
       } else {
         // if request to set item as protected
@@ -30,6 +29,23 @@ const protectedValidation = (validIdsMapName) => [
     .customSanitizer((value) => value === "on")
     .toBoolean(),
 ];
+
+async function checkIfItemIsProtected(req) {
+  const baseUrl = req.baseUrl;
+
+  const dbRead =
+    baseUrl === "/pizzas"
+      ? db.read.pizzaProtected
+      : baseUrl === "/ingredients"
+      ? db.read.ingredientProtected
+      : baseUrl === "/categories"
+      ? db.read.categoryProtected
+      : null;
+
+  const is_protected = await dbRead(req.params.id);
+
+  return is_protected;
+}
 
 function checkPassword(password, editProtectedItem = false) {
   if (!password) {
