@@ -76,3 +76,9 @@ exports.getDeleteById = asyncHandler(async (req, res) => {
     data: pizzaData,
   });
 });
+
+exports.postDeleteById = (req, res) => {
+  const data = req.params.id;
+
+  res.send(`Deleting pizza ${data}`);
+};
