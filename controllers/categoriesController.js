@@ -74,6 +74,10 @@ exports.postEditById = [
 
 exports.getDeleteById = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const categoryData = await db.read.categoryDelete(id);
 
-  res.send(`Confirm delete of category ${id}?`);
+  res.render("categoryDelete", {
+    pageTitle: process.env.TITLE,
+    data: categoryData,
+  });
 });

@@ -1142,6 +1142,23 @@ exports.read.categoryEdit = async (id) => {
   return rows[0];
 };
 
+// This gets only the essential info for edit a category
+exports.read.categoryDelete = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        name,
+        id,
+        is_protected
+      FROM categories
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
 exports.read.categoryProtected = async (id) => {
   const { rows } = await pool.query(
     `

@@ -1,0 +1,9 @@
+<%_ const postUrl = `/categories/${data.id}/delete` _%>
+<form action=<%= postUrl %> method="POST">
+  <p>Are you sure you want to delete this category?</p>
+  <%- include("protectedItem.ejs") _%>
+  <div>
+    <button type="button" onclick="history.back()">Back</button>
+    <button>DELETE</button>
+  </div>
+</form>
