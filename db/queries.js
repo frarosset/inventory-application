@@ -846,6 +846,27 @@ exports.update.category = async (data) => {
   return results[results.length - 1];
 };
 
+exports.delete.pizza = async (id) => {
+  const queries = [
+    {
+      text: "DELETE FROM pizzas_ingredients WHERE pizza_id = $1;",
+      data: [id],
+    },
+    {
+      text: "DELETE FROM pizzas_categories WHERE pizza_id = $1;",
+      data: [id],
+    },
+    {
+      text: "DELETE FROM pizzas WHERE id = $1 RETURNING id;",
+      data: [id],
+    },
+  ];
+
+  const results = await makeTransaction(queries);
+
+  return results[2][0].id;
+};
+
 // This gets only the essential info for all pizzas in the db
 exports.read.pizzasBrief = async () => {
   const { rows } = await pool.query(`

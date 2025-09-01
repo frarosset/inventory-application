@@ -83,6 +83,8 @@ exports.postDeleteById = [
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
-    res.send(`Deleting pizza ${data.id}`);
+    const id = await db.delete.pizza(data.id);
+
+    res.redirect("/pizzas/");
   }),
 ];
