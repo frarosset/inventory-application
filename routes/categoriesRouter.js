@@ -9,6 +9,7 @@ router.post("/new", categoriesController.postNew);
 router.get("/:id/edit", categoriesController.getEditById);
 router.post("/:id/edit", categoriesController.postEditById);
 router.get("/:id/delete", categoriesController.getDeleteById);
+router.post("/:id/delete", categoriesController.postDeleteById);
 router.get("/:id", categoriesController.getById);
 
 module.exports = router;

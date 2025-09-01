@@ -81,3 +81,9 @@ exports.getDeleteById = asyncHandler(async (req, res) => {
     data: categoryData,
   });
 });
+
+exports.postDeleteById = (req, res) => {
+  const data = req.params.id;
+
+  res.send(`Deleting category ${data}`);
+};
