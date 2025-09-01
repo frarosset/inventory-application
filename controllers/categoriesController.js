@@ -71,3 +71,9 @@ exports.postEditById = [
     res.redirect("/categories/" + data.id);
   }),
 ];
+
+exports.getDeleteById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  res.send(`Confirm delete of category ${id}?`);
+});
