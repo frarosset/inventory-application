@@ -1,6 +1,7 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
 const pizzasValidator = require("./validation/pizzasValidator.js");
+const pizzasDeleteValidator = require("./validation/pizzasDeleteValidator.js");
 const { matchedData } = require("express-validator");
 
 exports.get = asyncHandler(async (req, res) => {
@@ -77,8 +78,11 @@ exports.getDeleteById = asyncHandler(async (req, res) => {
   });
 });
 
-exports.postDeleteById = (req, res) => {
-  const data = req.params.id;
+exports.postDeleteById = [
+  pizzasDeleteValidator,
+  asyncHandler(async (req, res) => {
+    const data = matchedData(req); // req.body + req.params.id
 
-  res.send(`Deleting pizza ${data}`);
-};
+    res.send(`Deleting pizza ${data.id}`);
+  }),
+];

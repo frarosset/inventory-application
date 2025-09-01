@@ -10,18 +10,34 @@ const handleValidationErrorsFcn = (ejsTemplate) => (req, res, next) => {
       path: itm.path,
     }));
 
+    const data = matchedData(req, {
+      onlyValidData: false,
+      includeOptionals: true,
+    });
+
+    const params =
+      req.locals.isEdit || req.locals.isNew
+        ? {
+            ingredients: req.locals.allIngredients,
+            categories: req.locals.allCategories,
+            pizzas: req.locals.allPizzas,
+            protectedPizzas: req.locals.allProtectedPizzas,
+            edit: req.locals.isEdit,
+            data: data,
+          }
+        : req.locals.isDelete
+        ? {
+            data: { ...data, ...req.locals.itemData },
+          }
+        : {};
+
     return res.status(400).render(ejsTemplate, {
       pageTitle: process.env.TITLE,
-      ingredients: req.locals.allIngredients,
-      categories: req.locals.allCategories,
-      pizzas: req.locals.allPizzas,
-      protectedPizzas: req.locals.allProtectedPizzas,
       validationErrors: {
         orderedMsgNames: orderedErrorsNames(errors),
         groupedMsg: groupedErrors(errors),
       },
-      data: matchedData(req, { onlyValidData: false, includeOptionals: true }),
-      edit: req.locals.isEdit,
+      ...params,
     });
   }
   // no errors

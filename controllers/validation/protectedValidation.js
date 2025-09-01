@@ -5,19 +5,25 @@ const protectedValidation = [
   body("password").custom(async (password, { req }) => {
     if (req.locals.isNew) {
       if (req.body.is_protected) {
-        checkPassword(req.body.password);
+        checkPassword(req.body.password, "enable");
       }
     } else if (req.locals.isEdit) {
       const isItemProtected = await checkIfItemIsProtected(req);
 
       // Check if the item is protected
       if (isItemProtected) {
-        checkPassword(req.body.password, true);
+        checkPassword(req.body.password, "edit");
       } else {
         // if request to set item as protected
         if (req.body.is_protected) {
-          checkPassword(req.body.password);
+          checkPassword(req.body.password, "enable");
         }
+      }
+    } else if (req.locals.isDelete) {
+      const isItemProtected = await checkIfItemIsProtected(req);
+      // Check if the item is protected
+      if (isItemProtected) {
+        checkPassword(req.body.password, "delete");
       }
     } else {
       throw new Error("Unknown protectedValdation route");
@@ -47,11 +53,17 @@ async function checkIfItemIsProtected(req) {
   return is_protected;
 }
 
-function checkPassword(password, editProtectedItem = false) {
+function checkPassword(password, type) {
   if (!password) {
     throw new Error(
       `The admin password is required for ${
-        editProtectedItem ? "mutating" : "enabling protection on"
+        type === "edit"
+          ? "mutating"
+          : type === "enable"
+          ? "enabling protection on"
+          : type === "delete"
+          ? "deleting"
+          : ""
       } this item.`
     );
   }
@@ -64,7 +76,13 @@ function checkPassword(password, editProtectedItem = false) {
   ) {
     throw new Error(
       `The admin password to ${
-        editProtectedItem ? "mutate" : "enable protection on"
+        type === "edit"
+          ? "mutate"
+          : type === "enable"
+          ? "enable protection on"
+          : type === "delete"
+          ? "delete"
+          : ""
       } this item is incorrect.`
     );
   }
