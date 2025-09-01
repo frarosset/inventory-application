@@ -97,6 +97,8 @@ exports.postDeleteById = [
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
-    res.send(`Deleting ingredient ${data.id}`);
+    const id = await db.delete.ingredient(data.id);
+
+    res.redirect("/ingredients/");
   }),
 ];
