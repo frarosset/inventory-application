@@ -90,3 +90,9 @@ exports.getDeleteById = asyncHandler(async (req, res) => {
     data: ingredientData,
   });
 });
+
+exports.postDeleteById = (req, res) => {
+  const data = req.params.id;
+
+  res.send(`Deleting ingredient ${data}`);
+};
