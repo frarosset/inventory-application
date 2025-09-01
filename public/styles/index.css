@@ -1,0 +1,121 @@
+@import url("https://fonts.googleapis.com/css2?family=Special+Elite&family=Short+Stack&family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bubblegum Sans&display=swap");
+
+:root {
+  --black: #3c3c3c;
+  --chestnut: #8d4d3aff;
+  --chamoisee: #a67854ff;
+  --persian-orange: #c99157ff;
+  --khaki: #c2ac9fff;
+  --tomato: #ec6850ff;
+  --atomic-tangerine: #f29057ff;
+  --sandy-brown: #f3a060ff;
+  --earth-yellow: #f5b867ff;
+  --sunglow: #fbcf57ff;
+  --lilac: #bda1b9ff;
+  --coral-pink: #ff9f90ff;
+  --reseda-green: #778752ff;
+  --olivine: #b3ca89ff;
+  --white: #ffffffff;
+  --isabelline: #efebe9;
+
+  --bg-col: var(--isabelline);
+  --txt-col: var(--black);
+  --labels-col: var(--black);
+  --labels-col-highlight: var(--chestnut);
+  --labels-col-nav: var(--chamoisee);
+  --headings-col: var(--chestnut);
+  --col-error: var(--tomato);
+
+  --default-font: "Short Stack", monospace;
+  --labels-font: "Special Elite", cursive;
+  --heading-font: "Bubblegum Sans", sans-serif;
+  --default-lineheight: 1.5;
+  --default-fontsize: max(18px, 2vmin);
+
+  font-family: var(--default-font);
+  line-height: var(--default-lineheight);
+  font-weight: 400;
+  font-size: var(--default-fontsize);
+
+  color-scheme: light dark;
+  color: var(--txt-col);
+  background-color: var(--bg-col);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ||  Reset */
+*,
+*:before,
+*:after {
+  font-family: inherit;
+  font-size: inherit; /* 100% */
+  line-height: inherit;
+  color: inherit;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  vertical-align: baseline;
+  -webkit-tap-highlight-color: transparent;
+  /* see: https://www.joshwcomeau.com/css/custom-css-reset/ */
+  line-height: calc(1em + 0.5rem);
+}
+
+body {
+  margin: 0 auto;
+  min-height: 100vh; /*it is assumed the same for <html>*/
+  min-height: 100dvh; /* if supported */
+  height: 100vh; /*it is assumed the same for <html>*/
+  height: 100dvh; /* if supported */
+
+  min-width: 320px;
+  width: 100%;
+  /* or max-width -- this avoids horizontal scroll bars */
+
+  touch-action: manipulation; /* disable double tap to zoom on some browsers*/
+  user-select: text;
+
+  overflow: hidden auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* || Generic styles */
+legend,
+th,
+label:not(:has(input[type="checkbox"])):not(:has(input[type="radio"])),
+nav a,
+fieldset p {
+  font-family: var(--labels-font);
+  color: var(--labels-col);
+}
+
+legend,
+th {
+  color: var(--labels-col-highlight);
+}
+
+nav a {
+  color: var(--labels-col-nav);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading-font);
+  font-weight: bold;
+  color: var(--headings-col);
+}
+
+*[role="alert"] {
+  color: var(--col-error);
+}
