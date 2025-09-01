@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%_ const subtitle = `Delete Ingredient "${data.name}"` _%>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= pageTitle %> | <%= subtitle %></title>
+</head>
+
+<body>
+  <%- include("partials/header.ejs",{highlightLink: "ingredients"}) %>
+  <h2><%= subtitle %></h2>
+  <%- include("partials/ingredientDeleteForm.ejs") %>
+</body>
+
+</html>

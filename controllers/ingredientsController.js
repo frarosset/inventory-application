@@ -80,3 +80,13 @@ exports.getDeleteById = asyncHandler(async (req, res) => {
 
   res.send(`Confirm delete of ingredient ${id}?`);
 });
+
+exports.getDeleteById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const ingredientData = await db.read.ingredientDelete(id);
+
+  res.render("ingredientDelete", {
+    pageTitle: process.env.TITLE,
+    data: ingredientData,
+  });
+});

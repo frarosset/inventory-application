@@ -1071,6 +1071,23 @@ exports.read.ingredientEdit = async (id) => {
   return rows[0];
 };
 
+// This gets only the essential info for edit a ingredient
+exports.read.ingredientDelete = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        name,
+        id,
+        is_protected
+      FROM ingredients
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
 exports.read.ingredientProtected = async (id) => {
   const { rows } = await pool.query(
     `
