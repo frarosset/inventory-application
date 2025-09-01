@@ -9,6 +9,8 @@ const populateReqLocalsWithItemData = async (req, res, next) => {
   const dbRead =
     baseUrl === "/pizzas"
       ? db.read.pizzaDelete
+      : baseUrl === "/ingredients"
+      ? db.read.ingredientDelete
       : baseUrl === "/categories"
       ? db.read.categoryDelete
       : null;
