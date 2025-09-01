@@ -846,6 +846,27 @@ exports.update.category = async (data) => {
   return results[results.length - 1];
 };
 
+exports.delete.category = async (id) => {
+  const queries = [
+    {
+      text: "DELETE FROM pizzas_categories WHERE category_id = $1;",
+      data: [id],
+    },
+    {
+      text: "DELETE FROM ingredients_categories_rules WHERE category_id = $1;",
+      data: [id],
+    },
+    {
+      text: "DELETE FROM categories WHERE id = $1 RETURNING id;",
+      data: [id],
+    },
+  ];
+
+  const results = await makeTransaction(queries);
+
+  return results[2][0].id;
+};
+
 exports.delete.pizza = async (id) => {
   const queries = [
     {

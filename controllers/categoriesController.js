@@ -88,6 +88,8 @@ exports.postDeleteById = [
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
-    res.send(`Deleting category ${data.id}`);
+    const id = await db.delete.category(data.id);
+
+    res.redirect("/categories/");
   }),
 ];
