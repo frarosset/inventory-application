@@ -8,10 +8,14 @@
 
 <body>
   <%- include("partials/header.ejs",{highlightLink: "categories"}) %>
-  <h2>Categories</h2>
-  <a href="/categories/new">New</a>
-  <%- include("partials/categoriesBriefTable.ejs") %>
+
+  <main>
+    <h2>Categories</h2>
+    <a href="/categories/new">New</a>
+    <%- include("partials/categoriesBriefTable.ejs") %>
+  </main>
+
+  <%- include("partials/creditFooter.ejs") %>
 </body>
-<%- include("partials/creditFooter.ejs") %>
 
 </html>

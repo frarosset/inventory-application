@@ -10,10 +10,13 @@
 
 <body>
   <%- include("partials/header.ejs",{highlightLink: "pizzas"}) %>
-  <h2><%= subtitle %></h2>
-  <%- include("partials/pizzaMutationForm.ejs") %>
-</body>
 
-<%- include("partials/creditFooter.ejs") %>
+  <main>
+    <h2><%= subtitle %></h2>
+    <%- include("partials/pizzaMutationForm.ejs") %>
+  </main>
+
+  <%- include("partials/creditFooter.ejs") %>
+</body>
 
 </html>

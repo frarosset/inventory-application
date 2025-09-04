@@ -8,30 +8,32 @@
 
 <body>
   <%- include("partials/header.ejs",{highlightLink: "pizzas"}) %>
-  <h2><%= pizzaData.name %></h2>
 
-  <%- include("partials/isProtectedSymbol.ejs", {is_protected: pizzaData.is_protected}) %>
-  <%- include("partials/itemActions.ejs", {baseRoute: "/pizzas", id: pizzaData.id}) %>
+  <main>
+    <h2><%= pizzaData.name %></h2>
 
-  <%- include("partials/pizzaDetailsTable.ejs", pizzaData) %>
+    <%- include("partials/isProtectedSymbol.ejs", {is_protected: pizzaData.is_protected}) %>
+    <%- include("partials/itemActions.ejs", {baseRoute: "/pizzas", id: pizzaData.id}) %>
 
-  <hr>
-  <section>
-    <h3>Ingredients Details</h3>
-    <%- include("partials/ingredientsPerPizzaTable.ejs", pizzaData) %>
-  </section>
+    <%- include("partials/pizzaDetailsTable.ejs", pizzaData) %>
 
-  <hr>
-  <section>
-    <h3>Categories Details</h3>
-    <%- include("partials/categoriesPerPizzaTable.ejs", pizzaData) %>
-  </section>
+    <hr>
+    <section>
+      <h3>Ingredients Details</h3>
+      <%- include("partials/ingredientsPerPizzaTable.ejs", pizzaData) %>
+    </section>
 
-  <hr>
-  <%- include("partials/dateInfoP.ejs", pizzaData) %>
+    <hr>
+    <section>
+      <h3>Categories Details</h3>
+      <%- include("partials/categoriesPerPizzaTable.ejs", pizzaData) %>
+    </section>
 
+    <hr>
+    <%- include("partials/dateInfoP.ejs", pizzaData) %>
+  </main>
+
+  <%- include("partials/creditFooter.ejs") %>
 </body>
-
-<%- include("partials/creditFooter.ejs") %>
 
 </html>

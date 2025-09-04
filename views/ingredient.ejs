@@ -8,30 +8,32 @@
 
 <body>
   <%- include("partials/header.ejs",{highlightLink: "ingredients"}) %>
-  <h2><%= ingredientData.name %></h2>
 
-  <%- include("partials/isProtectedSymbol.ejs", {is_protected: ingredientData.is_protected}) %>
-  <%- include("partials/itemActions.ejs", {baseRoute: "/ingredients", id: ingredientData.id}) %>
+  <main>
+    <h2><%= ingredientData.name %></h2>
 
-  <%- include("partials/ingredientDetailsTable.ejs", ingredientData) %>
+    <%- include("partials/isProtectedSymbol.ejs", {is_protected: ingredientData.is_protected}) %>
+    <%- include("partials/itemActions.ejs", {baseRoute: "/ingredients", id: ingredientData.id}) %>
 
-  <hr>
-  <section>
-    <h3>Pizzas using this Ingredient</h3>
-    <%- include("partials/pizzasBriefTable.ejs", {pizzasBriefData: ingredientData.pizzas}) %>
-  </section>
+    <%- include("partials/ingredientDetailsTable.ejs", ingredientData) %>
 
-  <hr>
-  <section>
-    <h3>Categories Rules</h3>
-    <%- include("partials/categoriesPerIngredientTable.ejs", ingredientData) %>
-  </section>
+    <hr>
+    <section>
+      <h3>Pizzas using this Ingredient</h3>
+      <%- include("partials/pizzasBriefTable.ejs", {pizzasBriefData: ingredientData.pizzas}) %>
+    </section>
 
-  <hr>
-  <%- include("partials/dateInfoP.ejs", ingredientData) %>
+    <hr>
+    <section>
+      <h3>Categories Rules</h3>
+      <%- include("partials/categoriesPerIngredientTable.ejs", ingredientData) %>
+    </section>
 
+    <hr>
+    <%- include("partials/dateInfoP.ejs", ingredientData) %>
+  </main>
+
+  <%- include("partials/creditFooter.ejs") %>
 </body>
-
-<%- include("partials/creditFooter.ejs") %>
 
 </html>
