@@ -19,11 +19,13 @@
       if (hasProtectedSelected()) {
         passwordCheckboxList.required = true;
         passwordCheckboxList.disabled = false;
-        passwordCheckboxListDiv.style.visibility = "visible";
+        // passwordCheckboxListDiv.style.visibility = "visible";
+        passwordCheckboxListDiv.style.display = "block";
       } else {
         passwordCheckboxList.required = false;
         passwordCheckboxList.disabled = true;
-        passwordCheckboxListDiv.style.visibility = "hidden";
+        // passwordCheckboxListDiv.style.visibility = "hidden";
+        passwordCheckboxListDiv.style.display = "none";
       }
     }
 

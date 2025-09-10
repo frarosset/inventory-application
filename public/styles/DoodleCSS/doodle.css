@@ -346,6 +346,7 @@ div[role="alert"] {
   align-items: center;
   margin-right: 0.25em;
   cursor: pointer;
+  aspect-ratio: 1;
 }
 
 .doodle label:has(input[type="checkbox"]),

@@ -25,11 +25,13 @@
         if (protectedInput.checked) {
           passwordInput.required = true;
           passwordInput.disabled = false;
-          passwordInputDiv.style.visibility = "visible";
+          // passwordInputDiv.style.visibility = "visible";
+          passwordInputDiv.style.display = "block";
         } else {
           passwordInput.required = false;
           passwordInput.disabled = true;
-          passwordInputDiv.style.visibility = "hidden";
+          // passwordInputDiv.style.visibility = "hidden";
+          passwordInputDiv.style.display = "none";
         }
       }
 
