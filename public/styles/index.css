@@ -31,6 +31,8 @@
   --default-lineheight: 1.5;
   --default-fontsize: max(18px, 2vmin);
 
+  --h2-fontsize: 2em;
+
   --page-width: 50em;
   --page-gap: 2rem;
   --base-padding-lr: 0.3rem;
@@ -77,6 +79,7 @@
 html {
   background: url("/images/bg.png");
   background-attachment: fixed;
+  scrollbar-gutter: stable both-edges;
 }
 
 body {
@@ -93,6 +96,7 @@ body {
   touch-action: manipulation; /* disable double tap to zoom on some browsers*/
   user-select: text;
 
+  scrollbar-gutter: stable both-edges;
   overflow: hidden auto;
 
   display: flex;
@@ -139,14 +143,63 @@ h6 {
   color: var(--headings-col);
 }
 
+h2 {
+  font-size: var(--h2-fontsize);
+}
+
 /* || Header */
 
 body > header {
   width: 100%;
   padding: var(--header-padding);
-  background: linear-gradient(180deg, var(--isabelline) 50%, transparent 100%);
+  background: linear-gradient(180deg, var(--bg-col) 60%, transparent 100%);
+  padding-bottom: 1em;
   position: sticky;
+  z-index: 1;
   top: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1em;
+}
+
+body > header h1 {
+  min-width: max-content;
+  flex: 4;
+  text-align: center;
+}
+
+@media screen and (min-width: 473px) {
+  body > header h1 {
+    text-align: left;
+  }
+}
+
+body > header h1 a:hover {
+  -webkit-text-stroke-width: 0px !important;
+}
+
+body > header nav {
+  min-width: max-content;
+  display: flex;
+  gap: 1em;
+  flex: 1;
+  justify-content: space-evenly;
+}
+
+body > header nav a {
+  flex: 1;
+  flex-basis: 0;
+  text-align: center;
+}
+
+body > header nav .highlight-link {
+  font-weight: bold;
+  text-decoration: underline;
+  text-decoration-thickness: 0.1lh;
+}
+
+body > header nav .highlight-link:hover {
+  -webkit-text-stroke-width: 0.1px;
 }
 
 /* || Main */
