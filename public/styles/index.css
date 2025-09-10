@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Special+Elite&family=Short+Stack&family=Montserrat&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Bubblegum Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Special+Elite&family=Short+Stack&family=Montserrat&family=Bubblegum+Sans&family=Bad+Script&display=swap");
 
 :root {
   --black: #3c3c3c;
@@ -16,7 +15,7 @@
   --coral-pink: #ff9f90ff;
   --reseda-green: #778752ff;
   --olivine: #b3ca89ff;
-  --white: #ffffffff;
+  --white: #ffffffff; /*#fdf7f1*/
   --isabelline: #efebe9;
 
   --bg-col: var(--isabelline);
@@ -25,13 +24,19 @@
   --labels-col-highlight: var(--chestnut);
   --labels-col-nav: var(--chamoisee);
   --headings-col: var(--chestnut);
-  --col-error: var(--tomato);
 
-  --default-font: "Short Stack", monospace;
-  --labels-font: "Special Elite", cursive;
+  --default-font: "Short Stack", cursive;
+  --labels-font: "Special Elite", monospace;
   --heading-font: "Bubblegum Sans", sans-serif;
   --default-lineheight: 1.5;
   --default-fontsize: max(18px, 2vmin);
+
+  --page-width: 50em;
+  --page-gap: 2rem;
+  --base-padding-lr: 0.3rem;
+  --main-gap: 0.8rem;
+  --main-padding: 0 var(--base-padding-lr);
+  --header-padding: 0.3rem var(--base-padding-lr);
 
   font-family: var(--default-font);
   line-height: var(--default-lineheight);
@@ -42,7 +47,7 @@
   color: var(--txt-col);
   background-color: var(--bg-col);
 
-  font-synthesis: none;
+  /* font-synthesis: none; */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -65,12 +70,17 @@
   line-height: calc(1em + 0.5rem);
 }
 
+html {
+  background: url("/images/bg.png");
+  background-attachment: fixed;
+}
+
 body {
   margin: 0 auto;
   min-height: 100vh; /*it is assumed the same for <html>*/
   min-height: 100dvh; /* if supported */
-  height: 100vh; /*it is assumed the same for <html>*/
-  height: 100dvh; /* if supported */
+  /* height: 100vh; /*it is assumed the same for <html>*/
+  /* height: 100dvh; /* if supported */
 
   min-width: 320px;
   width: 100%;
@@ -83,7 +93,11 @@ body {
 
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
+  gap: var(--page-gap);
+
+  filter: drop-shadow(0 0 0.75rem var(--isabelline));
+  backdrop-filter: blur(5px);
 }
 
 /* || Generic styles */
@@ -91,9 +105,14 @@ legend,
 th,
 label:not(:has(input[type="checkbox"])):not(:has(input[type="radio"])),
 nav a,
-fieldset p {
+p {
   font-family: var(--labels-font);
   color: var(--labels-col);
+}
+
+div[role="alert"],
+div[role="alert"] * {
+  font-family: var(--labels-font);
 }
 
 legend,
@@ -116,6 +135,92 @@ h6 {
   color: var(--headings-col);
 }
 
-*[role="alert"] {
-  color: var(--col-error);
+/* || Header */
+
+body > header {
+  width: 100%;
+  padding: var(--header-padding);
+  background: linear-gradient(180deg, var(--isabelline) 50%, transparent 100%);
+  position: sticky;
+  top: 0;
+}
+
+/* || Main */
+
+body > main {
+  max-width: 100%;
+  width: var(--page-width);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--main-padding);
+  gap: var(--main-gap);
+}
+
+/* || Icon */
+
+.icon {
+  background: var(--txt-col);
+  font-size: inherit;
+  width: 1em;
+  height: 1em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  mask-image: var(--mask-image-url);
+  -webkit-mask-image: var(--mask-image-url);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.icon-github {
+  /* !Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. */
+  --mask-image-url: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OTYgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNy4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjUgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTE2NS45IDM5Ny40YzAgMi0yLjMgMy42LTUuMiAzLjYtMy4zIC4zLTUuNi0xLjMtNS42LTMuNiAwLTIgMi4zLTMuNiA1LjItMy42IDMtLjMgNS42IDEuMyA1LjYgMy42em0tMzEuMS00LjVjLS43IDIgMS4zIDQuMyA0LjMgNC45IDIuNiAxIDUuNiAwIDYuMi0ycy0xLjMtNC4zLTQuMy01LjJjLTIuNi0uNy01LjUgLjMtNi4yIDIuM3ptNDQuMi0xLjdjLTIuOSAuNy00LjkgMi42LTQuNiA0LjkgLjMgMiAyLjkgMy4zIDUuOSAyLjYgMi45LS43IDQuOS0yLjYgNC42LTQuNi0uMy0xLjktMy0zLjItNS45LTIuOXpNMjQ0LjggOEMxMDYuMSA4IDAgMTEzLjMgMCAyNTJjMCAxMTAuOSA2OS44IDIwNS44IDE2OS41IDIzOS4yIDEyLjggMi4zIDE3LjMtNS42IDE3LjMtMTIuMSAwLTYuMi0uMy00MC40LS4zLTYxLjQgMCAwLTcwIDE1LTg0LjctMjkuOCAwIDAtMTEuNC0yOS4xLTI3LjgtMzYuNiAwIDAtMjIuOS0xNS43IDEuNi0xNS40IDAgMCAyNC45IDIgMzguNiAyNS44IDIxLjkgMzguNiA1OC42IDI3LjUgNzIuOSAyMC45IDIuMy0xNiA4LjgtMjcuMSAxNi0zMy43LTU1LjktNi4yLTExMi4zLTE0LjMtMTEyLjMtMTEwLjUgMC0yNy41IDcuNi00MS4zIDIzLjYtNTguOS0yLjYtNi41LTExLjEtMzMuMyAyLjYtNjcuOSAyMC45LTYuNSA2OSAyNyA2OSAyNyAyMC01LjYgNDEuNS04LjUgNjIuOC04LjVzNDIuOCAyLjkgNjIuOCA4LjVjMCAwIDQ4LjEtMzMuNiA2OS0yNyAxMy43IDM0LjcgNS4yIDYxLjQgMi42IDY3LjkgMTYgMTcuNyAyNS44IDMxLjUgMjUuOCA1OC45IDAgOTYuNS01OC45IDEwNC4yLTExNC44IDExMC41IDkuMiA3LjkgMTcgMjIuOSAxNyA0Ni40IDAgMzMuNy0uMyA3NS40LS4zIDgzLjYgMCA2LjUgNC42IDE0LjQgMTcuMyAxMi4xQzQyOC4yIDQ1Ny44IDQ5NiAzNjIuOSA0OTYgMjUyIDQ5NiAxMTMuMyAzODMuNSA4IDI0NC44IDh6TTk3LjIgMzUyLjljLTEuMyAxLTEgMy4zIC43IDUuMiAxLjYgMS42IDMuOSAyLjMgNS4yIDEgMS4zLTEgMS0zLjMtLjctNS4yLTEuNi0xLjYtMy45LTIuMy01LjItMXptLTEwLjgtOC4xYy0uNyAxLjMgLjMgMi45IDIuMyAzLjkgMS42IDEgMy42IC43IDQuMy0uNyAuNy0xLjMtLjMtMi45LTIuMy0zLjktMi0uNi0zLjYtLjMtNC4zIC43em0zMi40IDM1LjZjLTEuNiAxLjMtMSA0LjMgMS4zIDYuMiAyLjMgMi4zIDUuMiAyLjYgNi41IDEgMS4zLTEuMyAuNy00LjMtMS4zLTYuMi0yLjItMi4zLTUuMi0yLjYtNi41LTF6bS0xMS40LTE0LjdjLTEuNiAxLTEuNiAzLjYgMCA1LjkgMS42IDIuMyA0LjMgMy4zIDUuNiAyLjMgMS42LTEuMyAxLjYtMy45IDAtNi4yLTEuNC0yLjMtNC0zLjMtNS42LTJ6Ii8+PC9zdmc+);
+}
+
+/* || Footer */
+
+body > footer {
+  --black: var(--txt-col);
+  --ftr-fontsize: 12px;
+  --ftr-font: "Montserrat";
+  --ftr-padding: 5px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: top;
+  justify-content: center;
+  text-align: center;
+  color: var(--black);
+  font-family: var(--ftr-font), sans-serif;
+  font-size: var(--ftr-fontsize);
+  font-weight: 400;
+  line-height: 1.2;
+  padding: var(--ftr-padding);
+}
+
+body > footer p,
+body > footer a {
+  font-family: inherit;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5em;
+}
+
+body > footer a {
+  font-family: "Bad Script";
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-flex !important;
+}
+
+body > footer .icon {
+  width: 1.3em;
+  height: 1.3em;
+  background-color: var(--black);
 }
