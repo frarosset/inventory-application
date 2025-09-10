@@ -1,4 +1,4 @@
 <label>
-  <input <%- include("inputParams.ejs",{type: "checkbox"}) _%>><%= locals.label || value -%>
+  <input <%- include("inputParams.ejs",{type: "checkbox"}) _%>><span><%= locals.label || value -%></span>
   <%- include("inputValidationErrors.ejs") _%>
 </label>

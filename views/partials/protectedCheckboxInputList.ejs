@@ -32,7 +32,7 @@
 
       // add protected symbol to help the user identifying protected items
       if (protectedValuesSet.has(input.value))
-        input.parentElement.insertAdjacentHTML("beforeend", "<%- include('isProtectedSymbol.ejs', {is_protected: true}) %>");
+        input.nextElementSibling.insertAdjacentHTML("beforeend", "<%- include('isProtectedSymbol.ejs', {is_protected: true}) %>");
     });
 
     window.addEventListener('pageshow', setPasswordCheckboxListConstraints);
