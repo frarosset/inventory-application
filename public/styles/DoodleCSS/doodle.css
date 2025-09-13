@@ -72,9 +72,15 @@
   cursor: pointer;
 }
 
-.doodle a:hover {
+.doodle a:hover,
+.doodle button:hover {
   transform: scale(var(--scale-a-hover));
   -webkit-text-stroke-width: 0.5px; /* To avoid layout shifting */
+}
+
+.doodle a:active,
+.doodle button:active {
+  transform: scale(1);
 }
 
 .doodle ul,
@@ -206,6 +212,7 @@ div[role="alert"] {
 .doodle button,
 .doodle a.button {
   text-align: center;
+  cursor: pointer;
 }
 
 .doodle input[type="color"] {
