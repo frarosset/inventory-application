@@ -9,11 +9,16 @@
 <body class="doodle">
   <%- include("partials/header.ejs") %>
 
-  <main>
-    <h2 class="page-title"><%= pageTitle %></h2>
-    <div>
+  <main class="border index">
+    <h2><%= pageTitle %></h2>
+    <picture>
       <img src="/images/pizza.png" alt="Image of a pizza" />
-      <a href="https://www.freepik.com/free-psd/hand-drawn-delicious-food-restaurant-instagram-post_30859579.htm#fromView=serie&page=1&position=5">Image by freepik (edited)</a>
+      <a href="https://www.freepik.com/free-psd/hand-drawn-delicious-food-restaurant-instagram-post_30859579.htm">Image by freepik</a>
+    </picture>
+    <div>
+      <a class="button" href="/pizzas">All Pizzas</a>
+      <a class="button" href="/categories">All Categories</a>
+      <a class="button" href="/ingredients">All Ingredients</a>
     </div>
   </main>
 

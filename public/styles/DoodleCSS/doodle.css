@@ -194,6 +194,7 @@ div[role="alert"] {
 }
 
 .doodle button,
+.doodle a.button,
 .doodle input,
 .doodle select,
 .doodle input[type="file"]::file-selector-button {
@@ -202,7 +203,8 @@ div[role="alert"] {
   border-image: url(button.svg) 10 10 10 10 stretch stretch;
 }
 
-.doodle button {
+.doodle button,
+.doodle a.button {
   text-align: center;
 }
 
@@ -301,6 +303,7 @@ div[role="alert"] {
 }
 
 .doodle button,
+.doodle a.button,
 .doodle textarea,
 .doodle input,
 .doodle select {
@@ -311,7 +314,8 @@ div[role="alert"] {
   color: var(--txt-col);
 }
 
-.doodle button {
+.doodle button,
+.doodle a.button {
   border-radius: var(--border-radius);
   background: var(--col-button-bg);
 }
@@ -384,6 +388,7 @@ div[role="alert"] {
 }
 
 .doodle button:focus-visible,
+.doodle a.button:focus-visible,
 .doodle textarea:focus-visible,
 .doodle input:focus-visible,
 .doodle select:focus-visible {
