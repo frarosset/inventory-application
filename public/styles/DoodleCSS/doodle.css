@@ -35,7 +35,10 @@
   --input-font: var(--default-font);
   --input-color: var(--txt-col);
 
-  --border-radius: 10px;
+  --border-radius: var(--radius);
+
+  --th-padding: var(--table-th-padding);
+  --td-padding: var(--table-td-padding);
 }
 
 .doodle form,
@@ -257,12 +260,13 @@ div[role="alert"] {
 }
 
 .doodle table th {
-  padding: 0px 0.5em;
+  padding: var(--th-padding);
   font-weight: bold;
+  text-align: left;
 }
 
 .doodle table td {
-  padding: 0.25em;
+  padding: var(--td-padding);
 }
 
 .doodle table tbody tr:not(:last-child) {

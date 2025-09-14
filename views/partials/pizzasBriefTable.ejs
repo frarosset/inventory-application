@@ -1,4 +1,4 @@
-<table>
+<table class="fill-first-column with-actions responsive pizzas-brief">
   <thead>
     <tr>
       <th>Pizza</th>
@@ -6,24 +6,24 @@
       <th>Categories</th>
       <th>Availability</th>
       <th>Cost</th>
-      <th>Protected</th>
-      <th>Actions</th>
+      <th aria-label="Protected"></th>
+      <th aria-label="Actions"></th>
     </tr>
   </thead>
   <tbody>
     <%_ pizzasBriefData.forEach(data => { _%>
     <tr>
-      <td><%- include("pizzaLink.ejs", data) %></td>
-      <td>
+      <td data-label="Pizza"><%- include("pizzaLink.ejs", data) %></td>
+      <td data-label="Ingredients">
         <%- include("itemsList.ejs", {itemType: 'ingredientLink', items: data.ingredients ?? []}) %>
       </td>
-      <td>
+      <td data-label="Categories">
         <%- include("itemsList.ejs", {itemType: 'categoryLink', items: data.actual_categories ?? []}) %>
       </td>
-      <td><%=data.availability %></td>
-      <td><%=data.cost %></td>
-      <td><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></td>
-      <td><%- include("itemActions.ejs", {baseRoute: "/pizzas", id: data.id}) %></td>
+      <td data-label="Availability"><span><%=data.availability %></span></td>
+      <td data-label="Cost"><span><%=data.cost %></span></td>
+      <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
+      <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/pizzas", id: data.id}) %></td>
     </tr>
     <%_ }) _%>
   </tbody>

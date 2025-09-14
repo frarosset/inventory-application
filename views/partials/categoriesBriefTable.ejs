@@ -1,17 +1,17 @@
-<table>
+<table class="fill-first-column with-actions responsive categories-brief">
   <thead>
     <tr>
       <th>Category</th>
-      <th>Protected</th>
-      <th>Actions</th>
+      <th aria-label="Protected"></th>
+      <th aria-label="Actions"></th>
     </tr>
   </thead>
   <tbody>
     <%_ categoriesBriefData.forEach(data => { _%>
     <tr>
-      <td><%- include("categoryLink.ejs", data) %></td>
-      <td><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></td>
-      <td><%- include("itemActions.ejs", {baseRoute: "/categories", id: data.id}) %></td>
+      <td data-label="Category"><%- include("categoryLink.ejs", data) %></td>
+      <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
+      <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/categories", id: data.id}) %></td>
     </tr>
     <%_ }) _%>
   </tbody>

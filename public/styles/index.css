@@ -37,6 +37,8 @@
 
   --h2-fontsize: 2em;
 
+  --radius: 10px;
+
   --page-width: 50em;
   --page-gap: 0.5vmin;
   --page-gap-larger: 1.5rem;
@@ -45,11 +47,18 @@
   --main-padding: 0 var(--base-padding-lr);
   --header-padding: 0.3rem var(--base-padding-lr);
 
+  --h2-stroke-width: 0.5px;
+  --h2-stroke-color: var(--black);
+  --h2-color: var(--bg-col);
+  --h2-shadow-color: var(--chestnut);
+  --h2-shadow-size: -1px 2px 0;
+  --h2-shadow: var(--h2-shadow-size) var(--h2-shadow-color);
+
   --index-title-fontsize: 15vmin;
-  --index-title-stroke-width: 0.5px;
-  --index-title-stroke-color: var(--black);
-  --index-title-color: var(--bg-col);
-  --index-title-shadow-color: var(--chestnut);
+  --index-title-stroke-width: var(--h2-stroke-width);
+  --index-title-stroke-color: var(--h2-stroke-color);
+  --index-title-color: var(--h2-color);
+  --index-title-shadow-color: var(--h2-shadow-color);
   --index-title-shadow-size: -2px 4px 0;
   --index-image-left: 10cqw;
   --index-image-left-larger: 30cqw;
@@ -69,6 +78,12 @@
   --form-buttons-gap: 1em;
   --form-buttons-margin-top: 2em;
   --form-buttons-width: 20em;
+
+  --table-th-padding: 0px 0.5em;
+  --table-td-padding: 0.25em 0.5em;
+
+  --table-responsive-tr-padding: 0px 0.25em;
+  --table-responsive-tr-gap: 0.5em;
 
   font-family: var(--default-font);
   line-height: var(--default-lineheight);
@@ -161,6 +176,7 @@ body {
 /* || Generic styles */
 legend,
 th,
+td::before,
 label:not(:has(input[type="checkbox"])):not(:has(input[type="radio"])),
 nav a,
 p {
@@ -174,7 +190,9 @@ div[role="alert"] * {
 }
 
 legend,
-th {
+th,
+td::before {
+  font-weight: bold;
   color: var(--labels-col-highlight);
 }
 
@@ -263,6 +281,13 @@ body > main {
   align-items: center;
   padding: var(--main-padding);
   gap: var(--main-gap);
+}
+
+main h2 {
+  color: var(--h2-color);
+  text-shadow: var(--h2-shadow);
+  -webkit-text-stroke-color: var(--h2-stroke-color);
+  -webkit-text-stroke-width: var(--h2-stroke-width);
 }
 
 /* Index page */
@@ -370,6 +395,156 @@ main.index .button:nth-child(2) {
 main.index .button:nth-child(3) {
   margin-left: var(--index-button-margin);
   background-color: var(--button-col-3);
+}
+
+/* || Pizzas, Ingredients, Categories pages */
+
+main:has(.pizzas-brief) a.button,
+main:has(.categories-brief) a.button,
+main:has(.ingredients-brief) a.button {
+  text-transform: uppercase;
+  width: 100%;
+}
+
+main:has(.pizzas-brief) a.button {
+  background-color: var(--button-col-1);
+}
+
+main:has(.categories-brief) a.button {
+  background-color: var(--button-col-2);
+}
+
+main:has(.ingredients-brief) a.button {
+  background-color: var(--button-col-3);
+}
+
+/* || Tables */
+
+table.fill-first-column thead th:first-of-type {
+  width: 100%;
+}
+
+table.with-actions tbody td[data-label="Actions"] > * {
+  white-space: nowrap;
+}
+
+table td[data-label="Protected"] > * {
+  margin: 0 0.5em 0 2em;
+}
+
+table.with-actions tbody td[data-label="Actions"] *:has(> .icon),
+table.with-actions tbody td[data-label="Protected"] *:has(> .icon) {
+  font-size: 1.1em;
+}
+
+table tbody td[data-label="Cost"],
+table tbody td[data-label="Price"],
+table tbody td[data-label="Availability"],
+table tbody td[data-label="Stock"],
+table tbody td[data-label="Cost"] > *,
+table tbody td[data-label="Price"] > *,
+table tbody td[data-label="Availability"] > *,
+table tbody td[data-label="Stock"] > * {
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media only screen and (max-width: 800px) {
+  /* Force table to not be like tables anymore */
+  table.responsive,
+  table.responsive thead,
+  table.responsive tbody,
+  table.responsive th,
+  table.responsive td,
+  table.responsive tr {
+    display: block;
+  }
+
+  /* Move the thead away from viewport, but keep it for accessibility */
+  table.responsive thead {
+    position: absolute;
+    top: -100%;
+    left: -100%;
+  }
+
+  table.responsive tbody tr {
+    display: grid;
+    width: 100%;
+    padding: var(--table-responsive-tr-padding);
+    gap: var(--table-responsive-tr-gap);
+  }
+
+  table.responsive tbody tr:first-of-type {
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+  }
+
+  table.responsive tbody tr:last-of-type {
+    border-bottom-left-radius: var(--radius);
+    border-bottom-right-radius: var(--radius);
+  }
+
+  table.responsive td {
+    display: contents;
+  }
+
+  /* Styles specific to .with-actions tables */
+  table.responsive tbody td,
+  table.responsive tbody td > * {
+    text-align: left;
+  }
+
+  table.responsive.with-actions tbody tr {
+    grid-template-columns: max-content 1fr max-content;
+  }
+
+  table.responsive.with-actions
+    td:not([data-label="Protected"]):not([data-label="Actions"]):before {
+    content: attr(data-label);
+    grid-column: 1;
+    text-align: right;
+  }
+
+  table.responsive.with-actions td > * {
+    grid-column: 2 / span 2;
+  }
+
+  table.responsive.with-actions td[data-label="Protected"] > * {
+    grid-column: 2;
+    margin-left: auto;
+  }
+
+  table.responsive.with-actions td[data-label="Actions"] > * {
+    grid-column: 3;
+    margin-right: auto;
+  }
+
+  /* Transform bullet-point lists to comma-separated lists if responsive */
+
+  table.responsive ul {
+    list-style: none;
+    margin-left: 0;
+    display: block;
+  }
+
+  table.responsive li {
+    display: inline;
+  }
+
+  table.responsive li a {
+    display: inline;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+  }
+
+  table.responsive li:not(:last-child):after {
+    content: ", ";
+  }
 }
 
 /* || Specific styles */
