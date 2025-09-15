@@ -15,8 +15,10 @@
       <%- include("partials/isProtectedSymbol.ejs", {is_protected: pizzaData.is_protected}) %>
     </div>
 
-    <%- include("partials/itemActions.ejs", {baseRoute: "/pizzas", id: pizzaData.id}) %>
-
+    <div class="item-details-nav">
+      <a href="/pizzas"><span class="icon icon-back"></span>All Pizzas</a>
+      <%- include("partials/itemActions.ejs", {baseRoute: "/pizzas", id: pizzaData.id}) %>
+    </div>
 
     <%- include("partials/pizzaDetailsTable.ejs", pizzaData) %>
 

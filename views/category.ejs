@@ -15,7 +15,10 @@
       <%- include("partials/isProtectedSymbol.ejs", {is_protected: categoryData.is_protected}) %>
     </div>
 
-    <%- include("partials/itemActions.ejs", {baseRoute: "/categories", id: categoryData.id}) %>
+    <div class="item-details-nav">
+      <a href="/categories"><span class="icon icon-back"></span>All Categories</a>
+      <%- include("partials/itemActions.ejs", {baseRoute: "/categories", id: categoryData.id}) %>
+    </div>
 
     <%- include("partials/categoryDetailsTable.ejs", categoryData) %>
 
