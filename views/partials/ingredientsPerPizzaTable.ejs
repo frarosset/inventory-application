@@ -3,16 +3,16 @@
   <thead>
     <tr>
       <th>Ingredient</th>
-      <th>Stock</th>
-      <th>Price</th>
+      <th class="numeric-data">Stock</th>
+      <th class="numeric-data">Price</th>
     </tr>
   </thead>
   <tbody>
     <%_ ingredients.forEach(ingredient => { _%>
     <tr>
       <td data-label="Ingredient"><%- include("ingredientLink.ejs", ingredient) %></td>
-      <td data-label="Stock"><%=ingredient.stock %></td>
-      <td data-label="Price"><%= formatCost(ingredient.price) %></td>
+      <td class="numeric-data" data-label="Stock"><%=ingredient.stock %></td>
+      <td class="numeric-data" data-label="Price"><%= formatCost(ingredient.price) %></td>
     </tr>
     <%_ }) _%>
   </tbody>

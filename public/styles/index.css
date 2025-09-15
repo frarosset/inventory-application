@@ -473,17 +473,15 @@ table.with-actions tbody td[data-label="Protected"] *:has(> .icon) {
   font-size: 1.1em;
 }
 
-table tbody td[data-label="Cost"],
-table tbody td[data-label="Price"],
-table tbody td[data-label="Availability"],
-table tbody td[data-label="Stock"],
-table tbody td[data-label="Cost"] > *,
-table tbody td[data-label="Price"] > *,
-table tbody td[data-label="Availability"] > *,
-table tbody td[data-label="Stock"] > * {
+table tbody td.numeric-data,
+table tbody td.numeric-data > * {
   white-space: nowrap;
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+table thead th.numeric-data {
+  text-align: right;
 }
 
 table.item-details tbody tr {

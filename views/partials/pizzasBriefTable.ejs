@@ -5,8 +5,8 @@
       <th>Pizza</th>
       <th>Ingredients</th>
       <th>Categories</th>
-      <th>Availability</th>
-      <th>Cost</th>
+      <th class="numeric-data">Stock</th>
+      <th class="numeric-data">Price</th>
       <th aria-label="Protected"></th>
       <th aria-label="Actions"></th>
     </tr>
@@ -21,8 +21,8 @@
       <td data-label="Categories">
         <%- include("itemsList.ejs", {itemType: 'categoryLink', items: data.actual_categories ?? []}) %>
       </td>
-      <td data-label="Availability"><span><%=data.availability %></span></td>
-      <td data-label="Cost"><span><%=formatCost(data.cost) %></span></td>
+      <td class="numeric-data" data-label="Stock"><span><%=data.availability %></span></td>
+      <td class="numeric-data" data-label="Price"><span><%=formatCost(data.cost) %></span></td>
       <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
       <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/pizzas", id: data.id}) %></td>
     </tr>
