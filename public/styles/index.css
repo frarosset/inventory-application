@@ -450,101 +450,103 @@ table tbody td[data-label="Stock"] > * {
   font-variant-numeric: tabular-nums;
 }
 
-@media only screen and (max-width: 800px) {
-  /* Force table to not be like tables anymore */
-  table.responsive,
-  table.responsive thead,
-  table.responsive tbody,
-  table.responsive th,
-  table.responsive td,
-  table.responsive tr {
-    display: block;
-  }
+/* For table.responsive elements, the shrink property
+   is added via js whenever the table overflows horizontally 
+*/
 
-  /* Move the thead away from viewport, but keep it for accessibility */
-  table.responsive thead {
-    position: absolute;
-    top: -100%;
-    left: -100%;
-  }
+/* Force table to not be like tables anymore */
+table.responsive.shrink,
+table.responsive.shrink thead,
+table.responsive.shrink tbody,
+table.responsive.shrink th,
+table.responsive.shrink td,
+table.responsive.shrink tr {
+  display: block;
+}
 
-  table.responsive tbody tr {
-    display: grid;
-    width: 100%;
-    padding: var(--table-responsive-tr-padding);
-    gap: var(--table-responsive-tr-gap);
-  }
+/* Move the thead away from viewport, but keep it for accessibility */
+table.responsive.shrink thead {
+  position: absolute;
+  top: -100%;
+  left: -100%;
+}
 
-  table.responsive tbody tr:first-of-type {
-    border-top-left-radius: var(--radius);
-    border-top-right-radius: var(--radius);
-  }
+table.responsive.shrink tbody tr {
+  display: grid;
+  width: 100%;
+  padding: var(--table-responsive-tr-padding);
+  gap: var(--table-responsive-tr-gap);
+}
 
-  table.responsive tbody tr:last-of-type {
-    border-bottom-left-radius: var(--radius);
-    border-bottom-right-radius: var(--radius);
-  }
+table.responsive.shrink tbody tr:first-of-type {
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
 
-  table.responsive td {
-    display: contents;
-  }
+table.responsive.shrink tbody tr:last-of-type {
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
 
-  /* Styles specific to .with-actions tables */
-  table.responsive tbody td,
-  table.responsive tbody td > * {
-    text-align: left;
-  }
+table.responsive.shrink td {
+  display: contents;
+}
 
-  table.responsive.with-actions tbody tr {
-    grid-template-columns: max-content 1fr max-content;
-  }
+/* Styles specific to .with-actions tables */
+table.responsive.shrink tbody td,
+table.responsive.shrink tbody td > * {
+  text-align: left;
+}
 
-  table.responsive.with-actions
-    td:not([data-label="Protected"]):not([data-label="Actions"]):before {
-    content: attr(data-label);
-    grid-column: 1;
-    text-align: right;
-  }
+table.responsive.shrink.with-actions tbody tr {
+  grid-template-columns: max-content 1fr max-content;
+}
 
-  table.responsive.with-actions td > * {
-    grid-column: 2 / span 2;
-  }
+table.responsive.shrink.with-actions
+  td:not([data-label="Protected"]):not([data-label="Actions"]):before {
+  content: attr(data-label);
+  grid-column: 1;
+  text-align: right;
+}
 
-  table.responsive.with-actions td[data-label="Protected"] > * {
-    grid-column: 2;
-    margin-left: auto;
-  }
+table.responsive.shrink.with-actions td > * {
+  grid-column: 2 / span 2;
+}
 
-  table.responsive.with-actions td[data-label="Actions"] > * {
-    grid-column: 3;
-    margin-right: auto;
-  }
+table.responsive.shrink.with-actions td[data-label="Protected"] > * {
+  grid-column: 2;
+  margin-left: auto;
+}
 
-  /* Transform bullet-point lists to comma-separated lists if responsive */
+table.responsive.shrink.with-actions td[data-label="Actions"] > * {
+  grid-column: 3;
+  margin-right: auto;
+}
 
-  table.responsive ul {
-    list-style: none;
-    margin-left: 0;
-    display: block;
-  }
+/* Transform bullet-point lists to comma-separated lists if responsive */
 
-  table.responsive li {
-    display: inline;
-  }
+table.responsive.shrink ul {
+  list-style: none;
+  margin-left: 0;
+  display: block;
+}
 
-  table.responsive li a {
-    display: inline;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
-  }
+table.responsive.shrink li {
+  display: inline;
+}
 
-  table.responsive li:not(:last-child):after {
-    content: ", ";
-  }
+table.responsive.shrink li a {
+  display: inline;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+table.responsive.shrink li:not(:last-child):after {
+  content: ", ";
 }
 
 /* || Specific styles */
