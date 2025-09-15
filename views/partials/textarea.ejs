@@ -1,5 +1,5 @@
 <label>
   <span><%= label %></span>
-  <textarea <%- include("inputParams.ejs") _%>><%= locals.data?.[name] || "" %></textarea>
+  <textarea rows="6" <%- include("inputParams.ejs") _%>><%= locals.data?.[name] || "" %></textarea>
   <%- include("inputValidationErrors.ejs") _%>
 </label>

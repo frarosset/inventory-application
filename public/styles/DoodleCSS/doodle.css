@@ -195,6 +195,10 @@ div[role="alert"] {
   border-image: url(border.svg) 10 10 10 10 stretch stretch;
 }
 
+.doodle textarea {
+  resize: none;
+}
+
 .doodle .border,
 .doodle-border {
   border-style: solid;
