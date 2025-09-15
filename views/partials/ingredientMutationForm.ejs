@@ -7,7 +7,7 @@
         const dd = process.env.INGREDIENT_PRICE_DECIMAL_DIGITS;
         const step = Number(`1e-${dd}`).toFixed(dd); ;
       _%>
-    <%- include("input.ejs",{type: "number", name: "price", label: "Price", min: 0, step, required: true}) _%>
+    <%- include("input.ejs",{type: "number", name: "price", label: `Price [${process.env.CURRENCY}]`, min: 0, step, required: true}) _%>
     <%- include("input.ejs",{type: "number", name: "stock", label: "Stock", min: 0, step: 1, required: true}) _%>
     <%- include("textarea.ejs",{name: "notes", label: "Notes", maxlength: process.env.NOTES_MAX_LENGTH, pattern: process.env.NOTES_REGEX, title: process.env.NOTES_REGEX_MSG}) _%>
   </fieldset>

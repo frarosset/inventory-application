@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const categoryValidator = require("./validation/categoriesValidator.js");
 const categoryDeleteValidator = require("./validation/categoryDeleteValidator.js");
 const { matchedData } = require("express-validator");
+const formatCost = require("./scripts/formatCost.js");
 
 exports.get = asyncHandler(async (req, res) => {
   const categoriesBriefData = await db.read.categoriesBrief();
@@ -17,7 +18,11 @@ exports.getById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const categoryData = await db.read.category(id);
 
-  res.render("category", { pageTitle: process.env.TITLE, categoryData });
+  res.render("category", {
+    pageTitle: process.env.TITLE,
+    categoryData,
+    formatCost,
+  });
 });
 
 exports.getNew = asyncHandler(async (req, res) => {

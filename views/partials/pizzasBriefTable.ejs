@@ -22,7 +22,7 @@
         <%- include("itemsList.ejs", {itemType: 'categoryLink', items: data.actual_categories ?? []}) %>
       </td>
       <td data-label="Availability"><span><%=data.availability %></span></td>
-      <td data-label="Cost"><span><%=data.cost %></span></td>
+      <td data-label="Cost"><span><%=formatCost(data.cost) %></span></td>
       <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
       <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/pizzas", id: data.id}) %></td>
     </tr>

@@ -12,7 +12,7 @@
     <tr>
       <td data-label="Ingredient"><%- include("ingredientLink.ejs", ingredient) %></td>
       <td data-label="Stock"><%=ingredient.stock %></td>
-      <td data-label="Price"><%=ingredient.price %></td>
+      <td data-label="Price"><%= formatCost(ingredient.price) %></td>
     </tr>
     <%_ }) _%>
   </tbody>

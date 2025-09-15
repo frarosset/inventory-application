@@ -14,7 +14,7 @@
     <tr>
       <td data-label="Ingredient"><%- include("ingredientLink.ejs", data) %></td>
       <td data-label="Stock"><span><%=data.stock %></span></td>
-      <td data-label="Price"><span><%=data.price %></span></td>
+      <td data-label="Price"><span><%=formatCost(data.price) %></span></td>
       <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
       <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/ingredients", id: data.id}) %></td>
     </tr>

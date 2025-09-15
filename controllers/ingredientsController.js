@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const ingredientsValidator = require("./validation/ingredientsValidator.js");
 const ingredientDeleteValidator = require("./validation/ingredientDeleteValidator.js");
 const { matchedData } = require("express-validator");
+const formatCost = require("./scripts/formatCost.js");
 
 exports.get = asyncHandler(async (req, res) => {
   const ingredientsBriefData = await db.read.ingredientsBrief();
@@ -10,6 +11,7 @@ exports.get = asyncHandler(async (req, res) => {
   res.render("ingredients", {
     pageTitle: process.env.TITLE,
     ingredientsBriefData,
+    formatCost,
   });
 });
 
@@ -17,7 +19,11 @@ exports.getById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const ingredientData = await db.read.ingredient(id);
 
-  res.render("ingredient", { pageTitle: process.env.TITLE, ingredientData });
+  res.render("ingredient", {
+    pageTitle: process.env.TITLE,
+    ingredientData,
+    formatCost,
+  });
 });
 
 exports.getNew = (req, res) => {

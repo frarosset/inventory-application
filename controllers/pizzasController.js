@@ -3,18 +3,23 @@ const asyncHandler = require("express-async-handler");
 const pizzasValidator = require("./validation/pizzasValidator.js");
 const pizzasDeleteValidator = require("./validation/pizzasDeleteValidator.js");
 const { matchedData } = require("express-validator");
+const formatCost = require("./scripts/formatCost.js");
 
 exports.get = asyncHandler(async (req, res) => {
   const pizzasBriefData = await db.read.pizzasBrief();
 
-  res.render("pizzas", { pageTitle: process.env.TITLE, pizzasBriefData });
+  res.render("pizzas", {
+    pageTitle: process.env.TITLE,
+    pizzasBriefData,
+    formatCost,
+  });
 });
 
 exports.getById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const pizzaData = await db.read.pizza(id);
 
-  res.render("pizza", { pageTitle: process.env.TITLE, pizzaData });
+  res.render("pizza", { pageTitle: process.env.TITLE, pizzaData, formatCost });
 });
 
 exports.getNew = asyncHandler(async (req, res) => {
