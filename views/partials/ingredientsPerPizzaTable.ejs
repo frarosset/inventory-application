@@ -1,3 +1,4 @@
+<%_ if (ingredients?.length > 0) { _%>
 <table>
   <thead>
     <tr>
@@ -16,3 +17,6 @@
     <%_ }) _%>
   </tbody>
 </table>
+<%_ } else { _%>
+<p class="empty-table">No ingredients in this pizza.</p>
+<%_ } _%>

@@ -549,6 +549,16 @@ table.responsive.shrink li:not(:last-child):after {
   content: ", ";
 }
 
+/* Messages */
+p.empty-table {
+  text-wrap: balance;
+  padding: 2em 0;
+}
+
+table td:has(.empty-list) {
+  text-align: center;
+}
+
 /* || Specific styles */
 
 form div:has(> button) {

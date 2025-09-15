@@ -1,3 +1,4 @@
+<%_ if (categoriesBriefData?.length > 0) { _%>
 <table class="fill-first-column with-actions responsive categories-brief">
   <thead>
     <tr>
@@ -16,3 +17,6 @@
     <%_ }) _%>
   </tbody>
 </table>
+<%_ } else { _%>
+<p class="empty-table categories-brief">No items yet!</p>
+<%_ } _%>

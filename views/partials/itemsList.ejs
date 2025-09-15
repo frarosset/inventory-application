@@ -1,5 +1,9 @@
+<%_ if (items.length >0) { _%>
 <ul>
   <%_ items.forEach(item => { _%>
   <li><%- include(`${itemType}.ejs`,item); %></li>
   <%_ }) _%>
 </ul>
+<%_ } else { _%>
+<span class="empty-list">-</span>
+<%_ } _%>

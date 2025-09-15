@@ -1,3 +1,4 @@
+<%_ if (ingredientsBriefData?.length > 0) { _%>
 <table class="fill-first-column with-actions responsive ingredients-brief">
   <thead>
     <tr>
@@ -20,3 +21,6 @@
     <%_ }) _%>
   </tbody>
 </table>
+<%_ } else { _%>
+<p class="empty-table ingredients-brief">No items yet!</p>
+<%_ } _%>

@@ -1,3 +1,4 @@
+<%_ if (pizzasBriefData?.length > 0) { _%>
 <table class="fill-first-column with-actions responsive pizzas-brief">
   <thead>
     <tr>
@@ -28,3 +29,6 @@
     <%_ }) _%>
   </tbody>
 </table>
+<%_ } else { _%>
+<p class="empty-table pizzas-brief">No items yet!</p>
+<%_ } _%>
