@@ -5,5 +5,5 @@
         let createdAtStr = `Created on ${date2Str(locals.created_at)}${locals.created_by ? " by " + locals.created_by : ""}`;
         createdAtStr += locals.updated_at ? `; last updated on ${date2Str(locals.updated_at)}${locals.updated_by ? " by " + locals.updated_by : ""}.` : ".";
 _%>
-<p><%= createdAtStr %></p>
+<p class="date-info"><%= createdAtStr %></p>
 <%_ } _%>

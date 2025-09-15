@@ -1,14 +1,14 @@
-<table>
+<table class="two-columns responsive">
   <thead>
     <tr>
-      <th>Enforcing<br>Ingredients</th>
-      <th>Incompatible<br>Ingredients</th>
+      <th>Enforcing Ingredients</th>
+      <th>Incompatible Ingredients</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><%- include("itemsList.ejs", {itemType: 'ingredientLink', items: enforcing_ingredients}) %></td>
-      <td><%- include("itemsList.ejs", {itemType: 'ingredientLink', items: incompatible_ingredients}) %></td>
+      <td data-label="Enforcing Ingredients"><%- include("itemsList.ejs", {itemType: 'ingredientLink', items: enforcing_ingredients}) %></td>
+      <td data-label="Incompatible Ingredients"><%- include("itemsList.ejs", {itemType: 'ingredientLink', items: incompatible_ingredients}) %></td>
     </tr>
   </tbody>
 </table>

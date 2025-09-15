@@ -1,14 +1,14 @@
-<table>
+<table class="two-columns responsive">
   <thead>
     <tr>
-      <th>Enforced<br>Categories</th>
-      <th>Excluded<br>Categories</th>
+      <th>Enforced Categories</th>
+      <th>Excluded Categories</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><%- include("itemsList.ejs", {itemType: 'categoryLink', items: enforced_categories}) %></td>
-      <td><%- include("itemsList.ejs", {itemType: 'categoryLink', items: incompatible_categories}) %></td>
+      <td data-label="Enforced Ingredients"><%- include("itemsList.ejs", {itemType: 'categoryLink', items: enforced_categories}) %></td>
+      <td data-label="Excluded Ingredients"><%- include("itemsList.ejs", {itemType: 'categoryLink', items: incompatible_categories}) %></td>
     </tr>
   </tbody>
 </table>

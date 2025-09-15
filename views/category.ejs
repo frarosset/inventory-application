@@ -3,39 +3,37 @@
 
 <head>
   <title><%= pageTitle %> | Category: <%= categoryData.name %></title>
-  <%- include("partials/headGenericElements.ejs") %>
+  <%- include("partials/headGenericElements.ejs",{hasTables: true}) %>
 </head>
 
 <body class="doodle">
   <%- include("partials/header.ejs",{highlightLink: "categories"}) %>
 
   <main>
-    <h2><%= categoryData.name %></h2>
+    <div class="item-details-title">
+      <h2><%= categoryData.name %></h2>
+      <%- include("partials/isProtectedSymbol.ejs", {is_protected: categoryData.is_protected}) %>
+    </div>
 
-    <%- include("partials/isProtectedSymbol.ejs", {is_protected: categoryData.is_protected}) %>
     <%- include("partials/itemActions.ejs", {baseRoute: "/categories", id: categoryData.id}) %>
 
     <%- include("partials/categoryDetailsTable.ejs", categoryData) %>
 
-    <hr>
     <section>
       <h3>Pizzas in this Category</h3>
       <%- include("partials/pizzasBriefTable.ejs", {pizzasBriefData: categoryData.actual_for_pizzas}) %>
     </section>
 
-    <hr>
     <section>
       <h3>Ingredient Rules</h3>
       <%- include("partials/ingredientsPerCategoryTable.ejs", categoryData) %>
     </section>
 
-    <hr>
     <section>
       <h3>Pizzas Rules</h3>
       <%- include("partials/pizzasPerCategoryTable.ejs", categoryData) %>
     </section>
 
-    <hr>
     <%- include("partials/dateInfoP.ejs", categoryData) %>
   </main>
 

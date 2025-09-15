@@ -1,16 +1,16 @@
-<table>
+<table class="three-columns responsive">
   <thead>
     <tr>
       <th>User-defined</th>
-      <th>Enforced by<br>Ingredients</th>
-      <th>Excluded by<br>Ingredients</th>
+      <th>Enforced by Ingredients</th>
+      <th>Excluded by Ingredients</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><%- include("itemsList.ejs", {itemType: 'categoryLink', items: categories}) %></td>
-      <td><%- include("itemsList.ejs", {itemType: 'categoryLink', items: enforced_categories}) %></td>
-      <td><%- include("itemsList.ejs", {itemType: 'categoryLink', items: incompatible_categories}) %></td>
+      <td data-label="User-defined"><%- include("itemsList.ejs", {itemType: 'categoryLink', items: categories}) %></td>
+      <td data-label="Enforced by Ingredients"><%- include("itemsList.ejs", {itemType: 'categoryLink', items: enforced_categories}) %></td>
+      <td data-label="Excluded by Ingredients"><%- include("itemsList.ejs", {itemType: 'categoryLink', items: incompatible_categories}) %></td>
     </tr>
   </tbody>
 </table>

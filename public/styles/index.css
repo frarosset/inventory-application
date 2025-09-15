@@ -36,6 +36,7 @@
   --default-fontsize: max(18px, 2vmin);
 
   --h2-fontsize: 2em;
+  --h2-icon-fontsize: 1.4em;
 
   --radius: 10px;
 
@@ -127,8 +128,8 @@
 
 /* ||  Reset */
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   font-family: inherit;
   font-size: inherit; /* 100% */
   line-height: inherit;
@@ -424,6 +425,30 @@ table.fill-first-column thead th:first-of-type {
   width: 100%;
 }
 
+table.three-columns,
+table.two-columns {
+  container-type: inline-size;
+}
+
+table.three-columns tbody tr:hover,
+table.two-columns tbody tr:hover {
+  background-color: var(--bg-col);
+}
+
+table.two-columns thead th:first-of-type,
+table.two-columns thead th:nth-of-type(2) {
+  width: 50cqw;
+}
+
+table.three-columns thead th:first-of-type,
+table.three-columns thead th:nth-of-type(2) {
+  width: 33.333cqw;
+}
+
+table.three-columns thead th:nth-of-type(3) {
+  width: 33.334cqw;
+}
+
 table.with-actions tbody td[data-label="Actions"] > * {
   white-space: nowrap;
 }
@@ -448,6 +473,24 @@ table tbody td[data-label="Stock"] > * {
   white-space: nowrap;
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+table.item-details tbody tr {
+  border-bottom: unset;
+}
+
+table.item-details tbody td {
+  width: 100%;
+  vertical-align: baseline;
+}
+
+table.item-details tbody th {
+  padding: var(--table-td-padding);
+}
+
+table.item-details tbody td:hover,
+table.item-details tbody tr:hover {
+  background-color: unset;
 }
 
 /* For table.responsive elements, the shrink property
@@ -478,6 +521,10 @@ table.responsive.shrink tbody tr {
   gap: var(--table-responsive-tr-gap);
 }
 
+table.responsive.shrink tbody tr:not(:first-of-type) {
+  padding-top: 1em;
+}
+
 table.responsive.shrink tbody tr:first-of-type {
   border-top-left-radius: var(--radius);
   border-top-right-radius: var(--radius);
@@ -492,18 +539,31 @@ table.responsive.shrink td {
   display: contents;
 }
 
-/* Styles specific to .with-actions tables */
 table.responsive.shrink tbody td,
 table.responsive.shrink tbody td > * {
   text-align: left;
+  vertical-align: baseline;
 }
+
+/* Styles specific to .fill-first-column:not(.with-actions) tables */
+
+table.responsive.shrink.fill-first-column:not(.with-actions) tbody tr {
+  grid-template-columns: max-content 1fr;
+}
+
+table.responsive.shrink.fill-first-column:not(.with-actions) td::before {
+  content: attr(data-label);
+  text-align: right;
+}
+
+/* Styles specific to .with-actions tables */
 
 table.responsive.shrink.with-actions tbody tr {
   grid-template-columns: max-content 1fr max-content;
 }
 
 table.responsive.shrink.with-actions
-  td:not([data-label="Protected"]):not([data-label="Actions"]):before {
+  td:not([data-label="Protected"]):not([data-label="Actions"])::before {
   content: attr(data-label);
   grid-column: 1;
   text-align: right;
@@ -523,6 +583,24 @@ table.responsive.shrink.with-actions td[data-label="Actions"] > * {
   margin-right: auto;
 }
 
+/* Styles specific to .two-columns and .three-columns tables */
+
+table.responsive.shrink.three-columns tbody tr,
+table.responsive.shrink.two-columns tbody tr {
+  grid-template-columns: 1fr;
+}
+
+table.responsive.shrink.three-columns tbody td::before,
+table.responsive.shrink.two-columns tbody td::before {
+  content: attr(data-label);
+}
+
+table.responsive.shrink.three-columns tbody td:not(:last-child) > *,
+table.responsive.shrink.two-columns tbody td:not(:last-child) > * {
+  border-bottom: 1px solid var(--khaki);
+  padding-bottom: var(--table-responsive-tr-gap);
+}
+
 /* Transform bullet-point lists to comma-separated lists if responsive */
 
 table.responsive.shrink ul {
@@ -531,12 +609,15 @@ table.responsive.shrink ul {
   display: block;
 }
 
-table.responsive.shrink li {
+table.responsive.shrink li,
+table.responsive.shrink td > *,
+table.responsive.shrink li a {
   display: inline;
 }
 
+table.item-details tbody td,
+table.responsive.shrink td > *,
 table.responsive.shrink li a {
-  display: inline;
   white-space: normal;
   overflow-wrap: anywhere;
   -webkit-hyphens: auto;
@@ -545,7 +626,7 @@ table.responsive.shrink li a {
   hyphens: auto;
 }
 
-table.responsive.shrink li:not(:last-child):after {
+table.responsive.shrink li:not(:last-child)::after {
   content: ", ";
 }
 
@@ -555,11 +636,43 @@ p.empty-table {
   padding: 2em 0;
 }
 
-table td:has(.empty-list) {
+/* table td:has(.empty-list) {
+  text-align: center;
+} */
+
+/* || Items details specific styles */
+
+.item-details-title {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  grid-template-columns: var(--h2-icon-fontsize) 1fr var(--h2-icon-fontsize);
+}
+
+.item-details-title h2 {
+  grid-column: 2;
   text-align: center;
 }
 
-/* || Specific styles */
+.item-details-title .icon {
+  grid-column: 3;
+  font-size: var(--h2-icon-fontsize);
+}
+
+.item-details-title + div {
+  align-self: end;
+}
+
+.date-info {
+  padding: 1em 1.25em 0 1.25em;
+  font-family: var(--default-font);
+  font-size: 0.8em;
+  opacity: 0.5;
+  text-wrap: balance;
+  text-align: center;
+}
+
+/* || Specific form styles */
 
 form div:has(> button) {
   display: flex;
@@ -597,8 +710,8 @@ form label:has(input[name="incompatibleCategories"]) span {
   text-decoration-thickness: 0.1lh;
 }
 
-form input[name="incompatibleIngredients"]:checked:after,
-form input[name="incompatibleCategories"]:checked:after {
+form input[name="incompatibleIngredients"]:checked::after,
+form input[name="incompatibleCategories"]:checked::after {
   content: "-" !important;
   margin-bottom: 0em;
 }

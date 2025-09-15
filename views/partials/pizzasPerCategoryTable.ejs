@@ -1,16 +1,16 @@
-<table>
+<table class="three-columns responsive">
   <thead>
     <tr>
-      <th>User-defined<br>For</th>
-      <th>Enforced<br>In</th>
-      <th>Incompatible<br>With</th>
+      <th>User-defined For</th>
+      <th>Enforced In</th>
+      <th>Incompatible With</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><%- include("itemsList.ejs", {itemType: 'pizzaLink', items: pizzas}) %></td>
-      <td><%- include("itemsList.ejs", {itemType: 'pizzaLink', items: enforced_in_pizzas}) %></td>
-      <td><%- include("itemsList.ejs", {itemType: 'PizzaLink', items: incompatible_with_pizzas}) %></td>
+      <td data-label="User-defined For"><%- include("itemsList.ejs", {itemType: 'pizzaLink', items: pizzas}) %></td>
+      <td data-label="Enforced In"><%- include("itemsList.ejs", {itemType: 'pizzaLink', items: enforced_in_pizzas}) %></td>
+      <td data-label="Incompatible With"><%- include("itemsList.ejs", {itemType: 'PizzaLink', items: incompatible_with_pizzas}) %></td>
     </tr>
   </tbody>
 </table>

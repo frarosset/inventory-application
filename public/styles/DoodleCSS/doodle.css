@@ -253,6 +253,7 @@ div[role="alert"] {
   border-width: 10px 10px 10px 10px;
   border-image: url(border.svg) 10 10 10 10 stretch stretch;
   background: var(--col-table-bg);
+  width: 100%;
 }
 
 .doodle table thead {
@@ -280,6 +281,7 @@ div[role="alert"] {
   border-bottom-right-radius: var(--border-radius);
 }
 
+.doodle table tbody td:hover,
 .doodle table tbody tr:hover {
   background-color: var(--col-input-bg);
 }
