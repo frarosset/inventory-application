@@ -1,4 +1,4 @@
-<%_ 
+<!-- <%_ 
     if (locals.created_at) {
         const date2Str = (date) => new Date(date).toLocaleString(['en-gb']);
 
@@ -6,4 +6,11 @@
         createdAtStr += locals.updated_at ? `; last updated on ${date2Str(locals.updated_at)}${locals.updated_by ? " by " + locals.updated_by : ""}.` : ".";
 _%>
 <p class="date-info"><%= createdAtStr %></p>
+<%_ } _%> -->
+<%_ if (locals.created_at) {
+    const date2Str = (date) => new Date(date).toLocaleString(['en-gb']);
+ _%>
+<p class="date-info">
+  Created on <span class="date" data-date="<%= locals.created_at.toISOString() %>"><%= date2Str(locals.created_at) %></span> <%_ if (locals.created_by) { _%> by <%= locals.created_by %><%_ } _%> <%_ if (locals.updated_at) { _%>; last updated on <span class="date" data-date="<%= locals.updated_at.toISOString() %>"><%= date2Str(locals.updated_at) %></span><%_ if (locals.updated_by) { _%> by <%= locals.updated_by %><%_ }} _%>.
+</p>
 <%_ } _%>
