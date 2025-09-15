@@ -4,6 +4,6 @@
   <%- include("protectedItem.ejs") _%>
   <div>
     <button type="button" onclick="history.back()">Back</button>
-    <button type="submit">DELETE</button>
+    <%- include("submitButton.ejs", {label: "DELETE"}) _%>
   </div>
 </form>

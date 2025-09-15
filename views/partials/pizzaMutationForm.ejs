@@ -17,6 +17,6 @@
   </fieldset>
   <div>
     <button type="button" onclick="history.back()">Back</button>
-    <button type="submit"><%= locals.edit ? "UPDATE" : "CREATE" _%></button>
+    <%- include("submitButton.ejs", {label: locals.edit ? "UPDATE" : "CREATE"}) _%>
   </div>
 </form>
