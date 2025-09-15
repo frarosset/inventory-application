@@ -47,6 +47,7 @@
   --main-gap: 0.8rem;
   --main-padding: 0 var(--base-padding-lr);
   --header-padding: 0.3rem var(--base-padding-lr);
+  --header-fade-height: 1em;
 
   --h2-stroke-width: 0.5px;
   --h2-stroke-color: var(--black);
@@ -221,14 +222,24 @@ h2 {
 body > header {
   width: 100%;
   padding: var(--header-padding);
-  background: linear-gradient(180deg, var(--bg-col) 60%, transparent 100%);
-  padding-bottom: 1em;
+  background: var(--bg-col);
+  /* background: linear-gradient(180deg, var(--bg-col) 60%, transparent 100%); */
+  margin-bottom: var(--header-fade-height);
   position: sticky;
   z-index: 10;
   top: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 0 1em;
+}
+
+body > header::after {
+  content: "";
+  width: 100%;
+  height: var(--header-fade-height);
+  background: linear-gradient(180deg, var(--bg-col) 0%, transparent 100%);
+  position: absolute;
+  bottom: calc(-1 * var(--header-fade-height));
 }
 
 body > header h1 {
