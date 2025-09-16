@@ -6,6 +6,7 @@ const indexRouter = require("./routes/indexRouter.js");
 const pizzasRouter = require("./routes/pizzasRouter.js");
 const ingredientsRouter = require("./routes/ingredientsRouter.js");
 const categoriesRouter = require("./routes/categoriesRouter.js");
+const CustomNotFoundError = require("./errors/CustomNotFoundError");
 
 const app = express();
 
@@ -20,10 +21,10 @@ app.use(express.static("public", { extensions: ["html"] }));
 app.use(express.urlencoded({ extended: true })); // to parse form data into req.body
 
 // Routes
-app.use("/", indexRouter);
 app.use("/pizzas", pizzasRouter);
 app.use("/ingredients", ingredientsRouter);
 app.use("/categories", categoriesRouter);
+app.use("/", indexRouter);
 
 // Ignore favicon icon / ... request
 app.get(
@@ -33,6 +34,21 @@ app.get(
     res.sendStatus(204); // No Content
   }
 );
+
+// catch-all route throwing a 404 error
+app.use((req, res, next) => {
+  throw new CustomNotFoundError("Page not found");
+});
+
+// Error handling
+app.use((error, req, res, next) => {
+  console.log(error);
+
+  const code = error.statusCode || 500;
+  const message = code !== 500 ? error.message : "Internal server error";
+
+  res.status(code).send(`error ${code}: ${message}`);
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
