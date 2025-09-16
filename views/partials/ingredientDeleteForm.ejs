@@ -3,7 +3,7 @@
   <p>Are you sure you want to delete ingredient "<%= data.name %>"?</p>
   <%- include("protectedItem.ejs") _%>
   <div>
-    <button type="button" onclick="history.back()">Back</button>
+    <%- include("backButton.ejs", {fallbackUrl: "/ingredients"}) _%>
     <%- include("submitButton.ejs", {label: "DELETE"}) _%>
   </div>
 </form>

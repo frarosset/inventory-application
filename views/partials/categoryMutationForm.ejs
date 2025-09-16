@@ -22,7 +22,7 @@
     <%- include("protectedCheckboxInputList.ejs", {name: "pizzas", list: pizzas, protectedValues: protectedPizzas}) _%>
   </fieldset>
   <div>
-    <button type="button" onclick="history.back()">Back</button>
+    <%- include("backButton.ejs", {fallbackUrl: "/categories"}) _%>
     <%- include("submitButton.ejs", {label: locals.edit ? "UPDATE" : "CREATE"}) _%>
   </div>
 </form>

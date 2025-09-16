@@ -1,0 +1,16 @@
+<script>
+  const goBack = (fallbackUrl = "/") => {
+    const referrer = document.referrer;
+    const isInternal = referrer && referrer.startsWith(window.location.origin);
+
+    console.log(referrer, "|", window.location.origin, "|", isInternal)
+
+    if (isInternal) {
+      history.back();
+    } else {
+      window.location.href = fallbackUrl;
+    }
+
+  }
+</script>
+<button type="button" onclick="goBack('<%= locals.fallbackUrl %>')">Back</button>

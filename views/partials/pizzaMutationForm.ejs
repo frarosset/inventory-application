@@ -16,7 +16,7 @@
     <%- include("checkboxInputList.ejs", {name: "categories", list: categories, data: locals.data}) _%>
   </fieldset>
   <div>
-    <button type="button" onclick="history.back()">Back</button>
+    <%- include("backButton.ejs", {fallbackUrl: "/pizzas"}) _%>
     <%- include("submitButton.ejs", {label: locals.edit ? "UPDATE" : "CREATE"}) _%>
   </div>
 </form>
