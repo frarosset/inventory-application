@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= pageTitle %> | Error <%= code %> </title>
+  <%- include("partials/headGenericElements.ejs") %>
+</head>
+
+<body class="doodle">
+  <%- include("partials/header.ejs") %>
+
+  <main class="border error">
+    <h2><%= code %></h2>
+    <p><%= message %></p>
+    <picture>
+      <img src="/images/pizza.png" alt="Image of a pizza" />
+      <a href="https://www.freepik.com/free-psd/hand-drawn-delicious-food-restaurant-instagram-post_30859579.htm">Image by freepik</a>
+    </picture>
+    <div>
+      <%- include("partials/backButton.ejs") _%>
+    </div>
+  </main>
+
+  <%- include("partials/creditFooter.ejs") %>
+</body>
+
+</html>
