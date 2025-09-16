@@ -2,8 +2,10 @@
 <%# the first state in the locals.states must be the unchecked state %>
 <label>
   <%_ const callback =  `cycleMultiStateCheckboxState(this,${JSON.stringify(locals.states)})`;
-      const checked = name !== locals.states[0]; _%>
-  <input <%- include("inputParams.ejs",{type: "checkbox", onclick: callback, checked}) _%>>
+      const checked = name !== locals.states[0];
+      const ariaLabel = `${locals.label || value} with state: ${checked ? name : "unchecked"}`;
+  _%>
+  <input <%- include("inputParams.ejs",{type: "checkbox", onclick: callback, checked, "aria-label": ariaLabel}) _%>>
   <span><%= locals.label || value -%></span>
   <%- include("inputValidationErrors.ejs") _%>
 </label>

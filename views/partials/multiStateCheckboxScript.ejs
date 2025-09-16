@@ -10,8 +10,10 @@
 
     if (nextState === 'none') {
       input.checked = false;
+      input.setAttribute("aria-label", `${input.value} with state: unchecked`);
     } else {
       input.checked = true;
+      input.setAttribute("aria-label", `${input.value} with state: ${nextState}`);
     }
   }
 </script>
