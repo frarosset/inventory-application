@@ -302,6 +302,13 @@ main h2 {
   -webkit-text-stroke-width: var(--h2-stroke-width);
 }
 
+body > main > h2,
+body > main > p,
+body > main > form > p {
+  text-align: center;
+  text-wrap: balance;
+}
+
 /* Index page */
 
 html:has(.index),

@@ -2,6 +2,7 @@ const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
 const pizzasValidator = require("./validation/pizzasValidator.js");
 const pizzasDeleteValidator = require("./validation/pizzasDeleteValidator.js");
+const redirectToValidator = require("./validation/redirectToValidator.js");
 const { matchedData } = require("express-validator");
 const formatCost = require("./scripts/formatCost.js");
 
@@ -40,6 +41,7 @@ exports.postNew = [
 
     const id = await db.create.pizza(body);
 
+    // this always redirect to the new pizza
     res.redirect("/pizzas/" + id);
   }),
 ];
@@ -61,6 +63,10 @@ exports.getEditById = asyncHandler(async (req, res) => {
 
 exports.postEditById = [
   pizzasValidator,
+  (req, res, next) => {
+    const validator = redirectToValidator();
+    return validator(req, res, next);
+  },
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
@@ -69,7 +75,7 @@ exports.postEditById = [
     // id is undefined if no change are made. Use data.id instead
     // Possibly, use id to possibly show a message of no edit done
 
-    res.redirect("/pizzas/" + data.id);
+    res.redirect(data.redirectTo || "/pizzas/" + data.id);
   }),
 ];
 
@@ -85,11 +91,16 @@ exports.getDeleteById = asyncHandler(async (req, res) => {
 
 exports.postDeleteById = [
   pizzasDeleteValidator,
+  (req, res, next) => {
+    /* Exclude the route to the deleted item */
+    const validator = redirectToValidator(`^/pizzas/${req.params.id}$`);
+    return validator(req, res, next);
+  },
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
     const id = await db.delete.pizza(data.id);
 
-    res.redirect("/pizzas/");
+    res.redirect(data.redirectTo || "/pizzas");
   }),
 ];

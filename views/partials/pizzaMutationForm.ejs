@@ -15,8 +15,5 @@
     <p>The final categories include those enforced by the selected ingredients and exclude any that are incompatible with them.</p>
     <%- include("checkboxInputList.ejs", {name: "categories", list: categories, data: locals.data}) _%>
   </fieldset>
-  <div>
-    <%- include("backButton.ejs", {fallbackUrl: "/pizzas"}) _%>
-    <%- include("submitButton.ejs", {label: locals.edit ? "UPDATE" : "CREATE"}) _%>
-  </div>
+  <%- include("formActions.ejs", {fallbackUrl: "/pizzas", label: locals.edit ? "UPDATE" : "CREATE"}) _%>
 </form>

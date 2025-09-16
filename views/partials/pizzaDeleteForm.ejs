@@ -2,8 +2,5 @@
 <form action=<%= postUrl %> method="POST">
   <p>Are you sure you want to delete this pizza?</p>
   <%- include("protectedItem.ejs") _%>
-  <div>
-    <%- include("backButton.ejs", {fallbackUrl: "/pizzas"}) _%>
-    <%- include("submitButton.ejs", {label: "DELETE"}) _%>
-  </div>
+  <%- include("formActions.ejs", {fallbackUrl: "/pizzas",label: "DELETE"}) _%>
 </form>

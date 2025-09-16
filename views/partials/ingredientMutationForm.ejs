@@ -27,9 +27,6 @@
     <legend>Add to these Pizzas</legend>
     <%- include("protectedCheckboxInputList.ejs", {name: "pizzas", list: pizzas, protectedValues: protectedPizzas}) _%>
   </fieldset>
-  <div>
-    <%- include("backButton.ejs", {fallbackUrl: "/ingredients"}) _%>
-    <%- include("submitButton.ejs", {label: locals.edit ? "UPDATE" : "CREATE"}) _%>
-  </div>
+  <%- include("formActions.ejs", {fallbackUrl: "/ingredients", label: locals.edit ? "UPDATE" : "CREATE"}) _%>
 </form>
 <%- include("multiStateCheckboxScript.ejs") _%>

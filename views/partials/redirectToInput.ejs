@@ -1,0 +1,12 @@
+<input type="text" id="redirectTo" name="redirectTo" hidden />
+<script>
+  (() => {
+    const redirectToInput = document.querySelector("#redirectTo");
+    const referrer = document.referrer;
+
+    if (referrer.startsWith(window.location.origin)) {
+      const relativePath = referrer.slice(window.location.origin.length);
+      redirectToInput.setAttribute("value", relativePath || "/");
+    }
+  })();
+</script>

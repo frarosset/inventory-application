@@ -2,6 +2,7 @@ const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
 const ingredientsValidator = require("./validation/ingredientsValidator.js");
 const ingredientDeleteValidator = require("./validation/ingredientDeleteValidator.js");
+const redirectToValidator = require("./validation/redirectToValidator.js");
 const { matchedData } = require("express-validator");
 const formatCost = require("./scripts/formatCost.js");
 
@@ -48,6 +49,7 @@ exports.postNew = [
 
     const id = await db.create.ingredient(body);
 
+    // this always redirect to the new ingredient
     res.redirect("/ingredients/" + id);
   }),
 ];
@@ -70,6 +72,10 @@ exports.getEditById = asyncHandler(async (req, res) => {
 
 exports.postEditById = [
   ingredientsValidator,
+  (req, res, next) => {
+    const validator = redirectToValidator();
+    return validator(req, res, next);
+  },
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
@@ -78,7 +84,7 @@ exports.postEditById = [
     // id is undefined if no change are made. Use data.id instead
     // Possibly, use id to possibly show a message of no edit done
 
-    res.redirect("/ingredients/" + data.id);
+    res.redirect(data.redirectTo || "/ingredients/" + data.id);
   }),
 ];
 
@@ -100,11 +106,16 @@ exports.getDeleteById = asyncHandler(async (req, res) => {
 
 exports.postDeleteById = [
   ingredientDeleteValidator,
+  (req, res, next) => {
+    /* Exclude the route to the deleted item */
+    const validator = redirectToValidator(`^/ingredients/${req.params.id}$`);
+    return validator(req, res, next);
+  },
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
     const id = await db.delete.ingredient(data.id);
 
-    res.redirect("/ingredients/");
+    res.redirect(data.redirectTo || "/ingredients");
   }),
 ];
