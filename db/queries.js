@@ -5,10 +5,7 @@ exports.read = {};
 exports.update = {};
 exports.delete = {};
 
-const makeTransaction = async (
-  queries,
-  beforeCommitCallback = async () => {}
-) => {
+const makeTransaction = async (queries, beforeCommitCallback = null) => {
   // This assumes the queries results are not used within the queries
   const results = [];
 
@@ -22,11 +19,13 @@ const makeTransaction = async (
       results.push(res.rows || []);
     }
 
-    const beforeCommitCallbackResult = await beforeCommitCallback(
-      client,
-      results
-    );
-    results.push(beforeCommitCallbackResult);
+    if (beforeCommitCallback !== null) {
+      const beforeCommitCallbackResult = await beforeCommitCallback(
+        client,
+        results
+      );
+      results.push(beforeCommitCallbackResult);
+    }
 
     await client.query("COMMIT");
 
@@ -864,7 +863,7 @@ exports.delete.ingredient = async (id) => {
 
   const results = await makeTransaction(queries);
 
-  return results[2][0].id;
+  return results[2]?.[0]?.id;
 };
 
 exports.delete.category = async (id) => {
@@ -885,7 +884,7 @@ exports.delete.category = async (id) => {
 
   const results = await makeTransaction(queries);
 
-  return results[2][0].id;
+  return results[2]?.[0]?.id;
 };
 
 exports.delete.pizza = async (id) => {
@@ -906,7 +905,7 @@ exports.delete.pizza = async (id) => {
 
   const results = await makeTransaction(queries);
 
-  return results[2][0].id;
+  return results[2]?.[0]?.id;
 };
 
 // This gets only the essential info for all pizzas in the db
@@ -1012,7 +1011,7 @@ exports.read.pizzaProtected = async (id) => {
     [id]
   );
 
-  return rows[0].is_protected;
+  return rows[0]?.is_protected;
 };
 
 exports.read.ingredientsBrief = async () => {
@@ -1120,7 +1119,7 @@ exports.read.ingredientProtected = async (id) => {
     [id]
   );
 
-  return rows[0].is_protected;
+  return rows[0]?.is_protected;
 };
 
 exports.read.categoriesBrief = async () => {
@@ -1229,7 +1228,7 @@ exports.read.categoryProtected = async (id) => {
     [id]
   );
 
-  return rows[0].is_protected;
+  return rows[0]?.is_protected;
 };
 
 function symmetricDifference(a, b) {

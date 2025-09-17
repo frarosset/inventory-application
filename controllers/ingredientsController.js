@@ -11,6 +11,7 @@ const err404Msg = {
   getById: "This ingredient does not exist!",
   getEditById: "Cannot edit — this ingredient does not exist!",
   getDeleteById: "Cannot delete — this ingredient does not exist!",
+  postDeleteById: "Cannot delete — this ingredient does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -125,6 +126,10 @@ exports.postDeleteById = [
     const data = matchedData(req); // req.body + req.params.id
 
     const id = await db.delete.ingredient(data.id);
+
+    if (id == null) {
+      throw new CustomNotFoundError(err404Msg.postDeleteById);
+    }
 
     res.redirect(data.redirectTo || "/ingredients");
   }),

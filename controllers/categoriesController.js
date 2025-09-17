@@ -11,6 +11,7 @@ const err404Msg = {
   getById: "This category does not exist!",
   getEditById: "Cannot edit — this category does not exist!",
   getDeleteById: "Cannot delete — this category does not exist!",
+  postDeleteById: "Cannot delete — this category does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -124,6 +125,10 @@ exports.postDeleteById = [
     const data = matchedData(req); // req.body + req.params.id
 
     const id = await db.delete.category(data.id);
+
+    if (id == null) {
+      throw new CustomNotFoundError(err404Msg.postDeleteById);
+    }
 
     res.redirect(data.redirectTo || "/categories");
   }),

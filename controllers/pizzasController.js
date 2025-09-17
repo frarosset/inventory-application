@@ -11,6 +11,7 @@ const err404Msg = {
   getById: "This pizza does not exist!",
   getEditById: "Cannot edit — this pizza does not exist!",
   getDeleteById: "Cannot delete — this pizza does not exist!",
+  postDeleteById: "Cannot delete — this pizza does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -119,6 +120,10 @@ exports.postDeleteById = [
     const data = matchedData(req); // req.body + req.params.id
 
     const id = await db.delete.pizza(data.id);
+
+    if (id == null) {
+      throw new CustomNotFoundError(err404Msg.postDeleteById);
+    }
 
     res.redirect(data.redirectTo || "/pizzas");
   }),
