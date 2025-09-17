@@ -3,8 +3,15 @@ const asyncHandler = require("express-async-handler");
 const categoryValidator = require("./validation/categoriesValidator.js");
 const categoryDeleteValidator = require("./validation/categoryDeleteValidator.js");
 const redirectToValidator = require("./validation/redirectToValidator.js");
+const CustomNotFoundError = require("../errors/CustomNotFoundError");
 const { matchedData } = require("express-validator");
 const formatCost = require("./scripts/formatCost.js");
+
+const err404Msg = {
+  getById: "This category does not exist!",
+  getEditById: "Cannot edit — this category does not exist!",
+  getDeleteById: "Cannot delete — this category does not exist!",
+};
 
 exports.get = asyncHandler(async (req, res) => {
   const categoriesBriefData = await db.read.categoriesBrief();
@@ -18,6 +25,10 @@ exports.get = asyncHandler(async (req, res) => {
 exports.getById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const categoryData = await db.read.category(id);
+
+  if (categoryData == null) {
+    throw new CustomNotFoundError(err404Msg.getById);
+  }
 
   res.render("category", {
     pageTitle: process.env.TITLE,
@@ -56,6 +67,10 @@ exports.getEditById = asyncHandler(async (req, res) => {
   const ingredients = await db.read.ingredientsNames();
   const pizzas = await db.read.pizzasNames();
 
+  if (categoryData == null) {
+    throw new CustomNotFoundError(err404Msg.getEditById);
+  }
+
   res.render("categoryMutation", {
     pageTitle: process.env.TITLE,
     ingredients: ingredients.map((i) => i.name),
@@ -87,6 +102,10 @@ exports.postEditById = [
 exports.getDeleteById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const categoryData = await db.read.categoryDelete(id);
+
+  if (categoryData == null) {
+    throw new CustomNotFoundError(err404Msg.getDeleteById);
+  }
 
   res.render("categoryDelete", {
     pageTitle: process.env.TITLE,

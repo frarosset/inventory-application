@@ -3,8 +3,15 @@ const asyncHandler = require("express-async-handler");
 const ingredientsValidator = require("./validation/ingredientsValidator.js");
 const ingredientDeleteValidator = require("./validation/ingredientDeleteValidator.js");
 const redirectToValidator = require("./validation/redirectToValidator.js");
+const CustomNotFoundError = require("../errors/CustomNotFoundError");
 const { matchedData } = require("express-validator");
 const formatCost = require("./scripts/formatCost.js");
+
+const err404Msg = {
+  getById: "This ingredient does not exist!",
+  getEditById: "Cannot edit — this ingredient does not exist!",
+  getDeleteById: "Cannot delete — this ingredient does not exist!",
+};
 
 exports.get = asyncHandler(async (req, res) => {
   const ingredientsBriefData = await db.read.ingredientsBrief();
@@ -20,6 +27,10 @@ exports.getById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const ingredientData = await db.read.ingredient(id);
 
+  if (ingredientData == null) {
+    throw new CustomNotFoundError(err404Msg.getById);
+  }
+
   res.render("ingredient", {
     pageTitle: process.env.TITLE,
     ingredientData,
@@ -27,9 +38,6 @@ exports.getById = asyncHandler(async (req, res) => {
   });
 });
 
-exports.getNew = (req, res) => {
-  res.send("New ingredient form");
-};
 exports.getNew = asyncHandler(async (req, res) => {
   const categories = await db.read.categoriesNames();
   const pizzas = await db.read.pizzasNames();
@@ -59,6 +67,10 @@ exports.getEditById = asyncHandler(async (req, res) => {
   const ingredientData = await db.read.ingredientEdit(id);
   const categories = await db.read.categoriesNames();
   const pizzas = await db.read.pizzasNames();
+
+  if (ingredientData == null) {
+    throw new CustomNotFoundError(err404Msg.getEditById);
+  }
 
   res.render("ingredientMutation", {
     pageTitle: process.env.TITLE,
@@ -90,13 +102,11 @@ exports.postEditById = [
 
 exports.getDeleteById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-
-  res.send(`Confirm delete of ingredient ${id}?`);
-});
-
-exports.getDeleteById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
   const ingredientData = await db.read.ingredientDelete(id);
+
+  if (ingredientData == null) {
+    throw new CustomNotFoundError(err404Msg.getDeleteById);
+  }
 
   res.render("ingredientDelete", {
     pageTitle: process.env.TITLE,
