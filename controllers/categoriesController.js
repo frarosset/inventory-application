@@ -12,6 +12,7 @@ const err404Msg = {
   getEditById: "Cannot edit — this category does not exist!",
   getDeleteById: "Cannot delete — this category does not exist!",
   postDeleteById: "Cannot delete — this category does not exist!",
+  postEditById: "Cannot edit — this category does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -91,12 +92,13 @@ exports.postEditById = [
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
-    const id = await db.update.category(data);
+    const { id, updated } = await db.update.category(data);
 
-    // id is undefined if no change are made. Use data.id instead
-    // Possibly, use id to possibly show a message of no edit done
+    if (id == null) {
+      throw new CustomNotFoundError(err404Msg.postEditById);
+    }
 
-    res.redirect(data.redirectTo || "/categories/" + data.id);
+    res.redirect(data.redirectTo || "/categories/" + id);
   }),
 ];
 
