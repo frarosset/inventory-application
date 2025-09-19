@@ -31,7 +31,7 @@ const pizzasValidator = [
     )
     .matches(new RegExp(process.env.NAME_REGEX, process.env.NAME_REGEX_FLAG))
     .withMessage(
-      "The name has some invalid characters." + process.env.NAME_REGEX_MSG
+      "The name has some invalid characters. " + process.env.NAME_REGEX_MSG
     ),
   body("notes")
     .trim()
@@ -46,7 +46,7 @@ const pizzasValidator = [
     )
     .matches(new RegExp(process.env.NOTES_REGEX, process.env.NOTES_REGEX_FLAG))
     .withMessage(
-      "Notes have some invalid characters." + process.env.NOTES_REGEX_MSG
+      "Notes have some invalid characters. " + process.env.NOTES_REGEX_MSG
     ),
   body("ingredients")
     .optional({ nullable: true })

@@ -16,7 +16,7 @@ const handleValidationErrorsFcn = (ejsTemplate) => (req, res, next) => {
     });
 
     const params =
-      req.locals.isEdit || req.locals.isNew
+      req.locals?.isEdit || req.locals?.isNew
         ? {
             ingredients: req.locals.allIngredients,
             categories: req.locals.allCategories,
@@ -25,10 +25,12 @@ const handleValidationErrorsFcn = (ejsTemplate) => (req, res, next) => {
             edit: req.locals.isEdit,
             data: data,
           }
-        : req.locals.isDelete
+        : req.locals?.isDelete
         ? {
             data: { ...data, ...req.locals.itemData },
           }
+        : req.locals?.isSearch
+        ? { data }
         : {};
 
     return res.status(400).render(ejsTemplate, {
