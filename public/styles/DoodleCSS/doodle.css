@@ -16,7 +16,7 @@
   --col-table-bg: var(--base-color);
   --col-fieldset-bg: var(--base-color);
   --col-button-bg: var(--base-color);
-  --col-submit-button-bg: var(--earth-yellow, orange);
+  --col-submit-button-bg: var(--button-col-highlight, orange);
   --col-a: inherit; /*(--black, #1c1c1c);*/
   --col-error: var(--tomato);
   --bg-col-error: var(--coral-pink);
@@ -79,6 +79,7 @@
 .doodle button:not(:disabled):hover {
   transform: scale(var(--scale-a-hover));
   -webkit-text-stroke-width: 0.5px; /* To avoid layout shifting */
+  z-index: 10;
 }
 
 .doodle a:active,

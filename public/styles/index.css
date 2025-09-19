@@ -28,6 +28,7 @@
   --button-col-1: var(--sandy-brown);
   --button-col-2: var(--olivine);
   --button-col-3: var(--lilac);
+  --button-col-highlight: var(--earth-yellow);
 
   --default-font: "Short Stack", monospace;
   --labels-font: "Special Elite", cursive;
@@ -77,6 +78,15 @@
     var(--index-title-shadow-size) var(--index-title-shadow-color);
   --index-buttons-shadow: 3px -3px 6px var(--bg-col);
 
+  --base-shadow: 0 0 5px var(--bg-col), 0 0 10px var(--bg-col),
+    0 0 20px var(--bg-col), 0 0 15px var(--bg-col);
+  --error-p-shadow: var(--base-shadow), var(--base-shadow), var(--base-shadow),
+    var(--base-shadow), var(--base-shadow), var(--base-shadow);
+  --error-title-fontsize: min(20cqmin, 170px);
+  --error-title-fontsize-larger: min(40cqmin, 170px);
+  --error-title-width: 100cqw;
+  --error-title-width-larger: 3em;
+
   --form-buttons-gap: 1em;
   --form-buttons-margin-top: 2em;
   --form-buttons-width: 20em;
@@ -118,6 +128,8 @@
   :root {
     --page-gap: var(--page-gap-larger);
     --index-buttons-margin-bottom: var(--index-buttons-margin-bottom-larger);
+    --error-title-fontsize: var(--error-title-fontsize-larger);
+    --error-title-width: var(--error-title-width-larger);
   }
 }
 
@@ -309,22 +321,44 @@ body > main > form > p {
   text-wrap: balance;
 }
 
-/* Index page */
+/* Index / error page */
 
 html:has(.index),
-body:has(.index) {
+body:has(.index),
+html:has(.error),
+body:has(.error) {
   overflow: hidden;
 }
 
-main.index {
+main.index,
+main.error {
   position: relative;
   align-items: flex-start;
   background-color: var(--bg-col);
   container-type: inline-size;
 }
 
-main.index h2 {
+main.error {
+  align-items: center;
+}
+
+main.index h2,
+main.error .h2-div {
   flex: 1;
+  z-index: 4;
+}
+
+main.error .h2-div {
+  display: flex;
+  flex-direction: column;
+  width: min-content;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+main.index h2,
+main.error h2 {
   font-size: var(--index-title-fontsize);
   text-align: left;
   text-transform: uppercase;
@@ -332,15 +366,32 @@ main.index h2 {
   text-shadow: var(--index-h2-shadow);
   -webkit-text-stroke-color: var(--index-title-stroke-color);
   -webkit-text-stroke-width: var(--index-title-stroke-width);
-  z-index: 4;
 }
 
-main.index picture {
+main.error .h2-div h2 {
+  font-size: var(--error-title-fontsize);
+  width: var(--error-title-width);
+  min-width: min-content;
+  max-width: 100cqw;
+  text-align: center;
+}
+
+main.error .h2-div p {
+  text-align: center;
+  text-shadow: var(--error-p-shadow);
+  z-index: 3;
+  font-weight: bold;
+  text-wrap: balance;
+}
+
+main.index picture,
+main.error picture {
   position: absolute;
   inset: 0;
 }
 
-main.index img {
+main.index img,
+main.error img {
   position: absolute;
   top: 0; /* center vertically */
   bottom: 0; /* center vertically */
@@ -351,12 +402,29 @@ main.index img {
   width: 100cqmax;
   min-width: 100cqmax;
   object-fit: cover;
-  animation: rotate var(--index-image-animation-duration) linear infinite;
+  animation: rotate-and-translate var(--index-image-animation-duration) linear
+    infinite;
   pointer-events: none;
   z-index: 2;
 }
 
-@keyframes rotate {
+main.error img {
+  left: 50%;
+  transform: translateX(-50%);
+  animation: rotate-from-hcenter var(--index-image-animation-duration) linear
+    infinite;
+}
+
+@keyframes rotate-from-hcenter {
+  from {
+    transform: translateX(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateX(-50%) rotate(-360deg);
+  }
+}
+
+@keyframes rotate-and-translate {
   from {
     transform: rotate(0deg) translateX(0%);
   }
@@ -374,7 +442,8 @@ main.index img {
   }
 }
 
-main.index picture a {
+main.index picture a,
+main.error picture a {
   position: absolute;
   opacity: 0.5;
   bottom: 0;
@@ -382,8 +451,12 @@ main.index picture a {
   z-index: 1;
 }
 
-main.index div:has(.button) {
+main.index .btn-div {
   flex: 1;
+}
+
+main.index .btn-div,
+main.error .btn-div {
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -394,7 +467,8 @@ main.index div:has(.button) {
   z-index: 3;
 }
 
-main.index .button {
+main.index .button,
+main.error button {
   text-align: center;
   margin-left: 0;
   box-shadow: var(--index-buttons-shadow);
@@ -822,6 +896,7 @@ body > footer {
   font-weight: 400;
   line-height: 1.2;
   padding: var(--ftr-padding);
+  z-index: 10;
 }
 
 body > footer p,
