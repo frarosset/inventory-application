@@ -825,6 +825,11 @@ form .incompatible {
   font-weight: bold;
 }
 
+form .search-options {
+  width: 100%;
+  max-width: 30em;
+}
+
 /* || Icon */
 
 .icon {

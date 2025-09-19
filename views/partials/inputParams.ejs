@@ -9,7 +9,7 @@ if (locals.validationErrors) {
     locals.onfocus = 'this.setSelectionRange(-1,-1)'
   }
 }
-const params = ["id","class","type","name","value","maxlength","min","max","step","pattern","title","onclick","onfocus","aria-label"];
+const params = ["id","class","type","name","value","maxlength","min","max","step","pattern","title","onclick","onfocus","aria-label","placeholder"];
 params.forEach(param => {
 if (locals[param] != null) { _%>
 <%= param %>="<%= locals[param] %>"
