@@ -3,7 +3,9 @@ exports.get = [
     const q = req.query.q;
 
     if (q == null) {
-      res.send("Search page with input only");
+      res.render("search", {
+        pageTitle: process.env.TITLE,
+      });
     } else {
       res.send("Search page with results for " + q);
     }

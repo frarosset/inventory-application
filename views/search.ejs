@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%_ const titleSearchStr = locals.q ? "Search: " + q : "Search" _%>
+
+<head>
+  <title><%= pageTitle %> | <%= titleSearchStr %> %></title>
+  <%- include("partials/headGenericElements.ejs") %>
+</head>
+
+<body class="doodle">
+  <%- include("partials/header.ejs") %>
+
+  <main>
+    <h2><%= titleSearchStr %></h2>
+    <%- include("partials/searchForm.ejs") %>
+  </main>
+
+  <%- include("partials/creditFooter.ejs") %>
+</body>
+
+</html>

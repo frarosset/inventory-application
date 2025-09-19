@@ -1,0 +1,4 @@
+<form action="/search" method="GET">
+  <%- include("input.ejs",{type: "search", name: "q", label: "", maxlength: process.env.NAME_MAX_LENGTH, required: true,  pattern: process.env.NAME_REGEX, title: process.env.NAME_REGEX_MSG}) _%>
+  <%- include("submitButton.ejs", {label: "SHOW RESULTS"}) _%>
+</form>
