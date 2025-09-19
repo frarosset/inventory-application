@@ -6,6 +6,7 @@ const indexRouter = require("./routes/indexRouter.js");
 const pizzasRouter = require("./routes/pizzasRouter.js");
 const ingredientsRouter = require("./routes/ingredientsRouter.js");
 const categoriesRouter = require("./routes/categoriesRouter.js");
+const searchRouter = require("./routes/searchRouter.js");
 const CustomNotFoundError = require("./errors/CustomNotFoundError");
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true })); // to parse form data into req.
 app.use("/pizzas", pizzasRouter);
 app.use("/ingredients", ingredientsRouter);
 app.use("/categories", categoriesRouter);
+app.use("/search", searchRouter);
 app.use("/", indexRouter);
 
 // Ignore favicon icon / ... request
