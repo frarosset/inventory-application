@@ -1,6 +1,7 @@
 const searchValidator = require("./validation/searchValidator.js");
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
+const formatCost = require("./scripts/formatCost.js");
 
 exports.get = [
   searchValidator,
@@ -16,16 +17,14 @@ exports.get = [
       const categoriesBriefData = await db.read.categoriesBriefSearch(q);
       const ingredientsBriefData = await db.read.ingredientsBriefSearch(q);
 
-      res.send(
-        "Search page with results for '" +
-          q +
-          "' | PIZZAS: " +
-          JSON.stringify(pizzasBriefData) +
-          " | CATEGORIES: " +
-          JSON.stringify(categoriesBriefData) +
-          " | INGREDIENTS: " +
-          JSON.stringify(ingredientsBriefData)
-      );
+      res.render("searchResults", {
+        pageTitle: process.env.TITLE,
+        q,
+        pizzasBriefData,
+        categoriesBriefData,
+        ingredientsBriefData,
+        formatCost,
+      });
     }
   }),
 ];

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%_ 
+  const titleSearchStr = locals.q != null ? "Search: " + q : "Search" 
+_%>
+
+<head>
+  <title><%= pageTitle %> | <%= titleSearchStr %> %></title>
+  <%- include("partials/headGenericElements.ejs",{hasTables: true}) %>
+</head>
+
+<body class="doodle">
+  <%- include("partials/header.ejs") %>
+
+  <main>
+    <h2><%= titleSearchStr %></h2>
+
+    <section>
+      <p>> Matched Pizzas: <%= pizzasBriefData.length %></p>
+      <%_ if (pizzasBriefData.length > 0) { _%>
+      <%- include("partials/pizzasBriefTable.ejs") %>
+      <%_ } _%>
+    </section>
+
+    <section>
+      <p>> Matched Categories: <%= categoriesBriefData.length %></p>
+      <%_ if (categoriesBriefData.length > 0) { _%>
+      <%- include("partials/categoriesBriefTable.ejs") %>
+      <%_ } _%>
+    </section>
+
+    <section>
+      <p>> Matched Ingredients: <%= ingredientsBriefData.length %></p>
+      <%_ if (ingredientsBriefData.length > 0) { _%>
+      <%- include("partials/ingredientsBriefTable.ejs") %>
+      <%_ } _%>
+    </section>
+  </main>
+
+  <%- include("partials/creditFooter.ejs") %>
+</body>
+
+</html>
