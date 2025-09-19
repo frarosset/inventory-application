@@ -10,6 +10,18 @@ exports.read = {};
 exports.update = {};
 exports.delete = {};
 
+function splitSearchTermsInName(q, matchesAll = false) {
+  const terms = q.trim().split(/\s+/);
+  const joinStr = matchesAll ? " AND " : " OR ";
+
+  // ILIKE: case insensitive
+  const sqlStr = terms.map((_, i) => `name ILIKE $${i + 1}`).join(joinStr);
+  // partial word search
+  const sqlValues = terms.map((term) => `%${term}%`);
+
+  return { sqlStr, sqlValues };
+}
+
 exports.create.category = async (data) => {
   // Adding a new category to the database means editing more than one table:
   // categories, pizzas_categories, ingredients_categories_rules
@@ -401,8 +413,25 @@ exports.delete.pizza = async (id) => {
 exports.read.pizzasBrief = async () => {
   const { rows } = await pool.query(`
     SELECT *
-    FROM pizzas_brief; 
+    FROM pizzas_brief
+    ORDER BY id; 
   `);
+
+  return rows;
+};
+
+exports.read.pizzasBriefSearch = async (qName) => {
+  const { sqlStr, sqlValues } = splitSearchTermsInName(qName);
+
+  const { rows } = await pool.query(
+    `
+    SELECT *
+    FROM pizzas_brief
+    WHERE ${sqlStr}
+    ORDER BY id;
+  `,
+    sqlValues
+  );
 
   return rows;
 };
@@ -518,6 +547,27 @@ exports.read.ingredientsBrief = async () => {
   return rows;
 };
 
+exports.read.ingredientsBriefSearch = async (qName) => {
+  const { sqlStr, sqlValues } = splitSearchTermsInName(qName);
+
+  const { rows } = await pool.query(
+    `
+    SELECT 
+      id,
+      name,
+      is_protected,
+      stock,
+      price
+    FROM ingredients
+    WHERE ${sqlStr}
+    ORDER BY id;
+  `,
+    sqlValues
+  );
+
+  return rows;
+};
+
 exports.read.ingredientsNames = async () => {
   const { rows } = await pool.query(`
     SELECT 
@@ -620,6 +670,25 @@ exports.read.categoriesBrief = async () => {
     FROM categories
     ORDER BY id;
   `);
+
+  return rows;
+};
+
+exports.read.categoriesBriefSearch = async (qName) => {
+  const { sqlStr, sqlValues } = splitSearchTermsInName(qName);
+
+  const { rows } = await pool.query(
+    `
+    SELECT 
+      id,
+      name,
+      is_protected
+    FROM categories
+    WHERE ${sqlStr}
+    ORDER BY id;
+  `,
+    sqlValues
+  );
 
   return rows;
 };
