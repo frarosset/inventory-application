@@ -10,16 +10,42 @@ exports.read = {};
 exports.update = {};
 exports.delete = {};
 
-function splitSearchTermsInName(q, matchesAll = false) {
-  const terms = q.trim().split(/\s+/);
-  const joinStr = matchesAll ? " AND " : " OR ";
+const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+function splitSearchTermsInName(data) {
+  if (!data.q || !data.q.trim()) {
+    return { sqlStr: "TRUE", sqlValues: [] }; // returns all rows
+  }
+
+  const props = {};
 
   // ILIKE: case insensitive
-  const sqlStr = terms.map((_, i) => `name ILIKE $${i + 1}`).join(joinStr);
-  // partial word search
-  const sqlValues = terms.map((term) => `%${term}%`);
+  const likeStr = data.fullWord
+    ? data.caseSensitive
+      ? "~"
+      : "~*"
+    : data.caseSensitive
+    ? "LIKE"
+    : "ILIKE";
+  // partial word search with %...%
+  const wordStr = (q) => (data.fullWord ? `\\m${escapeRegex(q)}\\M` : `%${q}%`);
 
-  return { sqlStr, sqlValues };
+  if (data.exactMatch) {
+    props.sqlStr = `name ${likeStr} $1`;
+    // partial word search
+    props.sqlValues = [wordStr(data.q)];
+  } else {
+    const terms = data.q.trim().split(/\s+/);
+    const joinStr = data.matchAllWords ? " AND " : " OR ";
+
+    props.sqlStr = terms
+      .map((_, i) => `name ${likeStr} $${i + 1}`)
+      .join(joinStr);
+    // partial word search
+    props.sqlValues = terms.map((term) => wordStr(term));
+  }
+
+  return props;
 }
 
 exports.create.category = async (data) => {
@@ -420,8 +446,8 @@ exports.read.pizzasBrief = async () => {
   return rows;
 };
 
-exports.read.pizzasBriefSearch = async (qName) => {
-  const { sqlStr, sqlValues } = splitSearchTermsInName(qName);
+exports.read.pizzasBriefSearch = async (queriesName) => {
+  const { sqlStr, sqlValues } = splitSearchTermsInName(queriesName);
 
   const { rows } = await pool.query(
     `
@@ -547,8 +573,8 @@ exports.read.ingredientsBrief = async () => {
   return rows;
 };
 
-exports.read.ingredientsBriefSearch = async (qName) => {
-  const { sqlStr, sqlValues } = splitSearchTermsInName(qName);
+exports.read.ingredientsBriefSearch = async (queriesName) => {
+  const { sqlStr, sqlValues } = splitSearchTermsInName(queriesName);
 
   const { rows } = await pool.query(
     `
@@ -674,8 +700,8 @@ exports.read.categoriesBrief = async () => {
   return rows;
 };
 
-exports.read.categoriesBriefSearch = async (qName) => {
-  const { sqlStr, sqlValues } = splitSearchTermsInName(qName);
+exports.read.categoriesBriefSearch = async (queriesName) => {
+  const { sqlStr, sqlValues } = splitSearchTermsInName(queriesName);
 
   const { rows } = await pool.query(
     `
