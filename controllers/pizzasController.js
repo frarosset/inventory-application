@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const pizzasValidator = require("./validation/pizzasValidator.js");
 const pizzasDeleteValidator = require("./validation/pizzasDeleteValidator.js");
 const redirectToValidator = require("./validation/redirectToValidator.js");
+const idValidator = require("./validation/idValidator.js");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 const { matchedData } = require("express-validator");
 const formatCost = require("./scripts/formatCost.js");
@@ -25,16 +26,23 @@ exports.get = asyncHandler(async (req, res) => {
   });
 });
 
-exports.getById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const pizzaData = await db.read.pizza(id);
+exports.getById = [
+  idValidator(err404Msg.getById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const pizzaData = await db.read.pizza(id);
 
-  if (pizzaData == null) {
-    throw new CustomNotFoundError(err404Msg.getById);
-  }
+    if (pizzaData == null) {
+      throw new CustomNotFoundError(err404Msg.getById);
+    }
 
-  res.render("pizza", { pageTitle: process.env.TITLE, pizzaData, formatCost });
-});
+    res.render("pizza", {
+      pageTitle: process.env.TITLE,
+      pizzaData,
+      formatCost,
+    });
+  }),
+];
 
 exports.getNew = asyncHandler(async (req, res) => {
   const ingredients = await db.read.ingredientsNames();
@@ -59,26 +67,30 @@ exports.postNew = [
   }),
 ];
 
-exports.getEditById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const pizzaData = await db.read.pizzaEdit(id);
-  const ingredients = await db.read.ingredientsNames();
-  const categories = await db.read.categoriesNames();
+exports.getEditById = [
+  idValidator(err404Msg.getEditById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const pizzaData = await db.read.pizzaEdit(id);
+    const ingredients = await db.read.ingredientsNames();
+    const categories = await db.read.categoriesNames();
 
-  if (pizzaData == null) {
-    throw new CustomNotFoundError(err404Msg.getEditById);
-  }
+    if (pizzaData == null) {
+      throw new CustomNotFoundError(err404Msg.getEditById);
+    }
 
-  res.render("pizzaMutation", {
-    pageTitle: process.env.TITLE,
-    ingredients: ingredients.map((i) => i.name),
-    categories: categories.map((i) => i.name),
-    data: pizzaData,
-    edit: true,
-  });
-});
+    res.render("pizzaMutation", {
+      pageTitle: process.env.TITLE,
+      ingredients: ingredients.map((i) => i.name),
+      categories: categories.map((i) => i.name),
+      data: pizzaData,
+      edit: true,
+    });
+  }),
+];
 
 exports.postEditById = [
+  idValidator(err404Msg.postEditById),
   pizzasValidator,
   (req, res, next) => {
     const validator = redirectToValidator();
@@ -96,21 +108,25 @@ exports.postEditById = [
   }),
 ];
 
-exports.getDeleteById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const pizzaData = await db.read.pizzaDelete(id);
+exports.getDeleteById = [
+  idValidator(err404Msg.getDeleteById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const pizzaData = await db.read.pizzaDelete(id);
 
-  if (pizzaData == null) {
-    throw new CustomNotFoundError(err404Msg.getDeleteById);
-  }
+    if (pizzaData == null) {
+      throw new CustomNotFoundError(err404Msg.getDeleteById);
+    }
 
-  res.render("pizzaDelete", {
-    pageTitle: process.env.TITLE,
-    data: pizzaData,
-  });
-});
+    res.render("pizzaDelete", {
+      pageTitle: process.env.TITLE,
+      data: pizzaData,
+    });
+  }),
+];
 
 exports.postDeleteById = [
+  idValidator(err404Msg.postDeleteById),
   pizzasDeleteValidator,
   (req, res, next) => {
     /* Exclude the route to the deleted item */

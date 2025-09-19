@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const ingredientsValidator = require("./validation/ingredientsValidator.js");
 const ingredientDeleteValidator = require("./validation/ingredientDeleteValidator.js");
 const redirectToValidator = require("./validation/redirectToValidator.js");
+const idValidator = require("./validation/idValidator.js");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 const { matchedData } = require("express-validator");
 const formatCost = require("./scripts/formatCost.js");
@@ -25,20 +26,23 @@ exports.get = asyncHandler(async (req, res) => {
   });
 });
 
-exports.getById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const ingredientData = await db.read.ingredient(id);
+exports.getById = [
+  idValidator(err404Msg.getById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const ingredientData = await db.read.ingredient(id);
 
-  if (ingredientData == null) {
-    throw new CustomNotFoundError(err404Msg.getById);
-  }
+    if (ingredientData == null) {
+      throw new CustomNotFoundError(err404Msg.getById);
+    }
 
-  res.render("ingredient", {
-    pageTitle: process.env.TITLE,
-    ingredientData,
-    formatCost,
-  });
-});
+    res.render("ingredient", {
+      pageTitle: process.env.TITLE,
+      ingredientData,
+      formatCost,
+    });
+  }),
+];
 
 exports.getNew = asyncHandler(async (req, res) => {
   const categories = await db.read.categoriesNames();
@@ -64,27 +68,31 @@ exports.postNew = [
   }),
 ];
 
-exports.getEditById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const ingredientData = await db.read.ingredientEdit(id);
-  const categories = await db.read.categoriesNames();
-  const pizzas = await db.read.pizzasNames();
+exports.getEditById = [
+  idValidator(err404Msg.getEditById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const ingredientData = await db.read.ingredientEdit(id);
+    const categories = await db.read.categoriesNames();
+    const pizzas = await db.read.pizzasNames();
 
-  if (ingredientData == null) {
-    throw new CustomNotFoundError(err404Msg.getEditById);
-  }
+    if (ingredientData == null) {
+      throw new CustomNotFoundError(err404Msg.getEditById);
+    }
 
-  res.render("ingredientMutation", {
-    pageTitle: process.env.TITLE,
-    categories: categories.map((i) => i.name),
-    pizzas: pizzas.map((i) => i.name),
-    protectedPizzas: pizzas.filter((p) => p.is_protected).map((p) => p.name),
-    data: ingredientData,
-    edit: true,
-  });
-});
+    res.render("ingredientMutation", {
+      pageTitle: process.env.TITLE,
+      categories: categories.map((i) => i.name),
+      pizzas: pizzas.map((i) => i.name),
+      protectedPizzas: pizzas.filter((p) => p.is_protected).map((p) => p.name),
+      data: ingredientData,
+      edit: true,
+    });
+  }),
+];
 
 exports.postEditById = [
+  idValidator(err404Msg.postEditById),
   ingredientsValidator,
   (req, res, next) => {
     const validator = redirectToValidator();
@@ -103,21 +111,25 @@ exports.postEditById = [
   }),
 ];
 
-exports.getDeleteById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const ingredientData = await db.read.ingredientDelete(id);
+exports.getDeleteById = [
+  idValidator(err404Msg.getDeleteById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const ingredientData = await db.read.ingredientDelete(id);
 
-  if (ingredientData == null) {
-    throw new CustomNotFoundError(err404Msg.getDeleteById);
-  }
+    if (ingredientData == null) {
+      throw new CustomNotFoundError(err404Msg.getDeleteById);
+    }
 
-  res.render("ingredientDelete", {
-    pageTitle: process.env.TITLE,
-    data: ingredientData,
-  });
-});
+    res.render("ingredientDelete", {
+      pageTitle: process.env.TITLE,
+      data: ingredientData,
+    });
+  }),
+];
 
 exports.postDeleteById = [
+  idValidator(err404Msg.postDeleteById),
   ingredientDeleteValidator,
   (req, res, next) => {
     /* Exclude the route to the deleted item */
