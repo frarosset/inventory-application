@@ -23,7 +23,7 @@
     <%- include("partials/categoryDetailsTable.ejs", categoryData) %>
 
     <section>
-      <h3>Pizzas in this Category</h3>
+      <h3>Pizzas in this Category: <%= categoryData?.pizzas.length || 0 %></h3>
       <%- include("partials/pizzasBriefTable.ejs", {pizzasBriefData: categoryData.actual_for_pizzas}) %>
     </section>
 

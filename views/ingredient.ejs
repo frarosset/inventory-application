@@ -23,7 +23,7 @@
     <%- include("partials/ingredientDetailsTable.ejs", ingredientData) %>
 
     <section>
-      <h3>Pizzas using this Ingredient</h3>
+      <h3>Pizzas using this Ingredient: <%= ingredientData?.pizzas.length || 0 %></h3>
       <%- include("partials/pizzasBriefTable.ejs", {pizzasBriefData: ingredientData.pizzas}) %>
     </section>
 

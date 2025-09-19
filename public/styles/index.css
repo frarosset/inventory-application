@@ -500,6 +500,7 @@ main:has(.categories-brief) a.button,
 main:has(.ingredients-brief) a.button {
   text-transform: uppercase;
   width: 100%;
+  margin-bottom: 1em;
 }
 
 main:has(.pizzas-brief) a.button {
@@ -515,6 +516,10 @@ main:has(.ingredients-brief) a.button {
 }
 
 /* || Tables */
+
+.table-div {
+  width: 100%;
+}
 
 table.fill-first-column thead th:first-of-type {
   width: 100%;
@@ -721,12 +726,6 @@ table.responsive.shrink li a {
 
 table.responsive.shrink li:not(:last-child)::after {
   content: ", ";
-}
-
-/* Messages */
-p.empty-table {
-  text-wrap: balance;
-  padding: 2em 0;
 }
 
 /* table td:has(.empty-list) {

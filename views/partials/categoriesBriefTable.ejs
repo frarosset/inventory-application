@@ -1,22 +1,26 @@
-<%_ if (categoriesBriefData?.length > 0) { _%>
-<table class="fill-first-column with-actions responsive categories-brief">
-  <thead>
-    <tr>
-      <th>Category</th>
-      <th aria-label="Protected"></th>
-      <th aria-label="Actions"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <%_ categoriesBriefData.forEach(data => { _%>
-    <tr>
-      <td data-label="Category"><%- include("categoryLink.ejs", data) %></td>
-      <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
-      <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/categories", id: data.id}) %></td>
-    </tr>
-    <%_ }) _%>
-  </tbody>
-</table>
-<%_ } else { _%>
-<p class="empty-table categories-brief">No items yet!</p>
-<%_ } _%>
+<div class="table-div categories-brief">
+  <%_ if (locals.sizeStr) { _%>
+  <p>> <%=sizeStr%>: <%= categoriesBriefData?.length || 0 %></p>
+  <%_ } _%>
+
+  <%_ if (categoriesBriefData?.length > 0) { _%>
+  <table class="fill-first-column with-actions responsive">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th aria-label="Protected"></th>
+        <th aria-label="Actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%_ categoriesBriefData.forEach(data => { _%>
+      <tr>
+        <td data-label="Category"><%- include("categoryLink.ejs", data) %></td>
+        <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
+        <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/categories", id: data.id}) %></td>
+      </tr>
+      <%_ }) _%>
+    </tbody>
+  </table>
+  <%_ } _%>
+</div>

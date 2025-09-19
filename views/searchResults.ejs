@@ -17,24 +17,15 @@ _%>
     <h2><%= titleSearchStr %></h2>
 
     <section>
-      <p>> Matched Pizzas: <%= pizzasBriefData.length %></p>
-      <%_ if (pizzasBriefData.length > 0) { _%>
-      <%- include("partials/pizzasBriefTable.ejs") %>
-      <%_ } _%>
+      <%- include("partials/pizzasBriefTable.ejs", {sizeStr: "Matched Pizzas"}) %>
     </section>
 
     <section>
-      <p>> Matched Categories: <%= categoriesBriefData.length %></p>
-      <%_ if (categoriesBriefData.length > 0) { _%>
-      <%- include("partials/categoriesBriefTable.ejs") %>
-      <%_ } _%>
+      <%- include("partials/categoriesBriefTable.ejs", {sizeStr: "Matched Categories"}) %>
     </section>
 
     <section>
-      <p>> Matched Ingredients: <%= ingredientsBriefData.length %></p>
-      <%_ if (ingredientsBriefData.length > 0) { _%>
-      <%- include("partials/ingredientsBriefTable.ejs") %>
-      <%_ } _%>
+      <%- include("partials/ingredientsBriefTable.ejs", {sizeStr: "Matched Ingredients"}) %>%>
     </section>
   </main>
 

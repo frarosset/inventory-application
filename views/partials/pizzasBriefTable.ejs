@@ -1,34 +1,38 @@
-<%_ if (pizzasBriefData?.length > 0) { _%>
-<table class="fill-first-column with-actions responsive pizzas-brief">
-  <thead>
-    <tr>
-      <th>Pizza</th>
-      <th>Ingredients</th>
-      <th>Categories</th>
-      <th class="numeric-data">Stock</th>
-      <th class="numeric-data">Price</th>
-      <th aria-label="Protected"></th>
-      <th aria-label="Actions"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <%_ pizzasBriefData.forEach(data => { _%>
-    <tr>
-      <td data-label="Pizza"><%- include("pizzaLink.ejs", data) %></td>
-      <td data-label="Ingredients">
-        <%- include("itemsList.ejs", {itemType: 'ingredientLink', items: data.ingredients ?? []}) %>
-      </td>
-      <td data-label="Categories">
-        <%- include("itemsList.ejs", {itemType: 'categoryLink', items: data.actual_categories ?? []}) %>
-      </td>
-      <td class="numeric-data" data-label="Stock"><span><%=data.availability %></span></td>
-      <td class="numeric-data" data-label="Price"><span><%=formatCost(data.cost) %></span></td>
-      <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
-      <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/pizzas", id: data.id}) %></td>
-    </tr>
-    <%_ }) _%>
-  </tbody>
-</table>
-<%_ } else { _%>
-<p class="empty-table pizzas-brief">No items yet!</p>
-<%_ } _%>
+<div class="table-div pizzas-brief">
+  <%_ if (locals.sizeStr) { _%>
+  <p>> <%=sizeStr%>: <%= pizzasBriefData?.length || 0 %></p>
+  <%_ } _%>
+
+  <%_ if (pizzasBriefData?.length > 0) { _%>
+  <table class="fill-first-column with-actions responsive">
+    <thead>
+      <tr>
+        <th>Pizza</th>
+        <th>Ingredients</th>
+        <th>Categories</th>
+        <th class="numeric-data">Stock</th>
+        <th class="numeric-data">Price</th>
+        <th aria-label="Protected"></th>
+        <th aria-label="Actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%_ pizzasBriefData.forEach(data => { _%>
+      <tr>
+        <td data-label="Pizza"><%- include("pizzaLink.ejs", data) %></td>
+        <td data-label="Ingredients">
+          <%- include("itemsList.ejs", {itemType: 'ingredientLink', items: data.ingredients ?? []}) %>
+        </td>
+        <td data-label="Categories">
+          <%- include("itemsList.ejs", {itemType: 'categoryLink', items: data.actual_categories ?? []}) %>
+        </td>
+        <td class="numeric-data" data-label="Stock"><span><%=data.availability %></span></td>
+        <td class="numeric-data" data-label="Price"><span><%=formatCost(data.cost) %></span></td>
+        <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
+        <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/pizzas", id: data.id}) %></td>
+      </tr>
+      <%_ }) _%>
+    </tbody>
+  </table>
+  <%_ } _%>
+</div>

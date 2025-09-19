@@ -12,7 +12,7 @@
   <main>
     <h2>Pizzas</h2>
     <a class="button" href="/pizzas/new">New</a>
-    <%- include("partials/pizzasBriefTable.ejs", {pizzasBriefData}) %>
+    <%- include("partials/pizzasBriefTable.ejs", {pizzasBriefData, sizeStr: "Items"}) %>
   </main>
 
   <%- include("partials/creditFooter.ejs") %>
