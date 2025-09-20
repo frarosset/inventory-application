@@ -95,6 +95,7 @@ const SQL_drop = `
   DROP TABLE IF EXISTS pizzas;
   DROP TABLE IF EXISTS categories;
   DROP TABLE IF EXISTS ingredients;
+  DROP TABLE IF EXISTS doughs;
 `;
 
 const SQL_create = `
@@ -107,6 +108,12 @@ const SQL_create = `
   );
 
   CREATE TABLE IF NOT EXISTS ingredients (
+    ${defaultColumns},
+    price NUMERIC NOT NULL DEFAULT 1,
+    stock INTEGER NOT NULL DEFAULT 100
+  );
+  
+  CREATE TABLE IF NOT EXISTS doughs (
     ${defaultColumns},
     price NUMERIC NOT NULL DEFAULT 1,
     stock INTEGER NOT NULL DEFAULT 100
