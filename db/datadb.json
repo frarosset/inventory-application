@@ -4,7 +4,7 @@
       "name": "Classic",
       "price": "5.0",
       "stock": "1000",
-      "notes": "This is the base dough used for the pizzas. The pizza cost is given by the sum of this dough cost plus the cost of each ingredient used in there. The pizza availability is given by the minimum availability among the dough and the used ingredients availabilities (per pizza)."
+      "notes": "This is the base dough used for all pizzas. The pizza cost is calculated as the sum of this dough’s cost and the cost of each ingredient used, while its availability is determined by the lowest value between the dough's stock and that of the ingredients."
     }
   ],
   "categories": [

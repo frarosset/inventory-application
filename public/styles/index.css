@@ -777,6 +777,15 @@ table.responsive.shrink li:not(:last-child)::after {
   text-align: center;
 }
 
+.note-text {
+  text-align: left;
+  text-indent: -1em;
+  padding-left: 1em;
+  text-wrap: pretty;
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
 /* || Specific form styles */
 
 form div:has(> button) {
