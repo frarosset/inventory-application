@@ -467,6 +467,19 @@ exports.delete.pizza = async (id) => {
   return results[2]?.[0]?.id;
 };
 
+exports.delete.dough = async (id) => {
+  const queries = [
+    {
+      text: "DELETE FROM doughs WHERE id = $1 AND id != 1 RETURNING id;",
+      data: [id],
+    },
+  ];
+
+  const results = await makeTransaction(queries);
+
+  return results[2]?.[0]?.id;
+};
+
 // This gets only the essential info for all pizzas in the db
 exports.read.pizzasBrief = async () => {
   const { rows } = await pool.query(`
