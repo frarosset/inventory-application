@@ -46,7 +46,7 @@ const queries = require("./queries.js");
 //   Columns: category_id, enforcing_ingredients_ids, incompatible_ingredients_ids, enforcing_ingredients_names, incompatible_ingredients_names
 
 // - ingredients_per_pizza: rearranges pizzas_ingredients table to summarize ingredients per pizza.
-//   Columns: pizza_id, ingredients_ids, ingredients_names, ingredients_stocks, ingredients_prices, availability (maximum availability), ingredients_total_cost (total ingredients cost)
+//   Columns: pizza_id, ingredients_ids, ingredients_names, ingredients_stocks, ingredients_prices, ingredients_availability (maximum availability), ingredients_total_cost (total ingredients cost)
 
 // - pizzas_per_ingredient: rearranges pizzas_ingredients table to summarize pizzas per ingredient.
 //   Columns: ingredient_id, pizzas_ids, pizzas_names
@@ -88,6 +88,7 @@ const SQL_drop = `
   DROP VIEW IF EXISTS categories_names_per_pizza;
   DROP VIEW IF EXISTS pizzas_actual_categories;
   DROP VIEW IF EXISTS pizzas_categories_rules;
+  DROP VIEW IF EXISTS base_dough;
 
   DROP TABLE IF EXISTS pizzas_categories;
   DROP TABLE IF EXISTS pizzas_ingredients;
@@ -137,6 +138,11 @@ const SQL_create = `
     rule_type VARCHAR(30) NOT NULL CHECK (rule_type IN ('enforcing', 'incompatible')),
     CONSTRAINT U_ingredient_category UNIQUE (ingredient_id,category_id)
   );
+
+  CREATE VIEW base_dough AS	
+    SELECT *
+    FROM doughs
+    WHERE id = 1;
 
   CREATE VIEW pizzas_categories_rules AS
   SELECT DISTINCT 
@@ -272,7 +278,7 @@ const SQL_create = `
       ), '[]'::json)
     AS ingredients,
     SUM(i.price) AS ingredients_total_cost,
-    MIN(i.stock) AS availability
+    MIN(i.stock) AS ingredients_availability
   FROM pizzas_ingredients AS pi
   LEFT JOIN ingredients AS i
   ON pi.ingredient_id = i.id
@@ -368,18 +374,20 @@ const SQL_create = `
 
   CREATE VIEW pizzas_brief AS
   SELECT 
-      id,
-      name,
-      is_protected,
+      p.id,
+      p.name,
+      p.is_protected,
       COALESCE(ingredients,'[]'::json) AS ingredients,
-      ingredients_total_cost AS cost,
-      availability,
+      COALESCE(ingredients_total_cost, 0) + d.price AS cost,
+      LEAST(COALESCE(ingredients_availability, d.stock), d.stock) AS availability,
       COALESCE(actual_categories,'[]'::json) AS actual_categories
     FROM pizzas AS p
     LEFT JOIN ingredients_per_pizza AS ip
     ON p.id = ip.pizza_id
     LEFT JOIN categories_per_pizza AS cp
     ON p.id = cp.pizza_id
+    JOIN base_dough AS d
+    ON true
     ORDER BY p.id; 
 
   CREATE VIEW pizzas_per_ingredient AS

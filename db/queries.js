@@ -526,8 +526,8 @@ exports.read.pizza = async (id) => {
       SELECT 
         p.*,
         COALESCE(ingredients,'[]'::json) AS ingredients,
-        ingredients_total_cost AS cost,
-        availability,
+        COALESCE(ingredients_total_cost, 0) + d.price AS cost,
+        LEAST(COALESCE(ingredients_availability, d.stock), d.stock) AS availability,
         COALESCE(actual_categories,'[]'::json) AS actual_categories,    
         COALESCE(categories,'[]'::json) AS categories,
         COALESCE(incompatible_categories,'[]'::json) AS incompatible_categories,
@@ -540,7 +540,9 @@ exports.read.pizza = async (id) => {
       LEFT JOIN ingredients_per_pizza AS ip
       ON p.id = ip.pizza_id
       LEFT JOIN categories_per_pizza AS cp
-      ON p.id = cp.pizza_id;
+      ON p.id = cp.pizza_id
+      JOIN base_dough AS d
+      ON true;
     `,
     [id]
   );
