@@ -861,3 +861,18 @@ exports.read.categoryProtected = async (id) => {
 
   return rows[0]?.is_protected;
 };
+
+exports.read.doughsBrief = async () => {
+  const { rows } = await pool.query(`
+    SELECT 
+      id,
+      name,
+      is_protected,
+      stock,
+      price
+    FROM doughs
+    ORDER BY id;
+  `);
+
+  return rows;
+};
