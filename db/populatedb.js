@@ -506,6 +506,14 @@ async function main() {
     });
   }
 
+  // add doughs to the db
+  for (const dough of datadb.doughs) {
+    await queries.create.dough({
+      ...dough,
+      is_protected: true,
+    });
+  }
+
   // add pizzas to the db
   for (const pizza of datadb.pizzas) {
     await queries.create.pizza({

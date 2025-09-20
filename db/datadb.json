@@ -1,4 +1,12 @@
 {
+  "doughs": [
+    {
+      "name": "Classic",
+      "price": "5.0",
+      "stock": "1000",
+      "notes": "This is the base dough used for the pizzas. The pizza cost is given by the sum of this dough cost plus the cost of each ingredient used in there. The pizza availability is given by the minimum availability among the dough and the used ingredients availabilities (per pizza)."
+    }
+  ],
   "categories": [
     { "name": "Classiche" },
     { "name": "Bianche" },

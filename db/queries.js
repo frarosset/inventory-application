@@ -336,6 +336,38 @@ exports.create.pizza = async (data) => {
   return results[0][0].id;
 };
 
+exports.create.dough = async (data) => {
+  // Adding a new dough to the database means editing just one table:
+  //
+  // A transaction is used for consistency with other operations.
+  //
+  // Sample data:
+  // {
+  //    "name": "Base",
+  //    "is_protected": false,
+  //    "notes": "Some notes"
+  //    "price": "5",
+  //    "stock": "200"
+  // }
+
+  const queries = [
+    {
+      text: "INSERT INTO doughs (name,is_protected,notes,price,stock) VALUES($1,$2,$3,$4,$5) RETURNING id;",
+      data: [
+        data.name,
+        data.is_protected ?? false,
+        data.notes ?? "",
+        data.price,
+        data.stock,
+      ],
+    },
+  ];
+
+  const results = await makeTransaction(queries);
+
+  return results[0][0].id;
+};
+
 exports.update.pizza = async (data) => {
   const beforeCommitCallback = updateBeforeCommitCallback.pizza(data);
 
