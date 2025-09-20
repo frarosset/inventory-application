@@ -9,11 +9,12 @@
       <td><%- include("itemsList.ejs", {itemType: 'categoryLink',items: actual_categories}) %></td>
     </tr>
     <tr>
-      <th scope="row">Cost</th>
-      <td><%= formatCost(cost) %></td>
-    <tr>
-      <th scope="row">Availability</th>
+      <th scope="row">Stock</th>
       <td><%= availability %></td>
+    </tr>
+    <tr>
+      <th scope="row">Price</th>
+      <td><%= formatCost(cost) %></td>
     </tr>
     <%_ if(notes){ _%>
     <tr>
