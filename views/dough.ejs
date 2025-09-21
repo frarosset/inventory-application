@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= pageTitle %> | Dough: <%= doughData.name %></title>
+  <%- include("partials/headGenericElements.ejs",{hasTables: true, hasDates: true}) %>
+</head>
+
+<body class="doodle">
+  <%- include("partials/header.ejs",{highlightLink: "doughs"}) %>
+
+  <main>
+    <div class="item-details-title">
+      <h2><%= doughData.name %></h2>
+      <%- include("partials/isProtectedSymbol.ejs", {is_protected: doughData.is_protected}) %>
+    </div>
+
+    <div class="item-details-nav">
+      <a href="/doughs"><span class="icon icon-back"></span>All Doughs</a>
+      <%- include("partials/itemActions.ejs", {baseRoute: "/doughs", id: doughData.id, showDelete: doughData.id != Number(process.env.BASE_DOUGH_ID)}) %>
+    </div>
+
+    <%- include("partials/doughDetailsTable.ejs", doughData) %>
+
+    <%- include("partials/dateInfoP.ejs", doughData) %>
+  </main>
+
+  <%- include("partials/creditFooter.ejs") %>
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+<table class="item-details">
+  <tbody>
+    <tr>
+      <th scope="row">Type</th>
+      <td><%= id == Number(process.env.BASE_DOUGH_ID) ? "base dough" : "variant dough" %></td>
+    </tr>
+    <tr>
+      <th scope="row">Stock</th>
+      <td><%= stock %></td>
+    </tr>
+    <tr>
+      <th scope="row">Price</th>
+      <td><%= formatCost(price) %></td>
+    </tr>
+    <%_ if(notes){ _%>
+    <tr>
+      <th scope="row">Notes</th>
+      <td><%= notes %></td>
+    </tr>
+    <%_ } _%>
+  </tbody>
+</table>

@@ -28,6 +28,10 @@ exports.getById = [
       throw new CustomNotFoundError(err404Msg.getById);
     }
 
-    res.send(JSON.stringify(doughData));
+    res.render("dough", {
+      pageTitle: process.env.TITLE,
+      doughData,
+      formatCost,
+    });
   }),
 ];
