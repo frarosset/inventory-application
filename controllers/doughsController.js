@@ -1,12 +1,16 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
+const doughsValidator = require("./validation/doughsValidator.js");
+const redirectToValidator = require("./validation/redirectToValidator.js");
 const idValidator = require("./validation/idValidator.js");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
+const { matchedData } = require("express-validator");
 const formatCost = require("./scripts/formatCost.js");
 
 const err404Msg = {
   getById: "This dough does not exist!",
   getEditById: "Cannot edit — this dough does not exist!",
+  postEditById: "Cannot edit — this dough does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -52,5 +56,25 @@ exports.getEditById = [
       data: doughData,
       edit: true,
     });
+  }),
+];
+
+exports.postEditById = [
+  idValidator(err404Msg.postEditById),
+  doughsValidator,
+  (req, res, next) => {
+    const validator = redirectToValidator();
+    return validator(req, res, next);
+  },
+  asyncHandler(async (req, res) => {
+    const data = matchedData(req); // req.body + req.params.id
+
+    const { id, updated } = await db.update.dough(data);
+
+    if (id == null) {
+      throw new CustomNotFoundError(err404Msg.postEditById);
+    }
+
+    res.redirect(data.redirectTo || "/doughs/" + id);
   }),
 ];

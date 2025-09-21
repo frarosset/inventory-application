@@ -1,0 +1,74 @@
+const { body } = require("express-validator");
+const protectedValidation = require("./protectedValidation.js");
+const populateReqLocalsWithValidDoughNames = require("./populateReqLocalsWithValidDoughNames.js");
+const populateRouteType = require("./populateRouteType.js");
+const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
+
+const doughsValidator = [
+  populateReqLocalsWithValidDoughNames,
+  populateRouteType,
+  protectedValidation,
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("The name cannot be empty.")
+    .custom((value, { req }) => {
+      if (
+        req.locals.allDoughs.includes(value) &&
+        value !== req.locals.allDoughsIdNameMap.get(req.params.id)
+      ) {
+        throw new Error(`An dough named '${value}' already exists.`);
+      }
+      return true;
+    })
+    .isLength({
+      max: process.env.NAME_MAX_LENGTH,
+    })
+    .withMessage(
+      `The name can have at most ${process.env.NAME_MAX_LENGTH}  ${
+        process.env.NAME_MAX_LENGTH == 1 ? "character" : "characters"
+      }.`
+    )
+    .matches(new RegExp(process.env.NAME_REGEX, process.env.NAME_REGEX_FLAG))
+    .withMessage(
+      "The name has some invalid characters. " + process.env.NAME_REGEX_MSG
+    ),
+  body("notes")
+    .trim()
+    .optional({ values: "falsy" })
+    .isLength({
+      max: process.env.NOTES_MAX_LENGTH,
+    })
+    .withMessage(
+      `Notes can have at most ${process.env.NOTES_MAX_LENGTH}  ${
+        process.env.NOTES_MAX_LENGTH == 1 ? "character" : "characters"
+      }.`
+    )
+    .matches(new RegExp(process.env.NOTES_REGEX, process.env.NOTES_REGEX_FLAG))
+    .withMessage(
+      "Notes have some invalid characters. " + process.env.NOTES_REGEX_MSG
+    ),
+  body("price")
+    .trim()
+    .notEmpty()
+    .withMessage("The dough price cannot be empty.")
+    .isDecimal({
+      min: 0,
+      force_decimal: false,
+      decimal_digits: `0,${process.env.INGREDIENT_PRICE_DECIMAL_DIGITS}`,
+    })
+    .withMessage(
+      `The dough price must be a non-negative decimal number with at most ${process.env.INGREDIENT_PRICE_DECIMAL_DIGITS} decimal digits.`
+    )
+    .toFloat(),
+  body("stock")
+    .trim()
+    .notEmpty()
+    .withMessage("The dough stock cannot be empty.")
+    .isInt({ min: 0 })
+    .withMessage("The dough stock must be a non-negative integer number.")
+    .toInt(),
+  handleValidationErrorsFcn("doughMutation"),
+];
+
+module.exports = doughsValidator;

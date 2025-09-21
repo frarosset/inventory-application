@@ -660,6 +660,72 @@ updateBeforeCommitCallback.category = (data) => async (client, results) => {
   return results;
 };
 
+updateBeforeCommitCallback.dough = (data) => async (client, results) => {
+  const queries0 = [
+    {
+      // Lock relevant rows
+      text: `SELECT * FROM doughs WHERE id = $1 FOR UPDATE;`,
+      data: [data.id],
+    },
+  ];
+
+  await awaitQueries(client, queries0, results); // results is updated by reference
+
+  if (results[0].length === 0) {
+    return [...results, false];
+  }
+
+  const doughPropsWereUpdated = hasChanged(results[0]?.[0], data, [
+    "name",
+    "is_protected",
+    "notes",
+    "price",
+    "stock",
+  ]);
+
+  // console.log({
+  //   doughPropsWereUpdated,
+  // });
+
+  const queries = [];
+
+  if (doughPropsWereUpdated) {
+    // Update the item itself
+    queries.push({
+      text: `
+          UPDATE doughs
+          SET name = $1,
+          is_protected = $2,
+          notes = $3,
+          price = $4,
+          stock = $5,
+          updated_at = CURRENT_TIMESTAMP
+          WHERE id = $6
+          AND (name IS DISTINCT FROM $1 OR 
+          is_protected IS DISTINCT FROM $2 OR
+          notes IS DISTINCT FROM $3 OR
+          price IS DISTINCT FROM $4 OR
+          stock IS DISTINCT FROM $5 
+          )
+          RETURNING id;`,
+      data: [
+        data.name,
+        data.is_protected ?? false,
+        data.notes ?? "",
+        data.price,
+        data.stock,
+        data.id,
+      ],
+    });
+  }
+
+  await awaitQueries(client, queries, results); // results is updated by reference
+
+  results.push(doughPropsWereUpdated);
+
+  return results;
+};
+
 // Helper functions
 
 function merge(...arrays) {

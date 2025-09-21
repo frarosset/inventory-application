@@ -46,6 +46,8 @@ async function checkIfItemIsProtected(req) {
       ? db.read.ingredientProtected
       : baseUrl === "/categories"
       ? db.read.categoryProtected
+      : baseUrl === "/doughs"
+      ? db.read.doughProtected
       : null;
 
   const is_protected = await dbRead(req.params.id);

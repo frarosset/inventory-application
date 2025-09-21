@@ -404,6 +404,18 @@ exports.update.category = async (data) => {
   return { id, updated };
 };
 
+exports.update.dough = async (data) => {
+  const beforeCommitCallback = updateBeforeCommitCallback.dough(data);
+
+  const results = await makeTransaction([], beforeCommitCallback);
+
+  const id = results[0]?.[0]?.id;
+  const updated = results[results.length - 1]; // last result is the result of beforeCommitCallback
+
+  // returns {id, updated} -- id is undefined if item does not exist
+  return { id, updated };
+};
+
 exports.delete.ingredient = async (id) => {
   const queries = [
     {
@@ -902,4 +914,31 @@ exports.read.doughEdit = async (id) => {
   );
 
   return rows[0];
+};
+
+exports.read.doughsNames = async () => {
+  const { rows } = await pool.query(`
+    SELECT 
+      id,
+      name,
+      is_protected
+    FROM doughs
+    ORDER BY id;
+  `);
+
+  return rows;
+};
+
+exports.read.doughProtected = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        is_protected
+      FROM doughs
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0]?.is_protected;
 };
