@@ -47,6 +47,10 @@ exports.getEditById = [
       throw new CustomNotFoundError(err404Msg.getEditById);
     }
 
-    res.send("Form to edit: " + JSON.stringify(doughData));
+    res.render("doughMutation", {
+      pageTitle: process.env.TITLE,
+      data: doughData,
+      edit: true,
+    });
   }),
 ];
