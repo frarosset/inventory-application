@@ -21,6 +21,7 @@ exports.get = [
       const ingredientsBriefData = await db.read.ingredientsBriefSearch(
         queries
       );
+      const doughsBriefData = await db.read.doughsBriefSearch(queries);
 
       res.render("searchResults", {
         pageTitle: process.env.TITLE,
@@ -28,6 +29,7 @@ exports.get = [
         pizzasBriefData,
         categoriesBriefData,
         ingredientsBriefData,
+        doughsBriefData,
         formatCost,
       });
     }

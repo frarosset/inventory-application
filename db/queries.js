@@ -942,3 +942,24 @@ exports.read.doughProtected = async (id) => {
 
   return rows[0]?.is_protected;
 };
+
+exports.read.doughsBriefSearch = async (queriesName) => {
+  const { sqlStr, sqlValues } = splitSearchTermsInName(queriesName);
+
+  const { rows } = await pool.query(
+    `
+    SELECT 
+      id,
+      name,
+      is_protected,
+      stock,
+      price
+    FROM doughs
+    WHERE ${sqlStr}
+    ORDER BY id;
+  `,
+    sqlValues
+  );
+
+  return rows;
+};

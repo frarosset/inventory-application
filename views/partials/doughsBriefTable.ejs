@@ -1,4 +1,5 @@
 <div class="table-div doughs-brief">
+  <%_ let hasBase = false; _%>
   <%_ if (locals.sizeStr) { _%>
   <p>> <%=sizeStr%>: <%= doughsBriefData?.length || 0 %></p>
   <%_ } _%>
@@ -16,7 +17,8 @@
     </thead>
     <tbody>
       <%_ doughsBriefData.forEach(data => { 
-        const isBase = data.id == Number(process.env.BASE_DOUGH_ID); _%>
+        const isBase = data.id == Number(process.env.BASE_DOUGH_ID);
+        if (isBase) hasBase = true; _%>
       <tr>
         <td data-label="Dough"><%- include("doughLink.ejs", {...data, highlightBase: true}) %></td>
         <td class="numeric-data" data-label="Stock"><span><%=data.stock %></span></td>
@@ -29,4 +31,6 @@
   </table>
   <%_ } _%>
 </div>
+<%_ if (hasBase) { _%>
 <p class="note-text"><span class="default-font">*</span>Base dough</p>
+<%_ } _%>
