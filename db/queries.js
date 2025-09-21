@@ -882,7 +882,21 @@ exports.read.dough = async (id) => {
     `
       SELECT * 
       FROM doughs
-      WHERE id=$1
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
+// This gets only the essential info for edit a dough
+exports.read.doughEdit = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT * 
+      FROM doughs
+      WHERE id=$1;
     `,
     [id]
   );
