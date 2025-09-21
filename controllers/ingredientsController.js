@@ -14,6 +14,7 @@ const err404Msg = {
   getDeleteById: "Cannot delete — this ingredient does not exist!",
   postDeleteById: "Cannot delete — this ingredient does not exist!",
   postEditById: "Cannot edit — this ingredient does not exist!",
+  getRestockById: "Cannot restock — this ingredient does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -146,5 +147,19 @@ exports.postDeleteById = [
     }
 
     res.redirect(data.redirectTo || "/ingredients");
+  }),
+];
+
+exports.getRestockById = [
+  idValidator(err404Msg.getRestockById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const ingredientData = await db.read.ingredientRestock(id);
+
+    if (ingredientData == null) {
+      throw new CustomNotFoundError(err404Msg.getRestockById);
+    }
+
+    res.send("Restock: " + JSON.stringify(ingredientData));
   }),
 ];

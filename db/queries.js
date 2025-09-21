@@ -746,6 +746,23 @@ exports.read.ingredientProtected = async (id) => {
   return rows[0]?.is_protected;
 };
 
+// This gets only the essential info for restock a ingredient
+exports.read.ingredientRestock = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        name,
+        id,
+        stock
+      FROM ingredients
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
 exports.read.categoriesBrief = async () => {
   const { rows } = await pool.query(`
     SELECT 
