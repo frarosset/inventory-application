@@ -1,6 +1,12 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
+const idValidator = require("./validation/idValidator.js");
+const CustomNotFoundError = require("../errors/CustomNotFoundError");
 const formatCost = require("./scripts/formatCost.js");
+
+const err404Msg = {
+  getById: "This dough does not exist!",
+};
 
 exports.get = asyncHandler(async (req, res) => {
   const doughsBriefData = await db.read.doughsBrief();
@@ -11,3 +17,17 @@ exports.get = asyncHandler(async (req, res) => {
     formatCost,
   });
 });
+
+exports.getById = [
+  idValidator(err404Msg.getById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const doughData = await db.read.dough(id);
+
+    if (doughData == null) {
+      throw new CustomNotFoundError(err404Msg.getById);
+    }
+
+    res.send(JSON.stringify(doughData));
+  }),
+];

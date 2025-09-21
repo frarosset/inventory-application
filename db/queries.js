@@ -876,3 +876,16 @@ exports.read.doughsBrief = async () => {
 
   return rows;
 };
+
+exports.read.dough = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT * 
+      FROM doughs
+      WHERE id=$1
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
