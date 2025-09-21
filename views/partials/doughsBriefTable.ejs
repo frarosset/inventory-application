@@ -1,0 +1,32 @@
+<div class="table-div doughs-brief">
+  <%_ if (locals.sizeStr) { _%>
+  <p>> <%=sizeStr%>: <%= doughsBriefData?.length || 0 %></p>
+  <%_ } _%>
+
+  <%_ if (doughsBriefData?.length > 0) { _%>
+  <table class="fill-first-column with-actions responsive">
+    <thead>
+      <tr>
+        <th>Dough</th>
+        <th class="numeric-data">Stock</th>
+        <th class="numeric-data">Price</th>
+        <th aria-label="Protected"></th>
+        <th aria-label="Actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%_ doughsBriefData.forEach(data => { 
+        const isBase = data.id == Number(process.env.BASE_DOUGH_ID); _%>
+      <tr>
+        <td data-label="Dough"><%- include("doughLink.ejs", {...data, highlightBase: true}) %></td>
+        <td class="numeric-data" data-label="Stock"><span><%=data.stock %></span></td>
+        <td class="numeric-data" data-label="Price"><span><%=formatCost(data.price) %></span></td>
+        <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
+        <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/doughs", id: data.id, showDelete: !isBase}) %></td>
+      </tr>
+      <%_ }) _%>
+    </tbody>
+  </table>
+  <%_ } _%>
+</div>
+<p class="note-text"><span class="default-font">*</span>Base dough</p>

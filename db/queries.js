@@ -470,7 +470,7 @@ exports.delete.pizza = async (id) => {
 exports.delete.dough = async (id) => {
   const queries = [
     {
-      text: "DELETE FROM doughs WHERE id = $1 AND id != 1 RETURNING id;",
+      text: `DELETE FROM doughs WHERE id = $1 AND id != ${process.env.BASE_DOUGH_ID} RETURNING id;`,
       data: [id],
     },
   ];

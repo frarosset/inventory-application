@@ -142,7 +142,7 @@ const SQL_create = `
   CREATE VIEW base_dough AS	
     SELECT *
     FROM doughs
-    WHERE id = 1;
+    WHERE id = ${process.env.BASE_DOUGH_ID};
 
   CREATE VIEW pizzas_categories_rules AS
   SELECT DISTINCT 

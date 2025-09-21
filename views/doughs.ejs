@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= pageTitle %> | Doughs</title>
+  <%- include("partials/headGenericElements.ejs",{hasTables: true}) %>
+</head>
+
+<body class="doodle">
+  <%- include("partials/header.ejs",{highlightLink: "doughs"}) %>
+
+  <main>
+    <h2>Doughs</h2>
+    <%- include("partials/doughsBriefTable.ejs", {sizeStr: "Items"}) %>
+
+  </main>
+
+  <%- include("partials/creditFooter.ejs") %>
+</body>
+
+</html>

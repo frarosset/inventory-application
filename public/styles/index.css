@@ -778,14 +778,18 @@ table.responsive.shrink li:not(:last-child)::after {
 }
 
 .note-text {
+  width: 100%;
   text-align: left;
   text-indent: -1em;
-  padding-left: 1em;
+  padding-left: 2em;
   text-wrap: pretty;
   font-size: 0.8em;
   opacity: 0.8;
 }
 
+.default-font {
+  font-family: var(--default-font);
+}
 /* || Specific form styles */
 
 form div:has(> button) {

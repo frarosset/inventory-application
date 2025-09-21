@@ -3,6 +3,10 @@
   const editUrl = `${baseRoute}/${id}/edit`;
   const deleteUrl = `${baseRoute}/${id}/delete`;
   _%>
+  <%_ if (locals.showEdit ?? true){ _%>
   <a href="<%= editUrl %>"><span class="icon icon-edit" title="Edit"></span></a>
+  <%_ } _%>
+  <%_ if (locals.showDelete ?? true){ _%>
   <a href="<%= deleteUrl %>"><span class="icon icon-delete" title="Delete"></span></a>
+  <%_ } _%>
 </div>
