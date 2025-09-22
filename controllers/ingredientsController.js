@@ -179,6 +179,12 @@ exports.postRestockById = [
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
-    res.send("Restock" + JSON.stringify(data));
+    const { id, updated } = await db.update.ingredientRestock(data);
+
+    if (id == null) {
+      throw new CustomNotFoundError(err404Msg.postRestockById);
+    }
+
+    res.redirect(data.redirectTo || "/ingredients/" + id);
   }),
 ];
