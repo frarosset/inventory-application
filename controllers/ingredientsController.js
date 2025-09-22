@@ -2,6 +2,7 @@ const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
 const ingredientsValidator = require("./validation/ingredientsValidator.js");
 const ingredientDeleteValidator = require("./validation/ingredientDeleteValidator.js");
+const ingredientRestockValidator = require("./validation/ingredientRestockValidator.js");
 const redirectToValidator = require("./validation/redirectToValidator.js");
 const idValidator = require("./validation/idValidator.js");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
@@ -15,6 +16,7 @@ const err404Msg = {
   postDeleteById: "Cannot delete — this ingredient does not exist!",
   postEditById: "Cannot edit — this ingredient does not exist!",
   getRestockById: "Cannot restock — this ingredient does not exist!",
+  postRestockById: "Cannot restock — this ingredient does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -164,5 +166,19 @@ exports.getRestockById = [
       pageTitle: process.env.TITLE,
       data: ingredientData,
     });
+  }),
+];
+
+exports.postRestockById = [
+  idValidator(err404Msg.postRestockById),
+  ingredientRestockValidator,
+  (req, res, next) => {
+    const validator = redirectToValidator();
+    return validator(req, res, next);
+  },
+  asyncHandler(async (req, res) => {
+    const data = matchedData(req); // req.body + req.params.id
+
+    res.send("Restock" + JSON.stringify(data));
   }),
 ];

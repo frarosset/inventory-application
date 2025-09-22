@@ -11,6 +11,7 @@ router.post("/:id/edit", ingredientsController.postEditById);
 router.get("/:id/delete", ingredientsController.getDeleteById);
 router.post("/:id/delete", ingredientsController.postDeleteById);
 router.get("/:id/restock", ingredientsController.getRestockById);
+router.post("/:id/restock", ingredientsController.postRestockById);
 router.get("/:id", ingredientsController.getById);
 
 module.exports = router;

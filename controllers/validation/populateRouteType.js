@@ -10,6 +10,7 @@ const populateRouteType = [
     req.locals.isNew = path === "/new";
     req.locals.isEdit = path === `/${id}/edit`;
     req.locals.isDelete = path === `/${id}/delete`;
+    req.locals.isRestock = path === `/${id}/restock`;
 
     next();
   },
