@@ -439,6 +439,29 @@ exports.update.ingredientRestock = async (data) => {
   return { id, updated };
 };
 
+exports.update.doughRestock = async (data) => {
+  // do not edit updated at when editing the stock
+  const queries = [
+    {
+      text: `
+          UPDATE doughs
+          SET stock = stock + $1
+          WHERE id = $2
+          AND ($1 > 0)
+          RETURNING id;`,
+      data: [data.unitsToRestock, data.id],
+    },
+  ];
+
+  const results = await makeTransaction(queries);
+
+  const id = results[0]?.[0]?.id;
+  const updated = id != null; // last result is the result of beforeCommitCallback
+
+  // returns {id, updated} -- id is undefined if item does not exist
+  return { id, updated };
+};
+
 exports.delete.ingredient = async (id) => {
   const queries = [
     {
