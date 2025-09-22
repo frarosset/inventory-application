@@ -1,12 +1,13 @@
 <form action="/search" method="GET">
   <%- include("input.ejs",{type: "search", name: "q", label: "", placeholder: "Find pizzas, categories, ingredients, and doughs", maxlength: process.env.NAME_MAX_LENGTH, required: true,  pattern: process.env.NAME_REGEX, title: process.env.NAME_REGEX_MSG}) _%>
 
-  <div class="search-options">
+  <fieldset class="search-options">
+    <legend>Search Options</legend>
     <%- include("checkbox.ejs", {name: "fullWord", id: "full_word", checked: locals.data?.full_word, label: "Full word search" }) _%>
-    <%- include("checkbox.ejs", {name: "matchAllWords", id: "match_all_words", checked: locals.data?.match_all_words, label: "Match all words (if multiple words)" }) _%>
-    <%- include("checkbox.ejs", {name: "exactMatch", id: "exact_match", checked: locals.data?.exact_match, label: "Exact match (if multiple words)" }) _%>
+    <%- include("checkbox.ejs", {name: "matchAllWords", id: "match_all_words", checked: locals.data?.match_all_words, label: "Match all words (if multiple words query)" }) _%>
+    <%- include("checkbox.ejs", {name: "exactMatch", id: "exact_match", checked: locals.data?.exact_match, label: "Exact match (if multiple words query)" }) _%>
     <%- include("checkbox.ejs", {name: "caseSensitive", id: "case_sensitive", checked: locals.data?.case_sensitive, label: "Case Sensitive" }) _%>
-  </div>
+  </fieldset>
 
   <%- include("submitButton.ejs", {label: "SHOW RESULTS"}) _%>
 </form>

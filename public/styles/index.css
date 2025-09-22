@@ -839,9 +839,10 @@ form .incompatible {
   font-weight: bold;
 }
 
-form .search-options {
+form fieldset.search-options {
   width: 100%;
   max-width: 30em;
+  background-color: var(--bg-col);
 }
 
 /* || Icon */
