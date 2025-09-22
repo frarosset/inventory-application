@@ -17,7 +17,7 @@
 
     <div class="item-details-nav">
       <a href="/doughs"><span class="icon icon-back"></span>All Doughs</a>
-      <%- include("partials/itemActions.ejs", {baseRoute: "/doughs", id: doughData.id, showDelete: doughData.id != Number(process.env.BASE_DOUGH_ID)}) %>
+      <%- include("partials/itemActions.ejs", {baseRoute: "/doughs", id: doughData.id, showDelete: doughData.id != Number(process.env.BASE_DOUGH_ID), showRestock: true}) %>
     </div>
 
     <%- include("partials/doughDetailsTable.ejs", doughData) %>

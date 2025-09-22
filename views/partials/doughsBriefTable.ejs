@@ -24,7 +24,7 @@
         <td class="numeric-data" data-label="Stock"><span><%=data.stock %></span></td>
         <td class="numeric-data" data-label="Price"><span><%=formatCost(data.price) %></span></td>
         <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
-        <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/doughs", id: data.id, showDelete: !isBase}) %></td>
+        <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/doughs", id: data.id, showDelete: !isBase, showRestock: true}) %></td>
       </tr>
       <%_ }) _%>
     </tbody>
