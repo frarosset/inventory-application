@@ -14,6 +14,7 @@ const err404Msg = {
   getDeleteById: "Cannot delete — this pizza does not exist!",
   postDeleteById: "Cannot delete — this pizza does not exist!",
   postEditById: "Cannot edit — this pizza does not exist!",
+  getOrderById: "Cannot order — this dough does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -143,5 +144,19 @@ exports.postDeleteById = [
     }
 
     res.redirect(data.redirectTo || "/pizzas");
+  }),
+];
+
+exports.getOrderById = [
+  idValidator(err404Msg.getOrderById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const pizzaData = await db.read.pizzaOrder(id);
+
+    if (pizzaData == null) {
+      throw new CustomNotFoundError(err404Msg.getOrderById);
+    }
+
+    res.send(JSON.stringify(pizzaData));
   }),
 ];

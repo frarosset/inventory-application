@@ -608,7 +608,7 @@ exports.read.pizza = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info for edit a pizza
+// This gets only the essential info to edit a pizza
 exports.read.pizzaEdit = async (id) => {
   const { rows } = await pool.query(
     `
@@ -632,7 +632,7 @@ exports.read.pizzaEdit = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info for edit a pizza
+// This gets only the essential info to edit a pizza
 exports.read.pizzaDelete = async (id) => {
   const { rows } = await pool.query(
     `
@@ -641,6 +641,23 @@ exports.read.pizzaDelete = async (id) => {
         id,
         is_protected
       FROM pizzas
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
+// This gets only the essential info to order a pizza
+exports.read.pizzaOrder = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        name,
+        id,
+        availability
+      FROM pizzas_brief
       WHERE id=$1;
     `,
     [id]
@@ -736,7 +753,7 @@ exports.read.ingredient = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info for edit an ingredient
+// This gets only the essential info to edit an ingredient
 exports.read.ingredientEdit = async (id) => {
   const { rows } = await pool.query(
     `
@@ -761,7 +778,7 @@ exports.read.ingredientEdit = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info for edit a ingredient
+// This gets only the essential info to edit a ingredient
 exports.read.ingredientDelete = async (id) => {
   const { rows } = await pool.query(
     `
@@ -792,7 +809,7 @@ exports.read.ingredientProtected = async (id) => {
   return rows[0]?.is_protected;
 };
 
-// This gets only the essential info for restock a ingredient
+// This gets only the essential info to restock a ingredient
 exports.read.ingredientRestock = async (id) => {
   const { rows } = await pool.query(
     `
@@ -881,7 +898,7 @@ exports.read.category = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info for edit an category
+// This gets only the essential info to edit an category
 exports.read.categoryEdit = async (id) => {
   const { rows } = await pool.query(
     `
@@ -906,7 +923,7 @@ exports.read.categoryEdit = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info for edit a category
+// This gets only the essential info to edit a category
 exports.read.categoryDelete = async (id) => {
   const { rows } = await pool.query(
     `
@@ -965,7 +982,7 @@ exports.read.dough = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info for edit a dough
+// This gets only the essential info to edit a dough
 exports.read.doughEdit = async (id) => {
   const { rows } = await pool.query(
     `
@@ -979,7 +996,7 @@ exports.read.doughEdit = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info for restock a dough
+// This gets only the essential info to restock a dough
 exports.read.doughRestock = async (id) => {
   const { rows } = await pool.query(
     `
