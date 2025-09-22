@@ -1,8 +1,8 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
 const doughNewEditValidator = require("./validation/doughNewEditValidator.js");
-const redirectToValidator = require("./validation/redirectToValidator.js");
-const idValidator = require("./validation/idValidator.js");
+const redirectToValidator = require("./validation/helpers/redirectToValidator.js");
+const idValidator = require("./validation/helpers/idValidator.js");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 const { matchedData } = require("express-validator");
 const formatCost = require("./scripts/formatCost.js");

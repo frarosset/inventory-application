@@ -1,5 +1,3 @@
-const { param } = require("express-validator");
-
 const populateRouteType = [
   (req, res, next) => {
     req.locals = req.locals || {};
@@ -11,6 +9,7 @@ const populateRouteType = [
     req.locals.isEdit = path === `/${id}/edit`;
     req.locals.isDelete = path === `/${id}/delete`;
     req.locals.isRestock = path === `/${id}/restock`;
+    req.locals.isSearch = path === `/search`;
 
     next();
   },

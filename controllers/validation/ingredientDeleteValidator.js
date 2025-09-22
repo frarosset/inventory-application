@@ -1,7 +1,7 @@
-const protectedValidator = require("./protectedValidator.js");
-const populateRouteType = require("./populateRouteType.js");
-const populateReqLocalsWithItemData = require("./populateReqLocalsWithItemData.js");
-const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
+const protectedValidator = require("./helpers/protectedValidator.js");
+const populateRouteType = require("./helpers/populateRouteType.js");
+const populateReqLocalsWithItemData = require("./helpers/populateReqLocalsWithItemData.js");
+const handleValidationErrorsFcn = require("./helpers/handleValidationErrorsFcn.js");
 
 const ingredientValidator = [
   populateReqLocalsWithItemData,

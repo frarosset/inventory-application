@@ -1,4 +1,4 @@
-const db = require("../../db/queries.js");
+const db = require("../../../db/queries.js");
 
 // get all existing pizzas, ingredients, categories names
 const populateReqLocalsWithItemData = async (req, res, next) => {

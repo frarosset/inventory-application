@@ -1,12 +1,9 @@
 const { query } = require("express-validator");
-const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
+const handleValidationErrorsFcn = require("./helpers/handleValidationErrorsFcn.js");
+const populateRouteType = require("./helpers/populateRouteType.js");
 
 const searchValidator = [
-  (req, res, next) => {
-    req.locals = req.locals || {};
-    req.locals.isSearch = true;
-    next();
-  },
+  populateRouteType,
   query("q")
     .trim()
     .optional({ values: null }) // only  undefined and null values are optional

@@ -1,5 +1,5 @@
 const { body } = require("express-validator");
-const db = require("../../db/queries.js");
+const db = require("../../../db/queries.js");
 
 const protectedValidator = [
   body("password").custom(async (password, { req }) => {

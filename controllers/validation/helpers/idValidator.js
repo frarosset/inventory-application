@@ -1,5 +1,5 @@
 const { param } = require("express-validator");
-const CustomNotFoundError = require("../../errors/CustomNotFoundError");
+const CustomNotFoundError = require("../../../errors/CustomNotFoundError");
 const { validationResult } = require("express-validator");
 
 const idValidator = (invalidIdMessage) => [

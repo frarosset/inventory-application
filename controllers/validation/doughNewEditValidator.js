@@ -1,8 +1,8 @@
 const { body } = require("express-validator");
-const protectedValidator = require("./protectedValidator.js");
-const populateReqLocalsWithValidDoughNames = require("./populateReqLocalsWithValidDoughNames.js");
-const populateRouteType = require("./populateRouteType.js");
-const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
+const protectedValidator = require("./helpers/protectedValidator.js");
+const populateReqLocalsWithValidDoughNames = require("./helpers/populateReqLocalsWithValidDoughNames.js");
+const populateRouteType = require("./helpers/populateRouteType.js");
+const handleValidationErrorsFcn = require("./helpers/handleValidationErrorsFcn.js");
 
 const doughValidator = [
   populateReqLocalsWithValidDoughNames,

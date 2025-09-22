@@ -1,4 +1,4 @@
-const db = require("../../db/queries.js");
+const db = require("../../../db/queries.js");
 
 // get all existing doughs names
 const populateReqLocalsWithValidDoughNames = async (req, res, next) => {
