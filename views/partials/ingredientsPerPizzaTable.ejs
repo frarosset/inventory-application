@@ -1,10 +1,11 @@
 <%_ if (ingredients?.length > 0) { _%>
-<table class="fill-first-column responsive">
+<table class="fill-first-column  with-actions responsive">
   <thead>
     <tr>
       <th>Ingredient</th>
       <th class="numeric-data">Stock</th>
       <th class="numeric-data">Price</th>
+      <th aria-label="Actions"></th>
     </tr>
   </thead>
   <tbody>
@@ -13,6 +14,7 @@
       <td data-label="Ingredient"><%- include("ingredientLink.ejs", ingredient) %></td>
       <td class="numeric-data" data-label="Stock"><%=ingredient.stock %></td>
       <td class="numeric-data" data-label="Price"><%= formatCost(ingredient.price) %></td>
+      <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/ingredients", id: ingredient.id, showRestock: true,  showEdit: false,  showDelete: false}) %></td>
     </tr>
     <%_ }) _%>
   </tbody>

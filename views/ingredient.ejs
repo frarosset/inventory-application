@@ -17,7 +17,7 @@
 
     <div class="item-details-nav">
       <a href="/ingredients"><span class="icon icon-back"></span>All Ingredients</a>
-      <%- include("partials/itemActions.ejs", {baseRoute: "/ingredients", id: ingredientData.id}) %>
+      <%- include("partials/itemActions.ejs", {baseRoute: "/ingredients", id: ingredientData.id, showRestock: true}) %>
     </div>
 
     <%- include("partials/ingredientDetailsTable.ejs", ingredientData) %>
