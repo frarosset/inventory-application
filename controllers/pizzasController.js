@@ -157,6 +157,9 @@ exports.getOrderById = [
       throw new CustomNotFoundError(err404Msg.getOrderById);
     }
 
-    res.send(JSON.stringify(pizzaData));
+    res.render("pizzaOrder", {
+      pageTitle: process.env.TITLE,
+      data: pizzaData,
+    });
   }),
 ];

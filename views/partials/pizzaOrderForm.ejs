@@ -1,0 +1,12 @@
+<%_ const postUrl = `/pizzas/${data.id}/order` _%>
+<form action=<%= postUrl %> method="POST">
+  <p>`There are <strong><%= data.availability %> servings</strong> of this pizza available (with base dough).`
+  <fieldset>
+    <legend>Order</legend>
+    <%- include("input.ejs", {type: "number", value: 100, name: "unitsToOrder", label: "Units", min: 1, max: data.availability, step: 1, required: true}) _%>
+    <%# temporary doughId. Todo: select the dough from the available ones #%>
+    <input type="hidden" name="doughId" value=<%= process.env.BASE_DOUGH_ID %>>
+  </fieldset>
+  <%- include("formActions.ejs", {fallbackUrl: "/pizzas",label: "ORDER"}) _%>
+  </div>
+</form>
