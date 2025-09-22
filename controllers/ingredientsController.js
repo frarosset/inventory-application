@@ -160,6 +160,9 @@ exports.getRestockById = [
       throw new CustomNotFoundError(err404Msg.getRestockById);
     }
 
-    res.send("Restock: " + JSON.stringify(ingredientData));
+    res.render("ingredientRestock", {
+      pageTitle: process.env.TITLE,
+      data: ingredientData,
+    });
   }),
 ];

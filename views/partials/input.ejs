@@ -1,5 +1,5 @@
 <label>
   <span><%= label %></span>
-  <input <%- include("inputParams.ejs",{value: locals.data?.[name]}) _%>>
+  <input <%- include("inputParams.ejs",{value: locals.data?.[name] ?? locals.value}) _%>>
   <%- include("inputValidationErrors.ejs") _%>
 </label>
