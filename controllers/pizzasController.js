@@ -176,6 +176,12 @@ exports.postOrderById = [
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
-    res.send("ordering" + JSON.stringify(data));
+    const { id, updated } = await db.update.pizzaOrder(data);
+
+    if (id == null) {
+      throw new CustomNotFoundError(err404Msg.postOrderById);
+    }
+
+    res.redirect(data.redirectTo || "/pizzas/" + id);
   }),
 ];

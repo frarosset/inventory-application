@@ -462,6 +462,59 @@ exports.update.doughRestock = async (data) => {
   return { id, updated };
 };
 
+exports.update.pizzaOrder = async (data) => {
+  console.log(data);
+
+  // do not edit updated at when editing the stock
+  const queries = [
+    //lock doughs and ingredients that will be edited
+    {
+      text: `
+        SELECT id, stock FROM doughs WHERE id = $1 FOR UPDATE;`,
+      data: [data.doughId],
+    },
+    {
+      text: `
+        SELECT id, stock FROM ingredients
+        WHERE id = ANY (
+          SELECT ingredient_id FROM pizzas_ingredients WHERE pizza_id = $1
+        )
+        FOR UPDATE;`,
+      data: [data.id],
+    },
+    {
+      text: `
+          UPDATE doughs
+          SET stock = stock - $1
+          WHERE id = $2
+          AND ($1 > 0)
+          RETURNING id;`,
+      data: [data.unitsToOrder, data.doughId],
+    },
+    {
+      text: `
+          UPDATE ingredients
+          SET stock = stock - $1
+           WHERE id = ANY (
+            SELECT ingredient_id
+            FROM pizzas_ingredients
+            WHERE pizza_id = $2
+          )
+          AND ($1 > 0)
+          RETURNING id;`,
+      data: [data.unitsToOrder, data.id],
+    },
+  ];
+
+  const results = await makeTransaction(queries);
+
+  const id = data.id;
+  const updated = data.unitsToOrder > 0;
+
+  // returns {id, updated} -- id is undefined if item does not exist
+  return { id, updated };
+};
+
 exports.delete.ingredient = async (id) => {
   const queries = [
     {
