@@ -29,7 +29,7 @@
         <td class="numeric-data" data-label="Stock"><span><%=data.availability %></span></td>
         <td class="numeric-data" data-label="Price"><span><%=formatCost(data.cost) %></span></td>
         <td data-label="Protected"><span><%- include("isProtectedSymbol.ejs", {is_protected: data.is_protected}) %></span></td>
-        <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/pizzas", id: data.id}) %></td>
+        <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/pizzas", id: data.id, showOrder: true}) %></td>
       </tr>
       <%_ }) _%>
     </tbody>

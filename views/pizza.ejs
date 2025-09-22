@@ -17,7 +17,7 @@
 
     <div class="item-details-nav">
       <a href="/pizzas"><span class="icon icon-back"></span>All Pizzas</a>
-      <%- include("partials/itemActions.ejs", {baseRoute: "/pizzas", id: pizzaData.id}) %>
+      <%- include("partials/itemActions.ejs", {baseRoute: "/pizzas", id: pizzaData.id, showOrder: true}) %>
     </div>
 
     <%- include("partials/pizzaDetailsTable.ejs", pizzaData) %>

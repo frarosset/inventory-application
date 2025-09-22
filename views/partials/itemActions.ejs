@@ -3,9 +3,13 @@
   const editUrl = `${baseRoute}/${id}/edit`;
   const deleteUrl = `${baseRoute}/${id}/delete`;
   const restockUrl = `${baseRoute}/${id}/restock`;
+  const orderUrl = `${baseRoute}/${id}/order`;
   _%>
   <%_ if (locals.showRestock ?? false){ _%>
   <a href="<%= restockUrl %>"><span class="icon icon-restock" title="Restock"></span></a>
+  <%_ } _%>
+  <%_ if (locals.showOrder ?? false){ _%>
+  <a href="<%= orderUrl %>"><span class="icon icon-order" title="Order"></span></a>
   <%_ } _%>
   <%_ if (locals.showEdit ?? true){ _%>
   <a href="<%= editUrl %>"><span class="icon icon-edit" title="Edit"></span></a>
