@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 const db = require("../../db/queries.js");
 
-const protectedValidation = [
+const protectedValidator = [
   body("password").custom(async (password, { req }) => {
     if (req.locals.isNew) {
       if (req.body.is_protected) {
@@ -90,4 +90,4 @@ function checkPassword(password, type) {
   }
 }
 
-module.exports = protectedValidation;
+module.exports = protectedValidator;

@@ -1,13 +1,13 @@
 const { body } = require("express-validator");
-const protectedValidation = require("./protectedValidation.js");
+const protectedValidator = require("./protectedValidator.js");
 const populateReqLocalsWithValidDoughNames = require("./populateReqLocalsWithValidDoughNames.js");
 const populateRouteType = require("./populateRouteType.js");
 const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
 
-const doughsValidator = [
+const doughValidator = [
   populateReqLocalsWithValidDoughNames,
   populateRouteType,
-  protectedValidation,
+  protectedValidator,
   body("name")
     .trim()
     .notEmpty()
@@ -71,4 +71,4 @@ const doughsValidator = [
   handleValidationErrorsFcn("doughMutation"),
 ];
 
-module.exports = doughsValidator;
+module.exports = doughValidator;

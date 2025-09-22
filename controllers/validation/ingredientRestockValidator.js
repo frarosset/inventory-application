@@ -3,7 +3,7 @@ const populateRouteType = require("./populateRouteType.js");
 const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
 const populateReqLocalsWithItemData = require("./populateReqLocalsWithItemData.js");
 
-const ingredientRestockValidator = [
+const ingredientValidator = [
   populateRouteType,
   populateReqLocalsWithItemData,
   body("unitsToRestock")
@@ -18,4 +18,4 @@ const ingredientRestockValidator = [
   handleValidationErrorsFcn("ingredientRestock"),
 ];
 
-module.exports = ingredientRestockValidator;
+module.exports = ingredientValidator;

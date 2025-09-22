@@ -1,13 +1,13 @@
-const protectedValidation = require("./protectedValidation.js");
+const protectedValidator = require("./protectedValidator.js");
 const populateRouteType = require("./populateRouteType.js");
 const populateReqLocalsWithItemData = require("./populateReqLocalsWithItemData.js");
 const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
 
-const pizzasValidator = [
+const pizzaValidator = [
   populateReqLocalsWithItemData,
   populateRouteType,
-  protectedValidation,
+  protectedValidator,
   handleValidationErrorsFcn("pizzaDelete"),
 ];
 
-module.exports = pizzasValidator;
+module.exports = pizzaValidator;

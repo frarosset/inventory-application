@@ -1,6 +1,6 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
-const categoryValidator = require("./validation/categoriesValidator.js");
+const categoryNewEditValidator = require("./validation/categoryNewEditValidator.js");
 const categoryDeleteValidator = require("./validation/categoryDeleteValidator.js");
 const redirectToValidator = require("./validation/redirectToValidator.js");
 const idValidator = require("./validation/idValidator.js");
@@ -56,7 +56,7 @@ exports.getNew = asyncHandler(async (req, res) => {
 });
 
 exports.postNew = [
-  categoryValidator,
+  categoryNewEditValidator,
   asyncHandler(async (req, res) => {
     const body = matchedData(req); // req.body
 
@@ -92,7 +92,7 @@ exports.getEditById = [
 
 exports.postEditById = [
   idValidator(err404Msg.postEditById),
-  categoryValidator,
+  categoryNewEditValidator,
   (req, res, next) => {
     const validator = redirectToValidator();
     return validator(req, res, next);

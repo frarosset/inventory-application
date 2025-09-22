@@ -1,23 +1,23 @@
 const { body } = require("express-validator");
-const protectedValidation = require("./protectedValidation.js");
+const protectedValidator = require("./protectedValidator.js");
 const populateReqLocalsWithValidNames = require("./populateReqLocalsWithValidNames.js");
 const populateRouteType = require("./populateRouteType.js");
 const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
 
-const ingredientsValidator = [
+const categoryValidator = [
   populateReqLocalsWithValidNames,
   populateRouteType,
-  protectedValidation,
+  protectedValidator,
   body("name")
     .trim()
     .notEmpty()
     .withMessage("The name cannot be empty.")
     .custom((value, { req }) => {
       if (
-        req.locals.allIngredients.includes(value) &&
-        value !== req.locals.allIngredientsIdNameMap.get(req.params.id)
+        req.locals.allCategories.includes(value) &&
+        value !== req.locals.allCategoriesIdNameMap.get(req.params.id)
       ) {
-        throw new Error(`An ingredient named '${value}' already exists.`);
+        throw new Error(`A category named '${value}' already exists.`);
       }
       return true;
     })
@@ -48,58 +48,38 @@ const ingredientsValidator = [
     .withMessage(
       "Notes have some invalid characters. " + process.env.NOTES_REGEX_MSG
     ),
-  body("price")
-    .trim()
-    .notEmpty()
-    .withMessage("The ingredient price cannot be empty.")
-    .isDecimal({
-      min: 0,
-      force_decimal: false,
-      decimal_digits: `0,${process.env.INGREDIENT_PRICE_DECIMAL_DIGITS}`,
-    })
-    .withMessage(
-      `The ingredient price must be a non-negative decimal number with at most ${process.env.INGREDIENT_PRICE_DECIMAL_DIGITS} decimal digits.`
-    )
-    .toFloat(),
-  body("stock")
-    .trim()
-    .notEmpty()
-    .withMessage("The ingredient stock cannot be empty.")
-    .isInt({ min: 0 })
-    .withMessage("The ingredient stock must be a non-negative integer number.")
-    .toInt(),
-  body("incompatibleCategories")
+  body("incompatibleIngredients")
     .optional({ nullable: true })
     .customSanitizer((value) => (typeof value === "string" ? [value] : value))
     .isArray()
-    .withMessage("Invalid format for incompatible categories.")
+    .withMessage("Invalid format for incompatible ingredients.")
     .customSanitizer((value) => [...new Set(value)]), // remove duplicates,
-  body("incompatibleCategories.*").custom(async (value, { req }) => {
-    if (!req.locals.allCategories.includes(value)) {
-      throw new Error(`Category '${value}' is not allowed.`);
+  body("incompatibleIngredients.*").custom(async (value, { req }) => {
+    if (!req.locals.allIngredients.includes(value)) {
+      throw new Error(`Ingredient '${value}' is not allowed.`);
     }
     return true;
   }),
-  body("enforcedCategories")
+  body("enforcingIngredients")
     .optional({ nullable: true })
     .customSanitizer((value) => (typeof value === "string" ? [value] : value))
     .isArray()
-    .withMessage("Invalid format for enforced categories.")
+    .withMessage("Invalid format for enforcing ingredients.")
     .customSanitizer((value) => [...new Set(value)]), // remove duplicates,
-  body("enforcedCategories.*")
+  body("enforcingIngredients.*")
     .custom(async (value, { req }) => {
-      if (!req.locals.allCategories.includes(value)) {
-        throw new Error(`Category '${value}' is not allowed.`);
+      if (!req.locals.allIngredients.includes(value)) {
+        throw new Error(`Ingredient '${value}' is not allowed.`);
       }
       return true;
     })
     .custom(async (value, { req }) => {
       if (
-        req.body.incompatibleCategories &&
-        req.body.incompatibleCategories.includes(value)
+        req.body.incompatibleIngredients &&
+        req.body.incompatibleIngredients.includes(value)
       ) {
         throw new Error(
-          `Category '${value}' cannot be both enforced and incompatible.`
+          `Ingredient '${value}' cannot be both enforcing and incompatible.`
         );
       }
       return true;
@@ -108,7 +88,7 @@ const ingredientsValidator = [
     .optional({ nullable: true })
     .customSanitizer((value) => (typeof value === "string" ? [value] : value))
     .isArray()
-    .withMessage("Invalid format for pizzas using this ingredient.")
+    .withMessage("Invalid format for pizzas to be assigned to this category.")
     .customSanitizer((value) => [...new Set(value)]), // remove duplicates,
   body("pizzas.*").custom(async (value, { req }) => {
     if (!req.locals.allPizzas.includes(value)) {
@@ -124,7 +104,7 @@ const ingredientsValidator = [
     if (anyProtectedPizzas) {
       if (!req.body.passwordCheckboxList) {
         throw new Error(
-          "The admin password is required to use this ingredient in the selected protected pizzas."
+          "The admin password is required to assign this category to the selected protected pizzas."
         );
       }
 
@@ -135,13 +115,13 @@ const ingredientsValidator = [
         req.body.passwordCheckboxList !== process.env.ADMIN_PASSWORD
       ) {
         throw new Error(
-          "The admin password to use this ingredient in  the selected protected pizzas is incorrect."
+          "The admin password to assign this category to the selected protected pizzas is incorrect."
         );
       }
     }
     return true;
   }),
-  handleValidationErrorsFcn("ingredientMutation"),
+  handleValidationErrorsFcn("categoryMutation"),
 ];
 
-module.exports = ingredientsValidator;
+module.exports = categoryValidator;

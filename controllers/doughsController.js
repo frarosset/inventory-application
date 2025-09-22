@@ -1,6 +1,6 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
-const doughsValidator = require("./validation/doughsValidator.js");
+const doughNewEditValidator = require("./validation/doughNewEditValidator.js");
 const redirectToValidator = require("./validation/redirectToValidator.js");
 const idValidator = require("./validation/idValidator.js");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
@@ -61,7 +61,7 @@ exports.getEditById = [
 
 exports.postEditById = [
   idValidator(err404Msg.postEditById),
-  doughsValidator,
+  doughNewEditValidator,
   (req, res, next) => {
     const validator = redirectToValidator();
     return validator(req, res, next);

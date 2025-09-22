@@ -1,7 +1,7 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
-const pizzasValidator = require("./validation/pizzasValidator.js");
-const pizzasDeleteValidator = require("./validation/pizzasDeleteValidator.js");
+const pizzaNewEditValidator = require("./validation/pizzaNewEditValidator.js");
+const pizzaDeleteValidator = require("./validation/pizzaDeleteValidator.js");
 const redirectToValidator = require("./validation/redirectToValidator.js");
 const idValidator = require("./validation/idValidator.js");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
@@ -56,7 +56,7 @@ exports.getNew = asyncHandler(async (req, res) => {
 });
 
 exports.postNew = [
-  pizzasValidator,
+  pizzaNewEditValidator,
   asyncHandler(async (req, res) => {
     const body = matchedData(req); // req.body
 
@@ -91,7 +91,7 @@ exports.getEditById = [
 
 exports.postEditById = [
   idValidator(err404Msg.postEditById),
-  pizzasValidator,
+  pizzaNewEditValidator,
   (req, res, next) => {
     const validator = redirectToValidator();
     return validator(req, res, next);
@@ -127,7 +127,7 @@ exports.getDeleteById = [
 
 exports.postDeleteById = [
   idValidator(err404Msg.postDeleteById),
-  pizzasDeleteValidator,
+  pizzaDeleteValidator,
   (req, res, next) => {
     /* Exclude the route to the deleted item */
     const validator = redirectToValidator(`^/pizzas/${req.params.id}$`);

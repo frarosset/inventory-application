@@ -1,6 +1,6 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
-const ingredientsValidator = require("./validation/ingredientsValidator.js");
+const ingredientNewEditValidator = require("./validation/ingredientNewEditValidator.js");
 const ingredientDeleteValidator = require("./validation/ingredientDeleteValidator.js");
 const ingredientRestockValidator = require("./validation/ingredientRestockValidator.js");
 const redirectToValidator = require("./validation/redirectToValidator.js");
@@ -60,7 +60,7 @@ exports.getNew = asyncHandler(async (req, res) => {
 });
 
 exports.postNew = [
-  ingredientsValidator,
+  ingredientNewEditValidator,
   asyncHandler(async (req, res) => {
     const body = matchedData(req); // req.body
 
@@ -96,7 +96,7 @@ exports.getEditById = [
 
 exports.postEditById = [
   idValidator(err404Msg.postEditById),
-  ingredientsValidator,
+  ingredientNewEditValidator,
   (req, res, next) => {
     const validator = redirectToValidator();
     return validator(req, res, next);

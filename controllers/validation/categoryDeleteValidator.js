@@ -1,4 +1,4 @@
-const protectedValidation = require("./protectedValidation.js");
+const protectedValidator = require("./protectedValidator.js");
 const populateRouteType = require("./populateRouteType.js");
 const populateReqLocalsWithItemData = require("./populateReqLocalsWithItemData.js");
 const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
@@ -6,7 +6,7 @@ const handleValidationErrorsFcn = require("./handleValidationErrorsFcn.js");
 const categoryValidator = [
   populateReqLocalsWithItemData,
   populateRouteType,
-  protectedValidation,
+  protectedValidator,
   handleValidationErrorsFcn("categoryDelete"),
 ];
 
