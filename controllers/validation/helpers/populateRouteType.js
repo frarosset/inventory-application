@@ -11,6 +11,13 @@ const populateRouteType = [
     req.locals.isRestock = path === `/${id}/restock`;
     req.locals.isSearch = path === `/search`;
 
+    const baseUrl = req.baseUrl;
+
+    req.locals.isPizzas = baseUrl === "/pizzas";
+    req.locals.isIngredients = baseUrl === "/ingredients";
+    req.locals.isCategories = baseUrl === "/categories";
+    req.locals.isDoughs = baseUrl === "/doughs";
+
     next();
   },
 ];

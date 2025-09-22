@@ -36,19 +36,17 @@ const protectedValidator = [
     .toBoolean(),
 ];
 
-async function checkIfItemIsProtected(req) {
-  const baseUrl = req.baseUrl;
+function getProtectedReadKey(locals) {
+  if (locals?.isPizzas) return "pizzaProtected";
+  if (locals?.isIngredients) return "ingredientProtected";
+  if (locals?.isCategories) return "categoryProtected";
+  if (locals?.isDoughs) return "doughProtected";
+  return null;
+}
 
-  const dbRead =
-    baseUrl === "/pizzas"
-      ? db.read.pizzaProtected
-      : baseUrl === "/ingredients"
-      ? db.read.ingredientProtected
-      : baseUrl === "/categories"
-      ? db.read.categoryProtected
-      : baseUrl === "/doughs"
-      ? db.read.doughProtected
-      : null;
+async function checkIfItemIsProtected(req) {
+  const readKey = getProtectedReadKey(req.locals);
+  const dbRead = readKey ? db.read[readKey] : null;
 
   const is_protected = await dbRead(req.params.id);
 

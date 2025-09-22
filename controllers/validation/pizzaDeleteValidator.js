@@ -4,8 +4,8 @@ const populateReqLocalsWithItemData = require("./helpers/populateReqLocalsWithIt
 const handleValidationErrorsFcn = require("./helpers/handleValidationErrorsFcn.js");
 
 const pizzaValidator = [
-  populateReqLocalsWithItemData,
   populateRouteType,
+  populateReqLocalsWithItemData,
   protectedValidator,
   handleValidationErrorsFcn("pizzaDelete"),
 ];

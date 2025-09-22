@@ -5,8 +5,8 @@ const populateRouteType = require("./helpers/populateRouteType.js");
 const handleValidationErrorsFcn = require("./helpers/handleValidationErrorsFcn.js");
 
 const doughValidator = [
-  populateReqLocalsWithValidDoughNames,
   populateRouteType,
+  populateReqLocalsWithValidDoughNames,
   protectedValidator,
   body("name")
     .trim()
