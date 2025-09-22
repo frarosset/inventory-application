@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%_ const subtitle = `Restock Dough "${data.name}"` _%>
+
+<head>
+  <title><%= pageTitle %> | <%= subtitle %></title>
+  <%- include("partials/headGenericElements.ejs") %>
+</head>
+
+<body class="doodle">
+  <%- include("partials/header.ejs",{highlightLink: "doughs"}) %>
+
+  <main>
+    <h2><%= subtitle %></h2>
+    <%- include("partials/doughRestockForm.ejs") %>
+  </main>
+
+  <%- include("partials/creditFooter.ejs") %>
+</body>
+
+</html>

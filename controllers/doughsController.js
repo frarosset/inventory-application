@@ -90,6 +90,9 @@ exports.getRestockById = [
       throw new CustomNotFoundError(err404Msg.getRestockById);
     }
 
-    res.send(JSON.stringify(doughData));
+    res.render("doughRestock", {
+      pageTitle: process.env.TITLE,
+      data: doughData,
+    });
   }),
 ];
