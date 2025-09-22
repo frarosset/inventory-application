@@ -9,6 +9,7 @@ const populateRouteType = [
     req.locals.isEdit = path === `/${id}/edit`;
     req.locals.isDelete = path === `/${id}/delete`;
     req.locals.isRestock = path === `/${id}/restock`;
+    req.locals.isOrder = path === `/${id}/order`;
     req.locals.isSearch = path === `/search`;
 
     const baseUrl = req.baseUrl;

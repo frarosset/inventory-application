@@ -2,6 +2,7 @@ const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
 const pizzaNewEditValidator = require("./validation/pizzaNewEditValidator.js");
 const pizzaDeleteValidator = require("./validation/pizzaDeleteValidator.js");
+const pizzaOrderValidator = require("./validation/pizzaOrderValidator.js");
 const redirectToValidator = require("./validation/helpers/redirectToValidator.js");
 const idValidator = require("./validation/helpers/idValidator.js");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
@@ -14,7 +15,8 @@ const err404Msg = {
   getDeleteById: "Cannot delete — this pizza does not exist!",
   postDeleteById: "Cannot delete — this pizza does not exist!",
   postEditById: "Cannot edit — this pizza does not exist!",
-  getOrderById: "Cannot order — this dough does not exist!",
+  getOrderById: "Cannot order — this pizza does not exist!",
+  postOrderById: "Cannot order — this pizza does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -161,5 +163,19 @@ exports.getOrderById = [
       pageTitle: process.env.TITLE,
       data: pizzaData,
     });
+  }),
+];
+
+exports.postOrderById = [
+  idValidator(err404Msg.postOrderById),
+  pizzaOrderValidator,
+  (req, res, next) => {
+    const validator = redirectToValidator();
+    return validator(req, res, next);
+  },
+  asyncHandler(async (req, res) => {
+    const data = matchedData(req); // req.body + req.params.id
+
+    res.send("ordering" + JSON.stringify(data));
   }),
 ];

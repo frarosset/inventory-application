@@ -11,6 +11,7 @@ router.post("/:id/edit", pizzasController.postEditById);
 router.get("/:id/delete", pizzasController.getDeleteById);
 router.post("/:id/delete", pizzasController.postDeleteById);
 router.get("/:id/order", pizzasController.getOrderById);
+router.post("/:id/order", pizzasController.postOrderById);
 router.get("/:id", pizzasController.getById);
 
 module.exports = router;

@@ -3,6 +3,7 @@ const db = require("../../../db/queries.js");
 function getReadKey(locals) {
   if (locals?.isPizzas) {
     if (locals?.isDelete) return "pizzaDelete";
+    if (locals?.isOrder) return "pizzaOrder";
   } else if (locals?.isIngredients) {
     if (locals?.isDelete) return "ingredientDelete";
     if (locals?.isRestock) return "ingredientRestock";
