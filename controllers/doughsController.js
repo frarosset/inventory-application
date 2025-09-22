@@ -11,6 +11,7 @@ const err404Msg = {
   getById: "This dough does not exist!",
   getEditById: "Cannot edit — this dough does not exist!",
   postEditById: "Cannot edit — this dough does not exist!",
+  getRestockById: "Cannot restock — this dough does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -76,5 +77,19 @@ exports.postEditById = [
     }
 
     res.redirect(data.redirectTo || "/doughs/" + id);
+  }),
+];
+
+exports.getRestockById = [
+  idValidator(err404Msg.getRestockById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const doughData = await db.read.doughRestock(id);
+
+    if (doughData == null) {
+      throw new CustomNotFoundError(err404Msg.getRestockById);
+    }
+
+    res.send(JSON.stringify(doughData));
   }),
 ];

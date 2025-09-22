@@ -956,6 +956,23 @@ exports.read.doughEdit = async (id) => {
   return rows[0];
 };
 
+// This gets only the essential info for restock a dough
+exports.read.doughRestock = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        name,
+        id,
+        stock
+      FROM doughs
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0];
+};
+
 exports.read.doughsNames = async () => {
   const { rows } = await pool.query(`
     SELECT 
