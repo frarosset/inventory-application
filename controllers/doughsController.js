@@ -1,6 +1,7 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
 const doughNewEditValidator = require("./validation/doughNewEditValidator.js");
+const doughRestockValidator = require("./validation/doughRestockValidator.js");
 const redirectToValidator = require("./validation/helpers/redirectToValidator.js");
 const idValidator = require("./validation/helpers/idValidator.js");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
@@ -12,6 +13,7 @@ const err404Msg = {
   getEditById: "Cannot edit — this dough does not exist!",
   postEditById: "Cannot edit — this dough does not exist!",
   getRestockById: "Cannot restock — this dough does not exist!",
+  postRestockById: "Cannot restock — this dough does not exist!",
 };
 
 exports.get = asyncHandler(async (req, res) => {
@@ -94,5 +96,19 @@ exports.getRestockById = [
       pageTitle: process.env.TITLE,
       data: doughData,
     });
+  }),
+];
+
+exports.postRestockById = [
+  idValidator(err404Msg.postRestockById),
+  doughRestockValidator,
+  (req, res, next) => {
+    const validator = redirectToValidator();
+    return validator(req, res, next);
+  },
+  asyncHandler(async (req, res) => {
+    const data = matchedData(req); // req.body + req.params.id
+
+    res.send("restocking" + JSON.stringify(data));
   }),
 ];

@@ -8,6 +8,9 @@ function getReadKey(locals) {
     if (locals?.isRestock) return "ingredientRestock";
   } else if (locals?.isCategories) {
     if (locals?.isDelete) return "categoryDelete";
+  } else if (locals?.isDoughs) {
+    if (locals?.isDelete) return "doughDelete";
+    if (locals?.isRestock) return "doughRestock";
   }
   return null;
 }

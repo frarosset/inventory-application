@@ -6,6 +6,7 @@ const router = Router();
 router.get("/:id/edit", doughsController.getEditById);
 router.post("/:id/edit", doughsController.postEditById);
 router.get("/:id/restock", doughsController.getRestockById);
+router.post("/:id/restock", doughsController.postRestockById);
 router.get("/:id", doughsController.getById);
 router.get("/", doughsController.get);
 
