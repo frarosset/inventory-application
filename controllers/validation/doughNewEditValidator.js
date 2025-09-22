@@ -68,7 +68,7 @@ const doughValidator = [
     .isInt({ min: 0 })
     .withMessage("The dough stock must be a non-negative integer number.")
     .toInt(),
-  handleValidationErrorsFcn("doughMutation"),
+  handleValidationErrorsFcn("doughNewEdit"),
 ];
 
 module.exports = doughValidator;

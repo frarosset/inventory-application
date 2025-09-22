@@ -51,7 +51,7 @@ exports.getEditById = [
       throw new CustomNotFoundError(err404Msg.getEditById);
     }
 
-    res.render("doughMutation", {
+    res.render("doughNewEdit", {
       pageTitle: process.env.TITLE,
       data: doughData,
       edit: true,

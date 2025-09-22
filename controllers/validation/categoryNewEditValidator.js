@@ -121,7 +121,7 @@ const categoryValidator = [
     }
     return true;
   }),
-  handleValidationErrorsFcn("categoryMutation"),
+  handleValidationErrorsFcn("categoryNewEdit"),
 ];
 
 module.exports = categoryValidator;

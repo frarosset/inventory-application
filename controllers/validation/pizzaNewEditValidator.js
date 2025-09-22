@@ -72,7 +72,7 @@ const pizzaValidator = [
     }
     return true;
   }),
-  handleValidationErrorsFcn("pizzaMutation"),
+  handleValidationErrorsFcn("pizzaNewEdit"),
 ];
 
 module.exports = pizzaValidator;

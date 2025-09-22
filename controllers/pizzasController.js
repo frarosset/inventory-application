@@ -48,7 +48,7 @@ exports.getNew = asyncHandler(async (req, res) => {
   const ingredients = await db.read.ingredientsNames();
   const categories = await db.read.categoriesNames();
 
-  res.render("pizzaMutation", {
+  res.render("pizzaNewEdit", {
     pageTitle: process.env.TITLE,
     ingredients: ingredients.map((i) => i.name),
     categories: categories.map((i) => i.name),
@@ -79,7 +79,7 @@ exports.getEditById = [
       throw new CustomNotFoundError(err404Msg.getEditById);
     }
 
-    res.render("pizzaMutation", {
+    res.render("pizzaNewEdit", {
       pageTitle: process.env.TITLE,
       ingredients: ingredients.map((i) => i.name),
       categories: categories.map((i) => i.name),

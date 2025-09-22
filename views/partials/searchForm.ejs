@@ -1,5 +1,5 @@
 <form action="/search" method="GET">
-  <%- include("input.ejs",{type: "search", name: "q", label: "", placeholder: "Find pizzas, categories, ingredients, and doughs", maxlength: process.env.NAME_MAX_LENGTH, required: true,  pattern: process.env.NAME_REGEX, title: process.env.NAME_REGEX_MSG}) _%>
+  <%- include("input.ejs",{type: "search", name: "q", label: "", placeholder: "Find pizzas, categories, ingredients, and doughs", maxlength: process.env.NAME_MAX_LENGTH, required: true,  pattern: process.env.NAME_REGEX, title: process.env.NAME_REGEX_MSG, autofocus: true}) _%>
 
   <fieldset class="search-options">
     <legend>Search Options</legend>

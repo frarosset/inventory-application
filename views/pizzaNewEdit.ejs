@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<%_ const subtitle = locals.edit ? `Edit Ingredient "${data.name}"` : "Add New Ingredient" _%>
+<%_ const subtitle = locals.edit ? `Edit Pizza "${data.name}"` : "Add New Pizza" _%>
 
 <head>
   <title><%= pageTitle %> | <%= subtitle %></title>
@@ -9,11 +9,11 @@
 </head>
 
 <body class="doodle">
-  <%- include("partials/header.ejs",{highlightLink: "ingredients"}) %>
+  <%- include("partials/header.ejs",{highlightLink: "pizzas"}) %>
 
   <main>
     <h2><%= subtitle %></h2>
-    <%- include("partials/ingredientMutationForm.ejs") %>
+    <%- include("partials/pizzaNewEditForm.ejs") %>
   </main>
 
   <%- include("partials/creditFooter.ejs") %>

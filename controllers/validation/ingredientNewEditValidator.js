@@ -141,7 +141,7 @@ const ingredientValidator = [
     }
     return true;
   }),
-  handleValidationErrorsFcn("ingredientMutation"),
+  handleValidationErrorsFcn("ingredientNewEdit"),
 ];
 
 module.exports = ingredientValidator;
