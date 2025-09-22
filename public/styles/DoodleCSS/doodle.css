@@ -160,13 +160,13 @@ div[role="alert"] {
   background-color: var(--bg-col-error);
 }
 
-.doodle fieldset *[role="alert"] {
+.doodle label div[role="alert"] {
   padding: 0;
   color: var(--col-error);
   background: unset;
 }
 
-.doodle *[role="alert"] ul {
+.doodle div[role="alert"] ul {
   padding: var(--fieldset-padding);
 }
 
