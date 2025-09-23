@@ -44,6 +44,12 @@ exports.getById = [
   }),
 ];
 
+exports.getNew = asyncHandler(async (req, res) => {
+  res.render("doughNewEdit", {
+    pageTitle: process.env.TITLE,
+  });
+});
+
 exports.getEditById = [
   idValidator(err404Msg.getEditById),
   asyncHandler(async (req, res) => {
