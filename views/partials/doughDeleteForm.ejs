@@ -1,0 +1,7 @@
+<%_ const postUrl = `/doughs/${data.id}/delete` _%>
+<form action=<%= postUrl %> method="POST">
+  <p>Are you sure you want to delete this dough?</p>
+  <%- include("protectedItem.ejs") _%>
+  <%- include("formActions.ejs", {fallbackUrl: "/doughs",label: "DELETE"}) _%>
+  </div>
+</form>

@@ -111,7 +111,10 @@ exports.getDeleteById = [
       throw new CustomNotFoundError(err404Msg.getDeleteById);
     }
 
-    res.send("Delete" + JSON.stringify(doughData));
+    res.render("doughDelete", {
+      pageTitle: process.env.TITLE,
+      data: doughData,
+    });
   }),
 ];
 
