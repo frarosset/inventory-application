@@ -25,11 +25,17 @@ const pizzaValidator = [
     )
     .toInt()
     .custom((unitsToOrder, { req }) => {
-      const max = req.locals.itemData.availability;
+      const maxAvailability = req.locals.itemData.availability;
 
-      if (unitsToOrder > max) {
+      if (maxAvailability === 0) {
         throw new Error(
-          `There are only ${max} servings available with the selected dough.`
+          `There are currently no available pizzas made with this dough — this may be due to missing ingredients. Try selecting a different dough.`
+        );
+      }
+
+      if (unitsToOrder > maxAvailability) {
+        throw new Error(
+          `There are only ${maxAvailability} servings available with the selected dough.`
         );
       }
 

@@ -1,13 +1,20 @@
 <%_ 
 const postUrl = `/doughs/${data.id}/restock`;
 const maxUnitsToRestock = Math.max(0, parseInt(process.env.STOCK_MAX) - data.stock); 
+const disabled = maxUnitsToRestock === 0;
 _%>
 <form action=<%= postUrl %> method="POST">
+  <%_ if(disabled) { _%>
+  <div class="border" role="alert" aria-live="assertive">
+    <p>This dough currently has <strong><%= data.stock %> units</strong> in stock. You’ve reached the maximum stock limit, so no further items can be added.</p>
+  </div>
+  <%_ } else { _%>
   <p>This dough currently has <strong><%= data.stock %> units</strong> in stock.</p>
+  <%_ } _%>
   <fieldset>
     <legend>Add to stock</legend>
-    <%- include("input.ejs", {type: "number", value: 1000, name: "unitsToRestock", label: "Units", min: 1, max: maxUnitsToRestock, step: 1, required: true}) _%>
+    <%- include("input.ejs", {type: "number", value: 1000, name: "unitsToRestock", label: "Units", min: 1, max: maxUnitsToRestock, step: 1, required: true, disabled}) _%>
   </fieldset>
-  <%- include("formActions.ejs", {fallbackUrl: "/doughs",label: "RESTOCK"}) _%>
+  <%- include("formActions.ejs", {fallbackUrl: "/doughs",label: "RESTOCK", disableSubmit: disabled}) _%>
   </div>
 </form>

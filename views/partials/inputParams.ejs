@@ -14,7 +14,7 @@ params.forEach(param => {
 if (locals[param] != null) { _%>
 <%= param %>="<%= locals[param] %>"
 <%_ }}) _%>
-<%_ const paramsShort = ["required","checked","autofocus"];
+<%_ const paramsShort = ["required","checked","autofocus","disabled"];
 paramsShort.forEach(param => {
 if (locals[param]) { _%>
 <%= param %>

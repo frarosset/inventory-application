@@ -1,1 +1,1 @@
-<button type="submit" onClick="if(this.form.reportValidity()){this.form.submit(); this.disabled=true; this.innerText='Sending…'; }"><%= label %></button>
+<button type="submit" onClick="if(this.form.reportValidity()){this.form.submit(); this.disabled=true; this.innerText='Sending…'; }" <%_ if(locals.disableSubmit ?? false) { _%>disabled<%_ } _%>><%= label %></button>

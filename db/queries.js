@@ -463,8 +463,6 @@ exports.update.doughRestock = async (data) => {
 };
 
 exports.update.pizzaOrder = async (data) => {
-  console.log(data);
-
   // do not edit updated at when editing the stock
   const queries = [
     //lock doughs and ingredients that will be edited

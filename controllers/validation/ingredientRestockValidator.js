@@ -21,6 +21,12 @@ const ingredientValidator = [
         parseInt(process.env.STOCK_MAX) - req.locals.itemData.stock
       );
 
+      if (maxUnitsToRestock === 0) {
+        throw new Error(
+          `You’ve reached the maximum stock limit, so no further items can be added.`
+        );
+      }
+
       if (unitsToRestock > maxUnitsToRestock) {
         throw new Error(
           `The maximum amount you can add is ${maxUnitsToRestock} units, to avoid exceeding the maximum stock limit.`

@@ -342,6 +342,7 @@ div[role="alert"] {
   background: var(--col-submit-button-bg);
 }
 
+.doodle *:disabled,
 .doodle button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
