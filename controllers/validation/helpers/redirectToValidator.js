@@ -1,7 +1,8 @@
 const { body } = require("express-validator");
 
 // valid urls: /, /pizzas, /ingredients, /categories, /pizzas/:id, /ingredients/:id, /categories/:id
-const regexValidUrlsStr = "^(/|/(pizzas|ingredients|categories)(/\\d+)?)$";
+const regexValidUrlsStr =
+  "^(/|/(pizzas|ingredients|categories|doughs)(/\\d+)?)$";
 const regexValidUrls = new RegExp(regexValidUrlsStr);
 
 // validator returns a middleware. T
