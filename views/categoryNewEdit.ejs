@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<%_ const subtitle = locals.edit ? `Edit Category "${data.name}"` : "Add New Category" _%>
+<%_ const subtitle = locals.edit ? `Edit Category "${locals.name ?? data.name}"` : "Add New Category" _%>
 
 <head>
   <title><%= pageTitle %> | <%= subtitle %></title>

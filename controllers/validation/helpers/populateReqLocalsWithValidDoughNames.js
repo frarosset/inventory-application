@@ -10,6 +10,10 @@ const populateReqLocalsWithValidDoughNames = async (req, res, next) => {
 
   req.locals.allDoughsIdNameMap = new Map(allDoughs.map((i) => [i.id, i.name]));
 
+  if (req.locals.isEdit) {
+    req.locals.name = req.locals.allDoughsIdNameMap.get(req.params.id);
+  }
+
   next();
 };
 

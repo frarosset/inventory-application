@@ -23,6 +23,17 @@ const populateReqLocalsWithValidNames = async (req, res, next) => {
     allCategories.map((i) => [i.id, i.name])
   );
 
+  if (req.locals.isEdit) {
+    const nameMapStr = req.locals.isPizzas
+      ? "allPizzasIdNameMap"
+      : req.locals.isIngredients
+      ? "allIngredientsIdNameMap"
+      : req.locals.isCategories
+      ? "allCategoriesIdNameMap"
+      : null;
+    req.locals.name = req.locals[nameMapStr].get(req.params.id);
+  }
+
   next();
 };
 
