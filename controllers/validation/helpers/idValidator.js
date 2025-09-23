@@ -1,5 +1,5 @@
 const { param, body } = require("express-validator");
-const CustomNotFoundError = require("../../../errors/CustomNotFoundError");
+const CustomBadRequestError = require("../../../errors/CustomBadRequestError.js");
 const { validationResult } = require("express-validator");
 
 const idValidator = (invalidIdMessage, idLabel = "id", location = "param") => {
@@ -16,7 +16,7 @@ const idValidator = (invalidIdMessage, idLabel = "id", location = "param") => {
       if (!result.isEmpty()) {
         const msg = result.errors[0].msg;
 
-        throw new CustomNotFoundError(invalidIdMessage + " " + msg);
+        throw new CustomBadRequestError(invalidIdMessage + " " + msg);
       }
       // no errors
       next();
