@@ -28,6 +28,7 @@
   --button-col-1: var(--sandy-brown);
   --button-col-2: var(--olivine);
   --button-col-3: var(--lilac);
+  --button-col-4: var(--coral-pink);
   --button-col-highlight: var(--earth-yellow);
 
   --default-font: "Short Stack", monospace;
@@ -498,7 +499,8 @@ main.index .button:nth-child(3) {
 
 main:has(.pizzas-brief) a.button,
 main:has(.categories-brief) a.button,
-main:has(.ingredients-brief) a.button {
+main:has(.ingredients-brief) a.button,
+main:has(.doughs-brief) a.button {
   text-transform: uppercase;
   width: 100%;
   margin-bottom: 1em;
@@ -514,6 +516,10 @@ main:has(.categories-brief) a.button {
 
 main:has(.ingredients-brief) a.button {
   background-color: var(--button-col-3);
+}
+
+main:has(.doughs-brief) a.button {
+  background-color: var(--button-col-4);
 }
 
 /* || Tables */
