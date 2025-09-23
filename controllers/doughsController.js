@@ -50,6 +50,18 @@ exports.getNew = asyncHandler(async (req, res) => {
   });
 });
 
+exports.postNew = [
+  doughNewEditValidator,
+  asyncHandler(async (req, res) => {
+    const body = matchedData(req); // req.body
+
+    const id = await db.create.dough(body);
+
+    // this always redirect to the new dough
+    res.redirect("/doughs/" + id);
+  }),
+];
+
 exports.getEditById = [
   idValidator(err404Msg.getEditById),
   asyncHandler(async (req, res) => {
