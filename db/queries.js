@@ -588,7 +588,7 @@ exports.delete.dough = async (id) => {
 
   const results = await makeTransaction(queries);
 
-  return results[2]?.[0]?.id;
+  return results[1]?.[0]?.id;
 };
 
 // This gets only the essential info for all pizzas in the db
@@ -685,7 +685,7 @@ exports.read.pizzaEdit = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info to edit a pizza
+// This gets only the essential info to delete a pizza
 exports.read.pizzaDelete = async (id) => {
   const { rows } = await pool.query(
     `
@@ -831,7 +831,7 @@ exports.read.ingredientEdit = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info to edit a ingredient
+// This gets only the essential info to delete a ingredient
 exports.read.ingredientDelete = async (id) => {
   const { rows } = await pool.query(
     `
@@ -951,7 +951,7 @@ exports.read.category = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info to edit an category
+// This gets only the essential info to edit a category
 exports.read.categoryEdit = async (id) => {
   const { rows } = await pool.query(
     `
@@ -976,7 +976,7 @@ exports.read.categoryEdit = async (id) => {
   return rows[0];
 };
 
-// This gets only the essential info to edit a category
+// This gets only the essential info to delete a category
 exports.read.categoryDelete = async (id) => {
   const { rows } = await pool.query(
     `
@@ -1077,6 +1077,23 @@ exports.read.doughsNames = async () => {
   `);
 
   return rows;
+};
+
+// This gets only the essential info to delete a dough
+exports.read.doughDelete = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        name,
+        id,
+        is_protected
+      FROM doughs
+      WHERE id=$1;
+    `,
+    [id]
+  );
+
+  return rows[0];
 };
 
 exports.read.doughProtected = async (id) => {

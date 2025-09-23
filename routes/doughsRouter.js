@@ -7,6 +7,7 @@ router.get("/new", doughsController.getNew);
 router.post("/new", doughsController.postNew);
 router.get("/:id/edit", doughsController.getEditById);
 router.post("/:id/edit", doughsController.postEditById);
+router.get("/:id/delete", doughsController.getDeleteById);
 router.get("/:id/restock", doughsController.getRestockById);
 router.post("/:id/restock", doughsController.postRestockById);
 router.get("/:id", doughsController.getById);

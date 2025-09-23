@@ -10,6 +10,7 @@ const formatCost = require("./scripts/formatCost.js");
 
 const err404Msg = {
   getById: "This dough does not exist!",
+  getDeleteById: "Cannot delete — this dough does not exist!",
   getEditById: "Cannot edit — this dough does not exist!",
   postEditById: "Cannot edit — this dough does not exist!",
   getRestockById: "Cannot restock — this dough does not exist!",
@@ -97,6 +98,20 @@ exports.postEditById = [
     }
 
     res.redirect(data.redirectTo || "/doughs/" + id);
+  }),
+];
+
+exports.getDeleteById = [
+  idValidator(err404Msg.getDeleteById),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const doughData = await db.read.doughDelete(id);
+
+    if (doughData == null) {
+      throw new CustomNotFoundError(err404Msg.getDeleteById);
+    }
+
+    res.send("Delete" + JSON.stringify(doughData));
   }),
 ];
 
