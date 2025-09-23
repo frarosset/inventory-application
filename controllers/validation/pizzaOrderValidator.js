@@ -23,19 +23,18 @@ const pizzaValidator = [
     .withMessage(
       `The amount of servings to order must be a positive integer number.`
     )
+    .toInt()
     .custom((unitsToOrder, { req }) => {
-      const units = parseInt(unitsToOrder);
       const max = req.locals.itemData.availability;
 
-      if (units > max) {
+      if (unitsToOrder > max) {
         throw new Error(
           `There are only ${max} servings available with the selected dough.`
         );
       }
 
       return true;
-    })
-    .toInt(),
+    }),
   handleValidationErrorsFcn("pizzaOrder"),
 ];
 

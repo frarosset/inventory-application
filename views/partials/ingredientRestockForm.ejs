@@ -1,9 +1,12 @@
-<%_ const postUrl = `/ingredients/${data.id}/restock` _%>
+<%_ 
+const postUrl = `/ingredients/${data.id}/restock`;
+const maxUnitsToRestock = Math.max(0, parseInt(process.env.STOCK_MAX) - data.stock);
+_%>
 <form action=<%= postUrl %> method="POST">
   <p>This ingredient currently has <strong><%= data.stock %> units</strong> in stock.</p>
   <fieldset>
     <legend>Add to stock</legend>
-    <%- include("input.ejs", {type: "number", value: 100, name: "unitsToRestock", label: "Units", min: 1, step: 1, required: true}) _%>
+    <%- include("input.ejs", {type: "number", value: 100, name: "unitsToRestock", label: "Units", min: 1, max: maxUnitsToRestock, step: 1, required: true}) _%>
   </fieldset>
   <%- include("formActions.ejs", {fallbackUrl: "/ingredients",label: "RESTOCK"}) _%>
   </div>

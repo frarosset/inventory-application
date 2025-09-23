@@ -14,7 +14,21 @@ const ingredientValidator = [
     .withMessage(
       "The amount to add to stock must be a positive integer number."
     )
-    .toInt(),
+    .toInt()
+    .custom((unitsToRestock, { req }) => {
+      const maxUnitsToRestock = Math.max(
+        0,
+        parseInt(process.env.STOCK_MAX) - req.locals.itemData.stock
+      );
+
+      if (unitsToRestock > maxUnitsToRestock) {
+        throw new Error(
+          `The maximum amount you can add is ${maxUnitsToRestock} units, to avoid exceeding the maximum stock limit.`
+        );
+      }
+
+      return true;
+    }),
   handleValidationErrorsFcn("ingredientRestock"),
 ];
 
