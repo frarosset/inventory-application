@@ -18,10 +18,10 @@ const pizzaValidator = [
   body("unitsToOrder")
     .trim()
     .notEmpty()
-    .withMessage("The amount to add to stock cannot be empty.")
+    .withMessage("The amount of servings to order cannot be empty.")
     .isInt({ min: 1 })
     .withMessage(
-      `The amount to add to stock must be a positive integer number.`
+      `The amount of servings to order must be a positive integer number.`
     )
     .custom((unitsToOrder, { req }) => {
       const units = parseInt(unitsToOrder);

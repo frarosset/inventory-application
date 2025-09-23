@@ -99,6 +99,9 @@ const SQL_drop = `
   DROP TABLE IF EXISTS doughs;
 `;
 
+const maxPrice = parseFloat(process.env.PRICE_MAX);
+const maxStock = parseInt(process.env.STOCK_MAX);
+
 const SQL_create = `
   CREATE TABLE IF NOT EXISTS pizzas(
     ${defaultColumns}
@@ -110,14 +113,14 @@ const SQL_create = `
 
   CREATE TABLE IF NOT EXISTS ingredients (
     ${defaultColumns},
-    price NUMERIC NOT NULL DEFAULT 1,
-    stock INTEGER NOT NULL DEFAULT 100
+    price NUMERIC NOT NULL CHECK(price BETWEEN 0 AND ${maxPrice}) DEFAULT 1,
+    stock INTEGER NOT NULL CHECK(stock BETWEEN 0 AND ${maxStock}) DEFAULT 100
   );
   
   CREATE TABLE IF NOT EXISTS doughs (
     ${defaultColumns},
-    price NUMERIC NOT NULL DEFAULT 1,
-    stock INTEGER NOT NULL DEFAULT 100
+    price NUMERIC NOT NULL CHECK(price BETWEEN 0 AND ${maxPrice}) DEFAULT 1,
+    stock INTEGER NOT NULL CHECK(stock BETWEEN 0 AND ${maxStock}) DEFAULT 100
   );
 
   CREATE TABLE IF NOT EXISTS pizzas_categories (

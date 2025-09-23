@@ -4,11 +4,13 @@
   <fieldset>
     <%- include("input.ejs",{type: "text", name: "name", label: "Name", maxlength: process.env.NAME_MAX_LENGTH, required: true,  pattern: process.env.NAME_REGEX, title: process.env.NAME_REGEX_MSG}) _%>
     <%_ 
-        const dd = process.env.INGREDIENT_PRICE_DECIMAL_DIGITS;
-        const step = Number(`1e-${dd}`).toFixed(dd); ;
+        const dd = process.env.PRICE_DECIMAL_DIGITS;
+        const step = Number(`1e-${dd}`).toFixed(dd);
+        const maxPrice = parseFloat(process.env.PRICE_MAX);
+        const maxStock = parseInt(process.env.STOCK_MAX);
       _%>
-    <%- include("input.ejs",{type: "number", name: "price", label: `Price [${process.env.CURRENCY}]`, min: 0, step, required: true}) _%>
-    <%- include("input.ejs",{type: "number", name: "stock", label: "Stock", min: 0, step: 1, required: true}) _%>
+    <%- include("input.ejs",{type: "number", name: "price", label: `Price [${process.env.CURRENCY}]`, min: 0, step, max: maxPrice, required: true}) _%>
+    <%- include("input.ejs",{type: "number", name: "stock", label: "Stock", min: 0,  max: maxStock, step: 1, required: true}) _%>
     <%- include("textarea.ejs",{name: "notes", label: "Notes", maxlength: process.env.NOTES_MAX_LENGTH, pattern: process.env.NOTES_REGEX, title: process.env.NOTES_REGEX_MSG}) _%>
   </fieldset>
   <%- include("protectedFieldset.ejs") _%>

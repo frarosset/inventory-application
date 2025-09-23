@@ -4,6 +4,10 @@ const populateReqLocalsWithValidNames = require("./helpers/populateReqLocalsWith
 const populateRouteType = require("./helpers/populateRouteType.js");
 const handleValidationErrorsFcn = require("./helpers/handleValidationErrorsFcn.js");
 
+const priceDecimalDigits = process.env.PRICE_DECIMAL_DIGITS;
+const priceMax = parseFloat(process.env.PRICE_MAX);
+const stockMax = parseInt(process.env.STOCK_MAX);
+
 const ingredientValidator = [
   populateRouteType,
   populateReqLocalsWithValidNames,
@@ -53,20 +57,37 @@ const ingredientValidator = [
     .notEmpty()
     .withMessage("The ingredient price cannot be empty.")
     .isDecimal({
-      min: 0,
       force_decimal: false,
-      decimal_digits: `0,${process.env.INGREDIENT_PRICE_DECIMAL_DIGITS}`,
+      decimal_digits: `0,${priceDecimalDigits}`,
     })
     .withMessage(
-      `The ingredient price must be a non-negative decimal number with at most ${process.env.INGREDIENT_PRICE_DECIMAL_DIGITS} decimal digits.`
+      `The ingredient price must be a non-negative decimal number with at most ${priceDecimalDigits} decimal digits.`
     )
-    .toFloat(),
+    .toFloat()
+    .custom((price) => {
+      if (price < 0) {
+        throw new Error(`The ingredient price cannot be negative.`);
+      }
+      return true;
+    })
+    .custom((price) => {
+      if (price > priceMax) {
+        throw new Error(
+          `The ingredient price cannot be greater than ${priceMax} ${process.env.CURRENCY}.`
+        );
+      }
+      return true;
+    }),
   body("stock")
     .trim()
     .notEmpty()
     .withMessage("The ingredient stock cannot be empty.")
     .isInt({ min: 0 })
     .withMessage("The ingredient stock must be a non-negative integer number.")
+    .isInt({
+      max: stockMax,
+    })
+    .withMessage(`The ingredient stock cannot be greater than ${stockMax}.`)
     .toInt(),
   body("incompatibleCategories")
     .optional({ nullable: true })

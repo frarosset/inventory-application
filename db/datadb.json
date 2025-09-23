@@ -1,10 +1,20 @@
 {
   "doughs": [
     {
-      "name": "Classic",
+      "name": "Classico",
       "price": "5.0",
-      "stock": "1000",
+      "stock": "2000",
       "notes": "This is the base dough used for all pizzas. The pizza cost is calculated as the sum of this dough’s cost and the cost of each ingredient used, while its availability is determined by the lowest value between the dough's stock and that of the ingredients."
+    },
+    {
+      "name": "Integrale",
+      "price": "6.0",
+      "stock": "1000"
+    },
+    {
+      "name": "Gluten-free",
+      "price": "7.0",
+      "stock": "500"
     }
   ],
   "categories": [
