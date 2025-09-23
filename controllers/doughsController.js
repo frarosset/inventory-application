@@ -5,12 +5,14 @@ const doughRestockValidator = require("./validation/doughRestockValidator.js");
 const redirectToValidator = require("./validation/helpers/redirectToValidator.js");
 const idValidator = require("./validation/helpers/idValidator.js");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
+const CustomForbiddenError = require("../errors/CustomForbiddenError");
 const { matchedData } = require("express-validator");
 const formatCost = require("./scripts/formatCost.js");
 
 const err404Msg = {
   getById: "This dough does not exist!",
   getDeleteById: "Cannot delete — this dough does not exist!",
+  getDeleteByIdBaseForbidden: "Cannot delete the base dough!",
   getEditById: "Cannot edit — this dough does not exist!",
   postEditById: "Cannot edit — this dough does not exist!",
   getRestockById: "Cannot restock — this dough does not exist!",
@@ -105,6 +107,11 @@ exports.getDeleteById = [
   idValidator(err404Msg.getDeleteById),
   asyncHandler(async (req, res) => {
     const { id } = req.params;
+
+    if (id === Number(process.env.BASE_DOUGH_ID)) {
+      throw new CustomForbiddenError(err404Msg.getDeleteByIdBaseForbidden);
+    }
+
     const doughData = await db.read.doughDelete(id);
 
     if (doughData == null) {
