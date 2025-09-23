@@ -1,6 +1,7 @@
 const db = require("../db/queries.js");
 const asyncHandler = require("express-async-handler");
 const doughNewEditValidator = require("./validation/doughNewEditValidator.js");
+const doughDeleteValidator = require("./validation/doughDeleteValidator.js");
 const doughRestockValidator = require("./validation/doughRestockValidator.js");
 const redirectToValidator = require("./validation/helpers/redirectToValidator.js");
 const idValidator = require("./validation/helpers/idValidator.js");
@@ -12,6 +13,7 @@ const formatCost = require("./scripts/formatCost.js");
 const err404Msg = {
   getById: "This dough does not exist!",
   getDeleteById: "Cannot delete — this dough does not exist!",
+  postDeleteById: "Cannot delete — this dough does not exist!",
   getDeleteByIdBaseForbidden: "Cannot delete the base dough!",
   getEditById: "Cannot edit — this dough does not exist!",
   postEditById: "Cannot edit — this dough does not exist!",
@@ -122,6 +124,31 @@ exports.getDeleteById = [
       pageTitle: process.env.TITLE,
       data: doughData,
     });
+  }),
+];
+
+exports.postDeleteById = [
+  idValidator(err404Msg.postDeleteById),
+  doughDeleteValidator,
+  (req, res, next) => {
+    /* Exclude the route to the deleted item */
+    const validator = redirectToValidator(`^/doughs/${req.params.id}$`);
+    return validator(req, res, next);
+  },
+  asyncHandler(async (req, res) => {
+    const data = matchedData(req); // req.body + req.params.id
+
+    if (data.id === Number(process.env.BASE_DOUGH_ID)) {
+      throw new CustomForbiddenError(err404Msg.getDeleteByIdBaseForbidden);
+    }
+
+    const id = await db.delete.dough(data.id);
+
+    if (id == null) {
+      throw new CustomNotFoundError(err404Msg.postDeleteById);
+    }
+
+    res.redirect(data.redirectTo || "/doughs");
   }),
 ];
 

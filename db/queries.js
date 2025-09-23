@@ -588,7 +588,7 @@ exports.delete.dough = async (id) => {
 
   const results = await makeTransaction(queries);
 
-  return results[1]?.[0]?.id;
+  return results[0]?.[0]?.id;
 };
 
 // This gets only the essential info for all pizzas in the db
