@@ -266,13 +266,17 @@ updateBeforeCommitCallback.ingredient = (data) => async (client, results) => {
 
   const updatedPizzas = merge(delPizzas, insPizzas);
 
-  const ingredientPropsWereUpdated = hasChanged(results[0]?.[0], data, [
-    "name",
-    "is_protected",
-    "notes",
-    "price",
-    "stock",
-  ]);
+  // Updating the stock only does not count as an update to the item:
+  // the change to stock is applied, but updated_at is not edited
+  const ingredientPropsWereUpdatedExclStock = hasChanged(
+    results[0]?.[0],
+    data,
+    ["name", "is_protected", "notes", "price"]
+  );
+
+  const ingredientPropsWereUpdated =
+    ingredientPropsWereUpdatedExclStock ||
+    hasChanged(results[0]?.[0], data, ["stock"]);
 
   // updating a pizza's ingredients / categories just count as an update to the pizza,
   // but not to the ingredients / categories
@@ -317,8 +321,12 @@ updateBeforeCommitCallback.ingredient = (data) => async (client, results) => {
           is_protected = $2,
           notes = $3,
           price = $4,
-          stock = $5,
-          updated_at = CURRENT_TIMESTAMP
+          stock = $5
+          ${
+            ingredientPropsWereUpdatedExclStock
+              ? ", updated_at = CURRENT_TIMESTAMP"
+              : ""
+          }
           WHERE id = $6
           AND (name IS DISTINCT FROM $1 OR 
           is_protected IS DISTINCT FROM $2 OR
@@ -675,13 +683,18 @@ updateBeforeCommitCallback.dough = (data) => async (client, results) => {
     return [...results, false];
   }
 
-  const doughPropsWereUpdated = hasChanged(results[0]?.[0], data, [
+  // Updating the stock only does not count as an update to the item:
+  // the change to stock is applied, but updated_at is not edited
+  const doughPropsWereUpdatedExclStock = hasChanged(results[0]?.[0], data, [
     "name",
     "is_protected",
     "notes",
     "price",
-    "stock",
   ]);
+
+  const doughPropsWereUpdated =
+    doughPropsWereUpdatedExclStock ||
+    hasChanged(results[0]?.[0], data, ["stock"]);
 
   // console.log({
   //   doughPropsWereUpdated,
@@ -698,8 +711,12 @@ updateBeforeCommitCallback.dough = (data) => async (client, results) => {
           is_protected = $2,
           notes = $3,
           price = $4,
-          stock = $5,
-          updated_at = CURRENT_TIMESTAMP
+          stock = $5
+          ${
+            doughPropsWereUpdatedExclStock
+              ? ", updated_at = CURRENT_TIMESTAMP"
+              : ""
+          }
           WHERE id = $6
           AND (name IS DISTINCT FROM $1 OR 
           is_protected IS DISTINCT FROM $2 OR
