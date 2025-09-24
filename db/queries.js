@@ -659,6 +659,26 @@ exports.read.pizza = async (id) => {
   return rows[0];
 };
 
+exports.read.doughVariantsPerPizza = async (id) => {
+  const { rows } = await pool.query(
+    `SELECT 
+       d.id AS id,
+       d.name AS name,
+       d.stock AS dough_stock,
+       d.price AS dough_price,
+       COALESCE(ip.ingredients_total_cost, 0) + d.price AS pizza_cost,
+       LEAST(COALESCE(ip.ingredients_availability, d.stock), d.stock) AS pizza_availability
+     FROM doughs AS d
+     JOIN ingredients_per_pizza AS ip
+     ON ip.pizza_id = $1
+     ORDER BY id;
+    `,
+    [id]
+  );
+
+  return rows;
+};
+
 // This gets only the essential info to edit a pizza
 exports.read.pizzaEdit = async (id) => {
   const { rows } = await pool.query(

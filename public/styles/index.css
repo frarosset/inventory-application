@@ -528,6 +528,10 @@ main:has(.doughs-brief) a.button {
   width: 100%;
 }
 
+table.item-details th {
+  vertical-align: top;
+}
+
 table.fill-first-column thead th:first-of-type {
   width: 100%;
 }
@@ -563,6 +567,10 @@ table.with-actions tbody td[data-label="Actions"] > * {
 table td[data-label="Protected"] > *,
 table:not(:has(td[data-label="Protected"])) td[data-label="Actions"] > * {
   margin: 0 0.5em 0 2em;
+}
+
+table td[data-label="Dough Stock"] > * {
+  margin-left: 2em;
 }
 
 table.with-actions tbody td[data-label="Actions"] *:has(> .icon),
@@ -687,6 +695,10 @@ table.responsive.shrink.with-actions td[data-label="Protected"] > * {
 table.responsive.shrink.with-actions td[data-label="Actions"] > * {
   grid-column: 3;
   margin-right: auto;
+}
+
+table.responsive.shrink.with-actions td[data-label="Dough Stock"] > * {
+  margin-left: 0;
 }
 
 /* Styles specific to .two-columns and .three-columns tables */

@@ -13,6 +13,7 @@
     <h2>Pizzas</h2>
     <a class="button" href="/pizzas/new">New</a>
     <%- include("partials/pizzasBriefTable.ejs", {pizzasBriefData, sizeStr: "Items"}) %>
+    <p class="note-text">* The price is calculated as the sum of the base dough cost and the cost of each used ingredient. The (maximum) availability is determined by the lowest value between the dough's stock and that of the used ingredients. For dough-variant-specific pricing and availability, visit the pizza’s detail page.</p>
   </main>
 
   <%- include("partials/creditFooter.ejs") %>

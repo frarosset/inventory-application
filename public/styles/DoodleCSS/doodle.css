@@ -269,6 +269,7 @@ div[role="alert"] {
   padding: var(--th-padding);
   font-weight: bold;
   text-align: left;
+  vertical-align: bottom;
 }
 
 .doodle table td {

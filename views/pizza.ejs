@@ -21,11 +21,16 @@
     </div>
 
     <%- include("partials/pizzaDetailsTable.ejs", pizzaData) %>
-    <p class="note-text">* The price is calculated as the sum of the base dough cost and the cost of each used ingredient. The stock is determined by the lowest value between the dough's stock and that of the used ingredients.</p>
+    <p class="note-text">* The price is calculated as the sum of the base dough cost and the cost of each used ingredient. The (maximum) availability is determined by the lowest value between the dough's stock and that of the used ingredients.</p>
 
     <section>
       <h3>Ingredients Details</h3>
       <%- include("partials/ingredientsPerPizzaTable.ejs", pizzaData) %>
+    </section>
+
+    <section>
+      <h3>Dough Variants</h3>
+      <%- include("partials/doughVariantsPerPizzaTable.ejs", pizzaData) %>
     </section>
 
     <section>

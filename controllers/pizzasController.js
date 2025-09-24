@@ -39,6 +39,8 @@ exports.getById = [
       throw new CustomNotFoundError(err404Msg.getById);
     }
 
+    pizzaData.doughVariantsPerPizza = await db.read.doughVariantsPerPizza(id);
+
     res.render("pizza", {
       pageTitle: process.env.TITLE,
       pizzaData,
