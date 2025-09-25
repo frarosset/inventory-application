@@ -26,9 +26,17 @@ const handleValidationErrorsFcn = (ejsTemplate) => (req, res, next) => {
             name: req.locals.name,
             data: data,
           }
-        : req.locals?.isDelete || req.locals?.isRestock || req.locals?.isOrder
+        : req.locals?.isDelete || req.locals?.isRestock
         ? {
             data: { ...data, ...req.locals.itemData },
+          }
+        : req.locals?.isOrder
+        ? {
+            data: {
+              ...data,
+              ...req.locals.itemData,
+            },
+            doughId: req.body.doughId,
           }
         : req.locals?.isSearch
         ? { data }

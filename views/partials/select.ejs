@@ -1,0 +1,9 @@
+<label>
+  <span><%= label %></span>
+  <select name="<%= name %>">
+    <%_ for (const option of options) { _%>
+    <option value="<%= option.value %>" <%= option.disabled ? "disabled" : "" %> <%= option.selected ? "selected" : "" %>><%= option.label %></option>
+    <%_ } _%>
+  </select>
+  <%- include("inputValidationErrors.ejs") _%>
+</label>

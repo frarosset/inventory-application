@@ -25,6 +25,12 @@ const populateReqLocalsWithItemData = async (req, res, next) => {
 
   const itemData = await dbRead(req.params.id);
 
+  if (req.locals.isOrder) {
+    itemData.doughVariantsPerPizza = await db.read.doughVariantsPerPizza(
+      req.params.id
+    );
+  }
+
   req.locals.itemData = itemData;
 
   next();

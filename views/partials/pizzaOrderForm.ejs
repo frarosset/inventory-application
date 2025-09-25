@@ -1,21 +1,30 @@
 <%_ 
 const postUrl = `/pizzas/${data.id}/order`;
 const disabled = data.availability === 0;
+const baseDoughName = data.doughVariantsPerPizza.filter(d => Number(process.env.BASE_DOUGH_ID) === d.id)?.[0].name ?? "";
 _%>
 <form action=<%= postUrl %> method="POST">
   <%_ if(disabled) { _%>
   <div class="border" role="alert" aria-live="assertive">
-    <p>There are <strong><%= data.availability %> servings</strong> of this pizza available (with base dough). This may be due to missing ingredients. Try selecting a different dough.</p>
+    <p>There are <strong><%= data.availability %> servings</strong> of this pizza available (with base dough <%=baseDoughName%>). This may be due to missing ingredients. Try selecting a different dough.</p>
   </div>
   <%_ } else { _%>
-  <p>There are <strong><%= data.availability %> servings</strong> of this pizza available (with base dough).</p>
+  <p>There are <strong><%= data.availability %> servings</strong> of this pizza available (with base dough <%=baseDoughName%>).</p>
   <%_ } _%>
   <fieldset>
     <legend>Order</legend>
     <%- include("input.ejs", {type: "number", value: 1, name: "unitsToOrder", label: "Units", min: 1, max: data.availability, step: 1, required: true, disabled}) _%>
     <%# temporary doughId. Todo: select the dough from the available ones #%>
-    <input type="hidden" name="doughId" value=<%= process.env.BASE_DOUGH_ID %>>
+    <%_ const doughOptions = data.doughVariantsPerPizza.map(d => ({
+          label: `${d.name}${Number(process.env.BASE_DOUGH_ID) === d.id ? "*" : ""} | ${d.pizza_availability} available`, 
+          disabled: d.pizza_availability == 0, 
+          value: d.id,
+          selected: d.id === (locals.doughId ?? Number(process.env.BASE_DOUGH_ID))
+        }));
+    _%>
+    <%- include("select.ejs", {name: "doughId", label: "Dough", options: doughOptions }) _%>
   </fieldset>
+  <p class="note-text"><span class="default-font">*</span>Base dough</p>
   <%- include("formActions.ejs", {fallbackUrl: "/pizzas",label: "ORDER", disableSubmit: disabled }) _%>
   </div>
 </form>

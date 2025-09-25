@@ -8,13 +8,14 @@ const pizzaValidator = [
   populateRouteType,
   idValidator("The selected dough does not exist.", "doughId", "body"),
   populateReqLocalsWithItemData,
-  body("doughId").custom((doughId, { req }) => {
-    if (Number(process.env.BASE_DOUGH_ID) !== doughId) {
-      throw new Error(`The selected dough is invalid.`);
-    }
+  // Allow ordering a different dough
+  // body("doughId").custom((doughId, { req }) => {
+  //   if (Number(process.env.BASE_DOUGH_ID) !== doughId) {
+  //     throw new Error(`The selected dough is invalid.`);
+  //   }
 
-    return true;
-  }),
+  //   return true;
+  // }),
   body("unitsToOrder")
     .trim()
     .notEmpty()
