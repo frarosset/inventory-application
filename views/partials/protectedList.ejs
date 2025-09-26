@@ -4,7 +4,7 @@ let anyProtected = false;
 _%>
 <div>
   <%_ if (list.length > 0) { _%>
-  <ul>
+  <ul class="responsive-list">
     <%_ list.forEach((value,idx) => { _%>
     <li><%= value _%>
       <%_ if (protectedValuesSet.has(value)) { 

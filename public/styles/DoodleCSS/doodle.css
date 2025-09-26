@@ -100,14 +100,26 @@
 .doodle ul:has(input[type="checkbox"]),
 .doodle ul:has(input[type="radio"]) {
   list-style-type: none;
-  display: grid;
+  margin-left: 0;
   grid-template-columns: repeat(
     auto-fill,
     minmax(var(--checkbox-grid-label-size), 1fr)
   );
+}
+
+.doodle ul:has(input[type="checkbox"]),
+.doodle ul:has(input[type="radio"]),
+.doodle ul.responsive-list {
+  display: grid;
   align-items: start;
-  margin-left: 0;
   gap: 0 var(--checkbox-grid-label-gap);
+}
+
+.doodle ul.responsive-list {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(calc(var(--checkbox-grid-label-size) - 1em), 1fr)
+  );
 }
 
 .doodle ul li,
