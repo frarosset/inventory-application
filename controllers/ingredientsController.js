@@ -143,7 +143,7 @@ exports.postDeleteById = [
   asyncHandler(async (req, res) => {
     const data = matchedData(req); // req.body + req.params.id
 
-    const id = await db.delete.ingredient(data.id);
+    const id = await db.delete.ingredient(data.id, data.deleteAssociatedPizzas);
 
     if (id == null) {
       throw new CustomNotFoundError(err404Msg.postDeleteById);

@@ -514,7 +514,7 @@ exports.update.pizzaOrder = async (data) => {
   return { id, updated };
 };
 
-exports.delete.ingredient = async (id) => {
+exports.delete.ingredient = async (id, deleteAssociatedPizzas = false) => {
   // deleting a ingredient counts as an operation on the ingredient and the associated pizzas and categories,
   // hence you need to update the updated_at propery on them
 
@@ -539,13 +539,29 @@ exports.delete.ingredient = async (id) => {
     const updatedCategories = results[1].map((x) => x.category_id);
 
     if (updatedPizzas.length > 0) {
-      queries.push({
-        text: `
+      if (deleteAssociatedPizzas) {
+        queries.push({
+          text: "DELETE FROM pizzas_ingredients WHERE pizza_id = ANY($1::int[]);",
+          data: [updatedPizzas],
+        });
+        queries.push({
+          text: "DELETE FROM pizzas_categories WHERE pizza_id = ANY($1::int[]);",
+          data: [updatedPizzas],
+        });
+        queries.push({
+          text: `
+          DELETE FROM pizzas WHERE id = ANY($1::int[]);`,
+          data: [updatedPizzas],
+        });
+      } else {
+        queries.push({
+          text: `
           UPDATE pizzas 
           SET updated_at = CURRENT_TIMESTAMP
           WHERE id = ANY($1::int[]);`,
-        data: [updatedPizzas],
-      });
+          data: [updatedPizzas],
+        });
+      }
     }
 
     if (updatedCategories.length > 0) {

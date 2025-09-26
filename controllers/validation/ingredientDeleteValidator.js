@@ -30,6 +30,9 @@ const ingredientValidator = [
     }
     return true;
   }),
+  body("deleteAssociatedPizzas")
+    .customSanitizer((value) => value === "on")
+    .toBoolean(),
   handleValidationErrorsFcn("ingredientDelete"),
 ];
 
