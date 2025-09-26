@@ -752,7 +752,7 @@ exports.read.doughVariantsPerPizza = async (id) => {
        COALESCE(ip.ingredients_total_cost, 0) + d.price AS pizza_cost,
        LEAST(COALESCE(ip.ingredients_availability, d.stock), d.stock) AS pizza_availability
      FROM doughs AS d
-     JOIN ingredients_per_pizza AS ip
+     LEFT JOIN ingredients_per_pizza AS ip
      ON ip.pizza_id = $1
      ORDER BY id;
     `,
