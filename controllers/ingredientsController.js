@@ -76,12 +76,13 @@ exports.getEditById = [
   asyncHandler(async (req, res) => {
     const { id } = req.params;
     const ingredientData = await db.read.ingredientEdit(id);
-    const categories = await db.read.categoriesNames();
-    const pizzas = await db.read.pizzasNames();
 
     if (ingredientData == null) {
       throw new CustomNotFoundError(err404Msg.getEditById);
     }
+
+    const categories = await db.read.categoriesNames();
+    const pizzas = await db.read.pizzasNames();
 
     res.render("ingredientNewEdit", {
       pageTitle: process.env.TITLE,
