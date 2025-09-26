@@ -2,6 +2,7 @@ const pool = require("./pool.js");
 const {
   makeTransaction,
   queryTextGetIdFromName,
+  awaitQueries,
 } = require("./queriesHelpers.js");
 const { updateBeforeCommitCallback } = require("./queriesUpdateHelpers.js");
 
@@ -514,13 +515,16 @@ exports.update.pizzaOrder = async (data) => {
 };
 
 exports.delete.ingredient = async (id) => {
+  // deleting a ingredient counts as an operation on the ingredient and the associated pizzas and categories,
+  // hence you need to update the updated_at propery on them
+
   const queries = [
     {
-      text: "DELETE FROM pizzas_ingredients WHERE ingredient_id = $1;",
+      text: "DELETE FROM pizzas_ingredients WHERE ingredient_id = $1 RETURNING pizza_id;",
       data: [id],
     },
     {
-      text: "DELETE FROM ingredients_categories_rules WHERE ingredient_id = $1;",
+      text: "DELETE FROM ingredients_categories_rules WHERE ingredient_id = $1 RETURNING category_id;",
       data: [id],
     },
     {
@@ -528,20 +532,51 @@ exports.delete.ingredient = async (id) => {
       data: [id],
     },
   ];
+  const beforeCommitCallback = async (client, results) => {
+    const queries = [];
 
-  const results = await makeTransaction(queries);
+    const updatedPizzas = results[0].map((x) => x.pizza_id);
+    const updatedCategories = results[1].map((x) => x.category_id);
+
+    if (updatedPizzas.length > 0) {
+      queries.push({
+        text: `
+          UPDATE pizzas 
+          SET updated_at = CURRENT_TIMESTAMP
+          WHERE id = ANY($1::int[]);`,
+        data: [updatedPizzas],
+      });
+    }
+
+    if (updatedCategories.length > 0) {
+      queries.push({
+        text: `
+          UPDATE categories 
+          SET updated_at = CURRENT_TIMESTAMP
+          WHERE id = ANY($1::int[]);`,
+        data: [updatedCategories],
+      });
+    }
+
+    await awaitQueries(client, queries, results); // results is updated by reference
+  };
+
+  const results = await makeTransaction(queries, beforeCommitCallback);
 
   return results[2]?.[0]?.id;
 };
 
 exports.delete.category = async (id) => {
+  // deleting a category counts as an operation on the category and the associated pizzas and ingredients,
+  // hence you need to update the updated_at propery on them
+
   const queries = [
     {
-      text: "DELETE FROM pizzas_categories WHERE category_id = $1;",
+      text: "DELETE FROM pizzas_categories WHERE category_id = $1 RETURNING pizza_id;",
       data: [id],
     },
     {
-      text: "DELETE FROM ingredients_categories_rules WHERE category_id = $1;",
+      text: "DELETE FROM ingredients_categories_rules WHERE category_id = $1 RETURNING ingredient_id;",
       data: [id],
     },
     {
@@ -550,12 +585,44 @@ exports.delete.category = async (id) => {
     },
   ];
 
-  const results = await makeTransaction(queries);
+  const beforeCommitCallback = async (client, results) => {
+    const queries = [];
+
+    const updatedPizzas = results[0].map((x) => x.pizza_id);
+    const updatedIngredients = results[1].map((x) => x.ingredient_id);
+
+    if (updatedPizzas.length > 0) {
+      queries.push({
+        text: `
+          UPDATE pizzas 
+          SET updated_at = CURRENT_TIMESTAMP
+          WHERE id = ANY($1::int[]);`,
+        data: [updatedPizzas],
+      });
+    }
+
+    if (updatedIngredients.length > 0) {
+      queries.push({
+        text: `
+          UPDATE ingredients 
+          SET updated_at = CURRENT_TIMESTAMP
+          WHERE id = ANY($1::int[]);`,
+        data: [updatedIngredients],
+      });
+    }
+
+    await awaitQueries(client, queries, results); // results is updated by reference
+  };
+
+  const results = await makeTransaction(queries, beforeCommitCallback);
 
   return results[2]?.[0]?.id;
 };
 
 exports.delete.pizza = async (id) => {
+  // deleting a pizza counts as an operation on the pizza only: it does not
+  // need to update the updated_at propery on ingredients or categories
+
   const queries = [
     {
       text: "DELETE FROM pizzas_ingredients WHERE pizza_id = $1;",
