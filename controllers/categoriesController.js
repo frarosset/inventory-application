@@ -120,9 +120,12 @@ exports.getDeleteById = [
       throw new CustomNotFoundError(err404Msg.getDeleteById);
     }
 
+    const pizzas = await db.read.pizzasNames();
+
     res.render("categoryDelete", {
       pageTitle: process.env.TITLE,
       data: categoryData,
+      protectedPizzas: pizzas.filter((p) => p.is_protected).map((p) => p.name),
     });
   }),
 ];

@@ -1,0 +1,27 @@
+<%_
+const protectedValuesSet = new Set(protectedValues);
+let anyProtected = false;
+_%>
+<div>
+  <%_ if (list.length > 0) { _%>
+  <ul>
+    <%_ list.forEach((value,idx) => { _%>
+    <li><%= value _%>
+      <%_ if (protectedValuesSet.has(value)) { 
+        anyProtected = true;
+      _%>
+      <%- include('isProtectedSymbol.ejs', {is_protected: true}) %>
+      <%_ } _%>
+    </li>
+    <%_ }) _%>
+  </ul>
+  <%_ } else { _%>
+  <p>No items</p>
+  <%_ } _%>
+</div>
+<%_ if (anyProtected) {  _%>
+<div id="passwordCheckboxListDiv">
+  <p><strong>Some protected items are included.</strong> Admin password is required to apply changes to them.</p>
+  <%- include("input.ejs",{type: "password", name: "passwordList", label: "Password", maxlength: process.env.PWD_MAX_LENGTH}) _%>
+</div>
+<%_ } _%>

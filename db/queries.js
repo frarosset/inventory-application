@@ -1001,8 +1001,11 @@ exports.read.categoryDelete = async (id) => {
       SELECT 
         name,
         id,
-        is_protected
-      FROM categories
+        is_protected,
+        COALESCE(pizzas,'[]'::json) AS pizzas
+      FROM categories AS c
+      LEFT JOIN pizzas_names_per_category AS pc
+      ON c.id = pc.category_id
       WHERE id=$1;
     `,
     [id]
