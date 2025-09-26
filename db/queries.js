@@ -856,8 +856,11 @@ exports.read.ingredientDelete = async (id) => {
       SELECT 
         name,
         id,
-        is_protected
-      FROM ingredients
+        is_protected,
+        COALESCE(pizzas,'[]'::json) AS pizzas
+      FROM ingredients AS i
+      LEFT JOIN pizzas_names_per_ingredient AS pi
+      ON i.id = pi.ingredient_id
       WHERE id=$1;
     `,
     [id]

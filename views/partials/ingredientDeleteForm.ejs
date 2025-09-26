@@ -1,7 +1,12 @@
 <%_ const postUrl = `/ingredients/${data.id}/delete` _%>
 <form action=<%= postUrl %> method="POST">
   <p>Are you sure you want to delete this ingredient?</p>
+  <p>It will be removed from associated pizzas, and any category rule tied to it will be deleted, too.</p>
   <%- include("protectedItem.ejs") _%>
+  <fieldset>
+    <legend>Pizzas using this ingredient</legend>
+    <%- include("protectedList.ejs", {list: data.pizzas, protectedValues: protectedPizzas}) _%>
+  </fieldset>
   <%- include("formActions.ejs", {fallbackUrl: "/ingredients",label: "DELETE"}) _%>
   </div>
 </form>
