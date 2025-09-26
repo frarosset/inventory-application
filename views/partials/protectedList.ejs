@@ -22,6 +22,6 @@ _%>
 <%_ if (anyProtected) {  _%>
 <div id="passwordCheckboxListDiv">
   <p><strong>Some protected items are included.</strong> Admin password is required to apply changes to them.</p>
-  <%- include("input.ejs",{type: "password", name: "passwordList", label: "Password", maxlength: process.env.PWD_MAX_LENGTH}) _%>
+  <%- include("input.ejs",{type: "password", name: "passwordList", label: "Password", maxlength: process.env.PWD_MAX_LENGTH, required: true}) _%>
 </div>
 <%_ } _%>

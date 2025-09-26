@@ -857,7 +857,8 @@ exports.read.ingredientDelete = async (id) => {
         name,
         id,
         is_protected,
-        COALESCE(pizzas,'[]'::json) AS pizzas
+        COALESCE(pizzas,'[]'::json) AS pizzas,
+        COALESCE(protected_pizzas,'[]'::json) AS protected_pizzas
       FROM ingredients AS i
       LEFT JOIN pizzas_names_per_ingredient AS pi
       ON i.id = pi.ingredient_id
@@ -1005,7 +1006,8 @@ exports.read.categoryDelete = async (id) => {
         name,
         id,
         is_protected,
-        COALESCE(pizzas,'[]'::json) AS pizzas
+        COALESCE(pizzas,'[]'::json) AS pizzas,
+        COALESCE(protected_pizzas,'[]'::json) AS protected_pizzas
       FROM categories AS c
       LEFT JOIN pizzas_names_per_category AS pc
       ON c.id = pc.category_id

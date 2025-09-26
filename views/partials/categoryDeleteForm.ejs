@@ -6,7 +6,7 @@
   <%- include("protectedItem.ejs") _%>
   <fieldset>
     <legend>Pizzas manually tagged with this category (user-defined)</legend>
-    <%- include("protectedList.ejs", {list: data.pizzas, protectedValues: protectedPizzas}) _%>
+    <%- include("protectedList.ejs", {list: data.pizzas, protectedValues: data.protected_pizzas}) _%>
   </fieldset>
   <%- include("formActions.ejs", {fallbackUrl: "/categories",label: "DELETE"}) _%>
 </form>

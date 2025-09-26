@@ -409,11 +409,14 @@ const SQL_create = `
   SELECT 
     pi.ingredient_id,
     COALESCE(
-      JSON_AGG(p.name ORDER BY pi.pizza_id), '[]'::json)
-    AS pizzas
+      JSON_AGG(p.name ORDER BY pi.pizza_id), '[]'::json) AS pizzas,
+    COALESCE(
+      JSON_AGG(p.name ORDER BY p.id) FILTER (WHERE p.is_protected),'[]'::json) AS protected_pizzas
   FROM pizzas_ingredients AS pi
   LEFT JOIN pizzas AS p
   ON pi.pizza_id = p.id
+  LEFT JOIN ingredients AS i
+  ON pi.ingredient_id = i.id
   GROUP BY ingredient_id
   ORDER BY ingredient_id;
 
@@ -479,12 +482,14 @@ const SQL_create = `
     SELECT 
       category_id, 
       COALESCE(
-        JSON_AGG(p.name ORDER BY p.id
-        ), '[]'::json)
-      AS pizzas
+      JSON_AGG(p.name ORDER BY p.id), '[]'::json) AS pizzas,
+      COALESCE(
+      JSON_AGG(p.name ORDER BY p.id) FILTER (WHERE p.is_protected),'[]'::json) AS protected_pizzas
     FROM pizzas_categories AS pc
     LEFT JOIN pizzas AS p
     ON pc.pizza_id = p.id
+    LEFT JOIN categories AS c
+    ON pc.category_id = c.id
     GROUP BY category_id
     ORDER BY category_id;
 `;
