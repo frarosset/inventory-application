@@ -26,7 +26,9 @@ const pizzaValidator = [
     )
     .toInt()
     .custom((unitsToOrder, { req }) => {
-      const maxAvailability = req.locals.itemData.availability;
+      const maxAvailability = req.locals.itemData.doughVariantsPerPizza.find(
+        (d) => d.id === req.body.doughId
+      ).pizza_availability;
 
       if (maxAvailability === 0) {
         throw new Error(

@@ -1,16 +1,17 @@
 <%_ 
 const postUrl = `/pizzas/${data.id}/order`;
 const disabled = data.availability === 0;
-const baseDoughName = data.doughVariantsPerPizza.filter(d => Number(process.env.BASE_DOUGH_ID) === d.id)?.[0].name ?? "";
+const doughData = data.doughVariantsPerPizza.map(d => ({id: d.id, name: d.name, pizzaAvailability: d.pizza_availability, isBase: Number(process.env.BASE_DOUGH_ID) === d.id}));
+const doughDataObj = doughData.reduce((obj,d) => {obj[d.id] = d; return obj;}, {});
+const baseDoughName = doughData.filter(d => d.isBase)?.[0]?.name ?? "";
 _%>
 <form action=<%= postUrl %> method="POST">
-  <%_ if(disabled) { _%>
-  <div class="border" role="alert" aria-live="assertive">
-    <p>There are <strong><%= data.availability %> servings</strong> of this pizza available (with base dough <%=baseDoughName%>). This may be due to missing ingredients. Try selecting a different dough.</p>
+
+  <div id="zero-availability-msg" class="border" role="alert" aria-live="assertive">
+    <p>There are <strong>0 servings</strong> of this pizza available with dough <span><%=baseDoughName%>*</span id="dough-name-unavailable">. This may be due to unavailable ingredients or dough. Try selecting a different dough.</p>
   </div>
-  <%_ } else { _%>
-  <p>There are <strong><%= data.availability %> servings</strong> of this pizza available (with base dough <%=baseDoughName%>).</p>
-  <%_ } _%>
+  <p id="availability-msg">There are <strong><span id="pizza-availability"><%= data.availability %></span> servings</strong> of this pizza available with dough <span id="dough-name-available"><%=baseDoughName%>*</span>.</p>
+
   <fieldset>
     <legend>Order</legend>
     <%- include("input.ejs", {type: "number", value: 1, name: "unitsToOrder", label: "Units", min: 1, max: data.availability, step: 1, required: true, disabled}) _%>
@@ -27,4 +28,51 @@ _%>
   <p class="note-text"><span class="default-font">*</span>Base dough</p>
   <%- include("formActions.ejs", {fallbackUrl: "/pizzas",label: "ORDER", disableSubmit: disabled }) _%>
   </div>
+
+  <script>
+    (() => {
+      const doughData = JSON.parse('<%- JSON.stringify(doughDataObj) _%>');
+
+      const unitsToOrderInput = document.querySelector('input[name="unitsToOrder"]');
+      const doughIdSelect = document.querySelector('select[name="doughId"]');
+      const availabilityMsg = document.querySelector('#availability-msg');
+      const zeroAvailabilityMsg = document.querySelector('#zero-availability-msg');
+      const submitBtn = document.querySelector('button[type="submit"]');
+      const pizzaAvailabilityP = document.querySelector('span#pizza-availability');
+      const doughNameAvailable = document.querySelector('span#dough-name-available');
+      const doughNameUnavailable = document.querySelector('span#dough-name-unavailable');
+
+
+      const setData = () => {
+        const doughId = doughIdSelect.value;
+
+        const pizzaAvailability = doughData[doughId].pizzaAvailability;
+        const isPizzaAvailable = pizzaAvailability > 0;
+        const doughName = `${doughData[doughId].name}${doughData[doughId].isBase ? "*" : ""}`;
+
+        unitsToOrderInput.setAttribute("max", pizzaAvailability);
+        unitsToOrderInput.setAttribute("max", 100000000000);
+
+        if (isPizzaAvailable) {
+          submitBtn.removeAttribute("disabled");
+          unitsToOrderInput.removeAttribute("disabled");
+          availabilityMsg.style.display = "block";
+          zeroAvailabilityMsg.style.display = "none";
+          pizzaAvailabilityP.textContent = pizzaAvailability;
+          doughNameAvailable.textContent = doughName;
+        } else {
+          submitBtn.setAttribute("disabled", true);
+          unitsToOrderInput.setAttribute("disabled", true);
+          availabilityMsg.style.display = "none";
+          zeroAvailabilityMsg.style.display = "block";
+          doughNameUnavailable.textContent = doughName;
+        }
+
+
+      }
+
+      doughIdSelect.onchange = setData;
+      window.addEventListener('pageshow', setData)
+    })();
+  </script>
 </form>
