@@ -1,26 +1,29 @@
-<table class="item-details">
-  <tbody>
-    <tr>
-      <th scope="row">Ingredients</th>
-      <td><%- include("itemsList.ejs", {itemType: 'ingredientLink', items: ingredients}) %></td>
-    </tr>
-    <tr>
-      <th scope="row">Categories</th>
-      <td><%- include("itemsList.ejs", {itemType: 'categoryLink',items: actual_categories}) %></td>
-    </tr>
-    <tr>
-      <th scope="row">Availability</th>
-      <td><%= availability %></td>
-    </tr>
-    <tr>
-      <th scope="row">Price</th>
-      <td><%= formatCost(cost) %></td>
-    </tr>
-    <%_ if(notes){ _%>
-    <tr>
-      <th scope="row">Notes</th>
-      <td><%= notes %></td>
-    </tr>
-    <%_ } _%>
-  </tbody>
-</table>
+<div>
+  <table class="item-details">
+    <tbody>
+      <tr>
+        <th scope="row">Ingredients</th>
+        <td><%- include("itemsList.ejs", {itemType: 'ingredientLink', items: ingredients}) %></td>
+      </tr>
+      <tr>
+        <th scope="row">Categories</th>
+        <td><%- include("itemsList.ejs", {itemType: 'categoryLink',items: actual_categories}) %></td>
+      </tr>
+      <tr>
+        <th scope="row">Availability</th>
+        <td><%= availability %></td>
+      </tr>
+      <tr>
+        <th scope="row">Price</th>
+        <td><%= formatCost(cost) %></td>
+      </tr>
+      <%_ if(notes){ _%>
+      <tr>
+        <th scope="row">Notes</th>
+        <td><%= notes %></td>
+      </tr>
+      <%_ } _%>
+    </tbody>
+  </table>
+  <%- include("pizzaNote.ejs", {detailsBelow: true, isBaseDough: true, includeCategoryNotes: true}) %>
+</div>

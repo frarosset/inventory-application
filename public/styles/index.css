@@ -801,10 +801,21 @@ table.responsive.shrink li:not(:last-child)::after {
   width: 100%;
   text-align: left;
   text-indent: -1em;
-  padding-left: 2em;
+  padding: 0 2em;
   text-wrap: pretty;
   font-size: 0.8em;
   opacity: 0.8;
+  margin-top: 1em;
+}
+
+.note-text.no-margin-top {
+  margin-top: 0em;
+}
+
+fieldset .note-text {
+  margin-top: 0;
+  text-indent: -0.5em;
+  padding: 0 0.5em 0 1em;
 }
 
 .default-font {

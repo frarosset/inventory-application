@@ -30,7 +30,7 @@
     </tbody>
   </table>
   <%_ } _%>
+  <%_ if (hasBase) { _%>
+  <%- include("baseDoughNote.ejs") _%>
+  <%_ } _%>
 </div>
-<%_ if (hasBase) { _%>
-<p class="note-text"><span class="default-font">*</span>Base dough</p>
-<%_ } _%>

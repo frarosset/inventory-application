@@ -1,33 +1,35 @@
-<%_ let hasBase = false; _%>
-<%_ if (doughVariantsPerPizza?.length > 0) { _%>
-<table class="fill-first-column  with-actions responsive">
-  <thead>
-    <tr>
-      <th>Dough</th>
-      <th class="numeric-data">Pizza Avail.</th>
-      <th class="numeric-data">Pizza Price</th>
-      <th class="numeric-data">Dough Stock</th>
-      <th class="numeric-data">Dough Price</th>
-      <th aria-label="Actions"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <%_ doughVariantsPerPizza.forEach(dough => {
+<div>
+  <%_ let hasBase = false; _%>
+  <%_ if (doughVariantsPerPizza?.length > 0) { _%>
+  <table class="fill-first-column  with-actions responsive">
+    <thead>
+      <tr>
+        <th>Dough</th>
+        <th class="numeric-data">Pizza Avail.</th>
+        <th class="numeric-data">Pizza Price</th>
+        <th class="numeric-data">Dough Stock</th>
+        <th class="numeric-data">Dough Price</th>
+        <th aria-label="Actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%_ doughVariantsPerPizza.forEach(dough => {
           const isBase = dough.id == Number(process.env.BASE_DOUGH_ID);
           if (isBase) hasBase = true; 
     _%>
-    <tr>
-      <td data-label="Dough"><%- include("doughLink.ejs", {...dough, highlightBase: true}) %></td>
-      <td class="numeric-data" data-label="Pizza Avail."><span><%=dough.pizza_availability %></span></td>
-      <td class="numeric-data" data-label="Pizza Price"><span><%= formatCost(dough.pizza_cost) %></span></td>
-      <td class="numeric-data" data-label="Dough Stock"><span><%=dough.dough_stock %></span></td>
-      <td class="numeric-data" data-label="Dough Price"><span><%= formatCost(dough.dough_price) %></span></td>
-      <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/doughs", id: dough.id, showRestock: true,  showEdit: false,  showDelete: false}) %></td>
-    </tr>
-    <%_ }) _%>
-  </tbody>
-</table>
-<%_ } _%>
-<%_ if (hasBase) { _%>
-<p class="note-text"><span class="default-font">*</span>Base dough</p>
-<%_ } _%>
+      <tr>
+        <td data-label="Dough"><%- include("doughLink.ejs", {...dough, highlightBase: true}) %></td>
+        <td class="numeric-data" data-label="Pizza Avail."><span><%=dough.pizza_availability %></span></td>
+        <td class="numeric-data" data-label="Pizza Price"><span><%= formatCost(dough.pizza_cost) %></span></td>
+        <td class="numeric-data" data-label="Dough Stock"><span><%=dough.dough_stock %></span></td>
+        <td class="numeric-data" data-label="Dough Price"><span><%= formatCost(dough.dough_price) %></span></td>
+        <td data-label="Actions"><%- include("itemActions.ejs", {baseRoute: "/doughs", id: dough.id, showRestock: true,  showEdit: false,  showDelete: false}) %></td>
+      </tr>
+      <%_ }) _%>
+    </tbody>
+  </table>
+  <%_ } _%>
+  <%_ if (hasBase) { _%>
+  <%- include("baseDoughNote.ejs") _%>
+  <%_ } _%>
+</div>

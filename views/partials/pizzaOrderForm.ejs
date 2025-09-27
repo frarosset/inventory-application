@@ -25,7 +25,7 @@ _%>
     _%>
     <%- include("select.ejs", {name: "doughId", label: "Dough", options: doughOptions }) _%>
   </fieldset>
-  <p class="note-text"><span class="default-font">*</span>Base dough</p>
+  <%- include("baseDoughNote.ejs") _%>
   <%- include("formActions.ejs", {fallbackUrl: "/pizzas",label: "ORDER", disableSubmit: disabled }) _%>
   </div>
 

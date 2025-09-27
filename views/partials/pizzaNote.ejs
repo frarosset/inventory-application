@@ -1,0 +1,19 @@
+<%_ 
+    const doughDetailsStr =
+        locals.detailsBelow ?? false
+        ? "Dough-specific price and availability are shown below."
+        : locals.detailsInPizzaPage ?? false
+        ? "Dough-specific price and availability are shown on the pizza’s details page."
+        : "";
+
+    const categoriesDetailsStr =
+        locals.detailsBelow ?? false
+        ? "Categories details are shown below."
+        : locals.detailsInPizzaPage ?? false
+        ? "Categories details are shown on the pizza’s details page."
+        : "";
+_%>
+<p class="note-text">* The price is calculated as the sum of the <i><%= locals.isBaseDough ?? true ? "base dough" : "dough"%></i> cost and the cost of each used ingredient. The (maximum) availability is determined by the lowest value between the dough's stock and that of the used ingredients. <%= doughDetailsStr %></p>
+<%_ if(locals.includeCategoryNotes ?? false) { _%>
+<p class="note-text">* The categories are derived from the union of the user-defined categories and those enforced by its ingredients, excluding any that are incompatible with them. <%= categoriesDetailsStr %></p>
+<%_ } _%>
