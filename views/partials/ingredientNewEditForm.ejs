@@ -13,7 +13,6 @@
     <%- include("input.ejs",{type: "number", name: "stock", label: "Stock", min: 0, max: maxStock, step: 1, required: true}) _%>
     <%- include("textarea.ejs",{name: "notes", label: "Notes", maxlength: process.env.NOTES_MAX_LENGTH, pattern: process.env.NOTES_REGEX, title: process.env.NOTES_REGEX_MSG}) _%>
   </fieldset>
-  <%- include("protectedFieldset.ejs") _%>
   <fieldset>
     <legend>Categories Rules</legend>
     <p>
@@ -29,6 +28,7 @@
     <legend>Add to these Pizzas</legend>
     <%- include("protectedCheckboxInputList.ejs", {name: "pizzas", list: pizzas, protectedValues: protectedPizzas}) _%>
   </fieldset>
+  <%- include("protectedFieldset.ejs") _%>
   <%- include("formActions.ejs", {fallbackUrl: "/ingredients", label: locals.edit ? "UPDATE" : "CREATE"}) _%>
 </form>
 <%- include("multiStateCheckboxScript.ejs") _%>

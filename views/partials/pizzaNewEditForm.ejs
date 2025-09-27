@@ -6,7 +6,6 @@
     <%- include("textarea.ejs",{name: "notes", label: "Notes", maxlength: process.env.NOTES_MAX_LENGTH, pattern: process.env.NOTES_REGEX, title: process.env.NOTES_REGEX_MSG}) _%>
     <%- include("pizzaNote.ejs", {isBaseDough: false}) %>
   </fieldset>
-  <%- include("protectedFieldset.ejs") _%>
   <fieldset>
     <legend>Ingredients</legend>
     <%- include("checkboxInputList.ejs", {name: "ingredients", list: ingredients, data: locals.data}) _%>
@@ -16,5 +15,6 @@
     <p>The final categories include those enforced by the selected ingredients and exclude any that are incompatible with them.</p>
     <%- include("checkboxInputList.ejs", {name: "categories", list: categories, data: locals.data}) _%>
   </fieldset>
+  <%- include("protectedFieldset.ejs") _%>
   <%- include("formActions.ejs", {fallbackUrl: "/pizzas", label: locals.edit ? "UPDATE" : "CREATE"}) _%>
 </form>
