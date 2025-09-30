@@ -22,6 +22,7 @@ const handleValidationErrorsFcn = (ejsTemplate) => (req, res, next) => {
             categories: req.locals.allCategories,
             pizzas: req.locals.allPizzas,
             protectedPizzas: req.locals.allProtectedPizzas,
+            prevProtectedPizzas: req.locals.prevProtectedPizzas || [],
             edit: req.locals.isEdit,
             name: req.locals.name,
             data: data,

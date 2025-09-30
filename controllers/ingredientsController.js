@@ -83,12 +83,14 @@ exports.getEditById = [
 
     const categories = await db.read.categoriesNames();
     const pizzas = await db.read.pizzasNames();
+    const prevProtectedPizzas = await db.read.ingredientProtectedPizzas(id);
 
     res.render("ingredientNewEdit", {
       pageTitle: process.env.TITLE,
       categories: categories.map((i) => i.name),
       pizzas: pizzas.map((i) => i.name),
       protectedPizzas: pizzas.filter((p) => p.is_protected).map((p) => p.name),
+      prevProtectedPizzas: prevProtectedPizzas,
       data: ingredientData,
       edit: true,
     });

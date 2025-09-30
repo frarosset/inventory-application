@@ -18,7 +18,7 @@
   </fieldset>
   <fieldset>
     <legend>Apply to these Pizzas</legend>
-    <%- include("protectedCheckboxInputList.ejs", {name: "pizzas", list: pizzas, protectedValues: protectedPizzas}) _%>
+    <%- include("protectedCheckboxInputList.ejs", {name: "pizzas", list: pizzas, protectedValues: protectedPizzas, prevProtectedSelectedValues: locals.prevProtectedPizzas}) _%>
   </fieldset>
   <%- include("protectedFieldset.ejs") _%>
   <%- include("formActions.ejs", {fallbackUrl: "/categories", label: locals.edit ? "UPDATE" : "CREATE"}) _%>

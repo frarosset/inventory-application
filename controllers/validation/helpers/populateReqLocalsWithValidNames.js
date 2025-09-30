@@ -32,6 +32,17 @@ const populateReqLocalsWithValidNames = async (req, res, next) => {
       ? "allCategoriesIdNameMap"
       : null;
     req.locals.name = req.locals[nameMapStr].get(req.params.id);
+
+    const prevProtectedPizzasQuery = req.locals.isIngredients
+      ? "ingredientProtectedPizzas"
+      : req.locals.isCategories
+      ? "categoryProtectedPizzas"
+      : null;
+    if (prevProtectedPizzasQuery) {
+      req.locals.prevProtectedPizzas = await db.read[prevProtectedPizzasQuery](
+        req.params.id
+      );
+    }
   }
 
   next();

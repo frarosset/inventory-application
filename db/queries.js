@@ -932,6 +932,20 @@ exports.read.ingredientEdit = async (id) => {
   return rows[0];
 };
 
+exports.read.ingredientProtectedPizzas = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        COALESCE(protected_pizzas,'[]'::json) AS protected_pizzas
+      FROM pizzas_names_per_ingredient
+      WHERE ingredient_id=$1;
+    `,
+    [id]
+  );
+
+  return rows?.[0]?.protected_pizzas ?? [];
+};
+
 // This gets only the essential info to delete a ingredient
 exports.read.ingredientDelete = async (id) => {
   const { rows } = await pool.query(
@@ -1079,6 +1093,20 @@ exports.read.categoryEdit = async (id) => {
   );
 
   return rows[0];
+};
+
+exports.read.categoryProtectedPizzas = async (id) => {
+  const { rows } = await pool.query(
+    `
+      SELECT 
+        COALESCE(protected_pizzas,'[]'::json) AS protected_pizzas
+      FROM pizzas_names_per_category
+      WHERE category_id=$1;
+    `,
+    [id]
+  );
+
+  return rows?.[0]?.protected_pizzas ?? [];
 };
 
 // This gets only the essential info to delete a category

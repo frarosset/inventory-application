@@ -1,7 +1,13 @@
 <%- include("checkboxInputList.ejs") _%>
 <div id="passwordCheckboxListDiv">
-  <p><strong>Some protected items have been selected.</strong> Admin password is required to apply changes to them.</p>
-  <%- include("input.ejs",{type: "password", name: "passwordCheckboxList", label: "Password", maxlength: process.env.PWD_MAX_LENGTH}) _%>
+  <%_ 
+    const prevProtectedSelected = locals.prevProtectedSelectedValues ?? [];
+    const isEdit = locals.edit ?? false;
+
+    const inputParams = {type: "password", name: "passwordCheckboxList", label: "Password", maxlength: process.env.PWD_MAX_LENGTH};
+  _%>
+  <p><strong>Some protected items have been <span class="edit-type">selected</span>.</strong> Admin password is required to apply changes to them.</p>
+  <%- include("input.ejs",inputParams) _%>
 </div>
 <script>
   (() => {
@@ -10,17 +16,69 @@
     const passwordCheckboxListDiv = document.querySelector("#passwordCheckboxListDiv");
     const passwordCheckboxList = passwordCheckboxListDiv.querySelector('input[type="password"]');
 
+    <%_ if (isEdit) { _%>
+
+    const editTypeSpan = document.querySelector("span.edit-type");
+    const prevProtectedSelected = <%- JSON.stringify(prevProtectedSelected)_%>;
+    const prevProtectedSelectedSet = new Set(prevProtectedSelected);
+
+    function hasProtectedSelectedEdited() {
+      const protectedSelectedInput = checkboxInputs.filter(input => input.checked && protectedValuesSet.has(input.value));
+      const protectedSelected = protectedSelectedInput.map(input => input.value);
+      const protectedSelectedSet = new Set(protectedSelected);
+
+      const wereUnselected = prevProtectedSelected.filter(x => !protectedSelectedSet.has(x));
+      const wereSelected = protectedSelected.filter(x => !prevProtectedSelectedSet.has(x));
+
+      const anyWereUnselected = wereUnselected.length > 0;
+      const anyWereSelected = wereSelected.length > 0;
+
+      return {
+        askPassword: anyWereUnselected || anyWereSelected,
+        anyWereUnselected,
+        anyWereSelected,
+        wereUnselected,
+        wereSelected
+      };
+    }
+
+    <%_ } else { _%>
+
     function hasProtectedSelected() {
       const selected = checkboxInputs.filter(input => input.checked);
       return selected.some(input => protectedValuesSet.has(input.value));
     }
 
+    <%_ } _%>
+
     const setPasswordCheckboxListConstraints = () => {
-      if (hasProtectedSelected()) {
+      <%_ if (isEdit) { _%>
+
+      const {
+        askPassword,
+        anyWereUnselected,
+        anyWereSelected,
+        wereUnselected,
+        wereSelected
+      } = hasProtectedSelectedEdited();
+
+      <%_ } else { _%>
+      const askPassword = hasProtectedSelected();
+      <%_ } _%>
+
+      if (askPassword) {
         passwordCheckboxList.required = true;
         passwordCheckboxList.disabled = false;
         // passwordCheckboxListDiv.style.visibility = "visible";
         passwordCheckboxListDiv.style.display = "block";
+
+        <%_ if (isEdit) { _%>
+
+        const editTypeStr = anyWereUnselected ? (anyWereSelected ? "edited" : "unselected") : (anyWereSelected ? "selected" : null);
+        editTypeSpan.textContent = `${editTypeStr} (${[...wereSelected, ...wereUnselected].join(", ")})`;
+
+        <%_ } _%>
+
       } else {
         passwordCheckboxList.required = false;
         passwordCheckboxList.disabled = true;

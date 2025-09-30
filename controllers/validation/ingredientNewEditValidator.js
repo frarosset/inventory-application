@@ -3,6 +3,7 @@ const protectedValidator = require("./helpers/protectedValidator.js");
 const populateReqLocalsWithValidNames = require("./helpers/populateReqLocalsWithValidNames.js");
 const populateRouteType = require("./helpers/populateRouteType.js");
 const handleValidationErrorsFcn = require("./helpers/handleValidationErrorsFcn.js");
+const hasProtectedSelectedEdited = require("./helpers/hasProtectedSelectedEdited");
 
 const priceDecimalDigits = process.env.PRICE_DECIMAL_DIGITS;
 const priceMax = parseFloat(process.env.PRICE_MAX);
@@ -138,15 +139,20 @@ const ingredientValidator = [
     return true;
   }),
   body("passwordCheckboxList").custom((value, { req }) => {
-    const anyProtectedPizzas = req.body.pizzas?.some((pizza) =>
-      req.locals.allProtectedPizzas.includes(pizza)
+    const askPassword = hasProtectedSelectedEdited(
+      req.locals.isEdit,
+      req.body.pizzas,
+      req.locals.allProtectedPizzas,
+      req.locals.prevProtectedPizzas
     );
 
-    if (anyProtectedPizzas) {
+    if (askPassword) {
       if (!req.body.passwordCheckboxList) {
-        throw new Error(
-          "The admin password is required to use this ingredient in the selected protected pizzas."
-        );
+        const msg = req.locals.isEdit
+          ? "The admin password is required to edit the protected pizzas using this ingredient."
+          : "The admin password is required to use this ingredient in the selected protected pizzas.";
+
+        throw new Error(msg);
       }
 
       if (
@@ -155,9 +161,11 @@ const ingredientValidator = [
           parseInt(process.env.PWD_MAX_LENGTH) ||
         req.body.passwordCheckboxList !== process.env.ADMIN_PASSWORD
       ) {
-        throw new Error(
-          "The admin password to use this ingredient in  the selected protected pizzas is incorrect."
-        );
+        const msg = req.locals.isEdit
+          ? "The admin password to edit the selected protected pizzas using this ingredient is incorrect."
+          : "The admin password to use this ingredient in the selected protected pizzas is incorrect.";
+
+        throw new Error(msg);
       }
     }
     return true;
