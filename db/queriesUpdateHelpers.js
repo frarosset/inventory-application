@@ -274,9 +274,12 @@ updateBeforeCommitCallback.ingredient = (data) => async (client, results) => {
     ["name", "is_protected", "notes", "price"]
   );
 
+  const ingredientPropsWereUpdatedStock = hasChanged(results[0]?.[0], data, [
+    "stock",
+  ]);
+
   const ingredientPropsWereUpdated =
-    ingredientPropsWereUpdatedExclStock ||
-    hasChanged(results[0]?.[0], data, ["stock"]);
+    ingredientPropsWereUpdatedExclStock || ingredientPropsWereUpdatedStock;
 
   // updating a pizza's ingredients / categories just count as an update to the pizza,
   // but not to the ingredients / categories
@@ -325,6 +328,11 @@ updateBeforeCommitCallback.ingredient = (data) => async (client, results) => {
           ${
             ingredientPropsWereUpdatedExclStock
               ? ", updated_at = CURRENT_TIMESTAMP"
+              : ""
+          }
+          ${
+            ingredientPropsWereUpdatedStock
+              ? ", last_restocked_at = CURRENT_TIMESTAMP"
               : ""
           }
           WHERE id = $6
@@ -692,9 +700,12 @@ updateBeforeCommitCallback.dough = (data) => async (client, results) => {
     "price",
   ]);
 
+  const doughPropsWereUpdatedStock = hasChanged(results[0]?.[0], data, [
+    "stock",
+  ]);
+
   const doughPropsWereUpdated =
-    doughPropsWereUpdatedExclStock ||
-    hasChanged(results[0]?.[0], data, ["stock"]);
+    doughPropsWereUpdatedExclStock || doughPropsWereUpdatedStock;
 
   // console.log({
   //   doughPropsWereUpdated,
@@ -715,6 +726,11 @@ updateBeforeCommitCallback.dough = (data) => async (client, results) => {
           ${
             doughPropsWereUpdatedExclStock
               ? ", updated_at = CURRENT_TIMESTAMP"
+              : ""
+          }
+          ${
+            doughPropsWereUpdatedStock
+              ? ", last_restocked_at = CURRENT_TIMESTAMP"
               : ""
           }
           WHERE id = $6

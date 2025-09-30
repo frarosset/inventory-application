@@ -423,7 +423,8 @@ exports.update.ingredientRestock = async (data) => {
     {
       text: `
           UPDATE ingredients
-          SET stock = stock + $1
+          SET stock = stock + $1, 
+              last_restocked_at = CURRENT_TIMESTAMP
           WHERE id = $2
           AND ($1 > 0)
           RETURNING id;`,
@@ -446,7 +447,8 @@ exports.update.doughRestock = async (data) => {
     {
       text: `
           UPDATE doughs
-          SET stock = stock + $1
+          SET stock = stock + $1, 
+              last_restocked_at = CURRENT_TIMESTAMP
           WHERE id = $2
           AND ($1 > 0)
           RETURNING id;`,
@@ -484,7 +486,8 @@ exports.update.pizzaOrder = async (data) => {
     {
       text: `
           UPDATE doughs
-          SET stock = stock - $1
+          SET stock = stock - $1, 
+              last_used_at = CURRENT_TIMESTAMP
           WHERE id = $2
           AND ($1 > 0)
           RETURNING id;`,
@@ -493,12 +496,22 @@ exports.update.pizzaOrder = async (data) => {
     {
       text: `
           UPDATE ingredients
-          SET stock = stock - $1
-           WHERE id = ANY (
+          SET stock = stock - $1, 
+              last_used_at = CURRENT_TIMESTAMP
+          WHERE id = ANY (
             SELECT ingredient_id
             FROM pizzas_ingredients
             WHERE pizza_id = $2
           )
+          AND ($1 > 0)
+          RETURNING id;`,
+      data: [data.unitsToOrder, data.id],
+    },
+    {
+      text: `
+          UPDATE pizzas
+          SET last_ordered_at = CURRENT_TIMESTAMP
+          WHERE id = $2
           AND ($1 > 0)
           RETURNING id;`,
       data: [data.unitsToOrder, data.id],

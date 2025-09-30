@@ -11,6 +11,10 @@ _%>
     const date2Str = (date) => new Date(date).toLocaleString(['en-gb']);
  _%>
 <p class="date-info">
-  Created on <span class="date" data-date="<%= locals.created_at.toISOString() %>"><%= date2Str(locals.created_at) %></span> <%_ if (locals.created_by) { _%> by <%= locals.created_by %><%_ } _%> <%_ if (locals.updated_at) { _%>; last updated on <span class="date" data-date="<%= locals.updated_at.toISOString() %>"><%= date2Str(locals.updated_at) %></span><%_ if (locals.updated_by) { _%> by <%= locals.updated_by %><%_ }} _%>.
+  Created on <span class="date" data-date="<%= locals.created_at.toISOString() %>"><%= date2Str(locals.created_at) %></span><%_ if (locals.created_by) { _%> by <%= locals.created_by %><%_ } _%>
+  <%_ if (locals.updated_at) { _%>; last updated on <span class="date" data-date="<%= locals.updated_at.toISOString() %>"><%= date2Str(locals.updated_at) %></span><%_ if (locals.updated_by) { _%> by <%= locals.updated_by %><%_ }} _%>
+  <%_ if (locals.last_used_at) { _%>; last used on <span class="date" data-date="<%= locals.last_used_at.toISOString() %>"><%= date2Str(locals.last_used_at) %></span><%_ if (locals.last_used_by) { _%> by <%= locals.last_used_by %><%_ }} _%>
+  <%_ if (locals.last_restocked_at) { _%>; last restocked on <span class="date" data-date="<%= locals.last_restocked_at.toISOString() %>"><%= date2Str(locals.last_restocked_at) %></span><%_ if (locals.last_restocked_by) { _%> by <%= locals.last_restocked_by %><%_ }} _%>
+  <%_ if (locals.last_ordered_at) { _%>; last ordered on <span class="date" data-date="<%= locals.last_ordered_at.toISOString() %>"><%= date2Str(locals.last_ordered_at) %></span><%_ if (locals.last_ordered_by) { _%> by <%= locals.last_ordered_by %><%_ }} _%>.
 </p>
 <%_ } _%>

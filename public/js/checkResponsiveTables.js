@@ -6,13 +6,13 @@
       tab.classList.remove("shrink");
 
       if (tab.scrollWidth > tab.clientWidth) {
-        console.log("Horizontal overflow detected");
+        // console.log("Horizontal overflow detected");
         tab.classList.add("shrink");
       } else {
-        console.log("No horizontal overflow");
+        // console.log("No horizontal overflow");
       }
 
-      console.log(tab.scrollWidth, tab.clientWidth);
+      // console.log(tab.scrollWidth, tab.clientWidth);
     });
   };
 
