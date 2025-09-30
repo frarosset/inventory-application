@@ -402,7 +402,7 @@ const SQL_create = `
   SELECT 
     pi.ingredient_id,
     COALESCE(
-      JSON_AGG(p.*), '[]'::json)
+      JSON_AGG(p.* ORDER BY p.id), '[]'::json)
     AS pizzas
   FROM pizzas_ingredients AS pi
   LEFT JOIN pizzas_brief AS p
@@ -436,7 +436,7 @@ const SQL_create = `
     SELECT 
       pac.actual_category_id AS category_id,
       COALESCE(
-        JSON_AGG(p.*), '[]'::json)
+        JSON_AGG(p.* ORDER BY p.id), '[]'::json)
       AS actual_for_pizzas
     FROM pizzas_actual_categories AS pac
     LEFT JOIN pizzas_brief AS p
