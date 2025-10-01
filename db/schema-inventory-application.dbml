@@ -1,0 +1,84 @@
+Table "doughs" {
+  "id" integer [pk, not null]
+  "name" "character varying(40)" [unique, not null]
+  "is_protected" boolean [not null, default: false]
+  "created_at" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamp
+  "notes" "character varying(500)"
+  "price" numeric [not null, default: 1]
+  "stock" integer [not null, default: 100]
+  "last_used_at" timestamp
+  "last_restocked_at" timestamp
+}
+
+Table "categories" {
+  "id" integer [pk, not null]
+  "name" "character varying(40)" [unique, not null]
+  "is_protected" boolean [not null, default: false]
+  "created_at" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamp
+  "notes" "character varying(500)"
+}
+
+Table "pizzas_categories" {
+  "pizza_id" integer [not null]
+  "category_id" integer [not null]
+
+  Indexes {
+    (pizza_id, category_id) [unique, name: "u_pizza_category"]
+  }
+}
+
+Table "ingredients_categories_rules" {
+  "ingredient_id" integer [not null]
+  "category_id" integer [not null]
+  "rule_type" "character varying(30)" [not null]
+
+  Indexes {
+    (ingredient_id, category_id) [unique, name: "u_ingredient_category"]
+  }
+}
+
+Table "pizzas_ingredients" {
+  "pizza_id" integer [not null]
+  "ingredient_id" integer [not null]
+
+  Indexes {
+    (pizza_id, ingredient_id) [unique, name: "u_pizza_ingredient"]
+  }
+}
+
+Table "ingredients" {
+  "id" integer [pk, not null]
+  "name" "character varying(40)" [unique, not null]
+  "is_protected" boolean [not null, default: false]
+  "created_at" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamp
+  "notes" "character varying(500)"
+  "price" numeric [not null, default: 1]
+  "stock" integer [not null, default: 100]
+  "last_used_at" timestamp
+  "last_restocked_at" timestamp
+}
+
+Table "pizzas" {
+  "id" integer [pk, not null]
+  "name" "character varying(40)" [unique, not null]
+  "is_protected" boolean [not null, default: false]
+  "created_at" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamp
+  "notes" "character varying(500)"
+  "last_ordered_at" timestamp
+}
+
+Ref "ingredients_categories_rules_category_id_fkey":"categories"."id" < "ingredients_categories_rules"."category_id"
+
+Ref "ingredients_categories_rules_ingredient_id_fkey":"ingredients"."id" < "ingredients_categories_rules"."ingredient_id"
+
+Ref "pizzas_categories_category_id_fkey":"categories"."id" < "pizzas_categories"."category_id"
+
+Ref "pizzas_categories_pizza_id_fkey":"pizzas"."id" < "pizzas_categories"."pizza_id"
+
+Ref "pizzas_ingredients_ingredient_id_fkey":"ingredients"."id" < "pizzas_ingredients"."ingredient_id"
+
+Ref "pizzas_ingredients_pizza_id_fkey":"pizzas"."id" < "pizzas_ingredients"."pizza_id"
