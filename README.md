@@ -44,6 +44,20 @@ However, users can freely create their own pizzas, ingredients, categories, doug
 - **Pizza–Category / Pizza–Ingredient relationships**: If the pizza is protected, the admin password is required to edit its relationships. Otherwise, users may associate it with any ingredients or categories, including protected ones.
 - **Category–Ingredient rules (enforced/incompatible)**: These are freely editable if at least one of the category or the ingredient is not protected. If both are protected, the admin password is required. This prevents users from modifying rules seeded at initialization.
 
+## Database Schema
+
+The database schema includes tables for pizzas, ingredients, doughs, categories, and their relationships. Many-to-many relationships are modeled as one-to-many ones.
+
+The diagram below was generated from a **.dbml** file derived from the PostgreSQL **.sql** schema. It visualizes the core tables and their connections:
+
+![database diagram](https://raw.githubusercontent.com/frarosset/inventory-application/refs/heads/main/db/schema-inventory-application.png)
+
+> [!NOTE]  
+> A pizza's **price**, **stock** and **actual categories** are computed dynamically from the underlying table data.
+
+> [!NOTE]  
+> The diagram does **not** include the database **views** (e.g., `category_rules_per_ingredient`, `pizzas_per_category`, `pizzas_actual_categories`, and so on), which have been introduced to simplify the queries.
+
 ## Tech Stack
 
 - **Node.js** – JavaScript runtime for the server
